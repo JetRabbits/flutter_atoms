@@ -1,8 +1,8 @@
 name: flutter_atoms
 description: Some best practice and ready to go solutions for flutter projects
 version: 0.0.1
-author:
-homepage:
+author: JetRabbits
+homepage: https://github.com/JetRabbits/flutter_atoms
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -11,10 +11,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  firebase_core: 0.5.0+1
+  firebase_crashlytics: ^0.2.1+1
+  firebase_analytics: ^6.0.0
+  catcher: ^0.3.22
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^4.1.3
+  build_runner: ^1.10.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
