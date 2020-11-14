@@ -12,8 +12,28 @@ import 'package:flutter/material.dart';
 /// and it is useful to restore step by step scenario when app is crashed or
 /// none-critical error is occurred.
 ///
+/// Usage:
+///
+/// main.dart
+/// ---
+/// void main() async {
+///   await Analytics.initialize();
+///   // Call configure everytime you new new callbacks or reconfigure
+///   await Analytics().configure(
+///     options: AnalyticsOptions(onUserId: ..., onCustomProperties: ...)
+///   )
+/// }
+///
 class Analytics {
   static final Analytics _instance = Analytics._();
+
+  static Future<void> initialize() async {
+    await Firebase.initializeApp();
+    Analytics().configure(
+        analytics: FirebaseAnalytics(),
+        crashlytics: FirebaseCrashlytics.instance,
+        options: AnalyticsOptions.guestOptions);
+  }
 
   AnalyticsOptions options;
 
@@ -28,17 +48,19 @@ class Analytics {
   FirebaseCrashlytics _crashlytics;
   BuildContext _context;
 
-  Future<void> init(
-      FirebaseCrashlytics crashlytics,
+  Future<void> configure(
+      {FirebaseCrashlytics crashlytics,
       FirebaseAnalytics analytics,
-      AnalyticsOptions options) async {
-      _instance._crashlytics = crashlytics;
-      await _instance._crashlytics
-          .setCrashlyticsCollectionEnabled(true);
-      _instance._analytics = analytics;
-      _instance._observer =
-          FirebaseAnalyticsObserver(analytics: _instance._analytics);
-    _instance.options = options;
+      AnalyticsOptions options}) async {
+    if (crashlytics != null) {
+      _crashlytics = crashlytics;
+      await _crashlytics.setCrashlyticsCollectionEnabled(true);
+    }
+    if (analytics != null) {
+      _analytics = analytics;
+      _observer = FirebaseAnalyticsObserver(analytics: _analytics);
+    }
+    this.options = options;
   }
 
   get observer => _observer;
@@ -83,7 +105,6 @@ class Analytics {
     String eventName = "tap_$buttonName";
     _fillParams(_context).then(
         (_) => _analytics.logEvent(name: eventName, parameters: parameters));
-    ;
   }
 
   void logError(exception, stackTrace, Map<String, dynamic> parameters) {
@@ -96,6 +117,8 @@ class Analytics {
 }
 
 class AnalyticsOptions {
+  static AnalyticsOptions guestOptions =
+      AnalyticsOptions(onUserId: (_) async => "guest");
   final Future<String> Function(BuildContext context) onUserId;
   final Future<Map<String, String>> Function(BuildContext context)
       onCustomProperties;
