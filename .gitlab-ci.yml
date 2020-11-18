@@ -1,0 +1,16 @@
+default:
+  image: :2.5
+  before_script:
+    - sh "flutter doctor"
+    - sh "flutter channel stable"
+    - sh "flutter upgrade"
+    - sh "flutter build appbundle --verbose"
+    - sh "flutter build apk --verbose"
+
+rspec:
+  script:
+    - bundle exec rspec
+
+rubocop:
+  script:
+    - bundle exec rubocop

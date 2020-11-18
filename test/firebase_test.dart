@@ -14,15 +14,18 @@ class MockFirebaseCrashlytics extends Mock implements FirebaseCrashlytics {}
 
 class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
 
+class MockReportModeAction extends Mock implements ReportModeAction {}
+
 Future<void> main() async {
   BuildContext context;
   TestWidgetsFlutterBinding.ensureInitialized();
   FirebaseAnalytics firebaseAnalytics;
   FirebaseCrashlytics firebaseCrashlytics;
-
+  MockReportModeAction mockReportModeAction;
   setUp(() {
     firebaseAnalytics = MockFirebaseAnalytics();
     firebaseCrashlytics = MockFirebaseCrashlytics();
+    mockReportModeAction = MockReportModeAction();
     context = MockContext();
     when(firebaseCrashlytics.recordError(any, any, reason: anyNamed("reason")))
         .thenAnswer((realInvocation) async {
@@ -43,6 +46,7 @@ Future<void> main() async {
         analytics: firebaseAnalytics,
         options: AnalyticsOptions(onUserId: (context) async => "guest"));
     var reportMode = AnalyticsCatcherReportMode();
+    reportMode.setReportModeAction(mockReportModeAction);
     var report = Report(
         Exception("Test Error"),
         StackTrace.current,
