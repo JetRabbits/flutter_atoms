@@ -1,7 +1,6 @@
 import 'package:catcher/catcher.dart';
 import 'package:catcher/model/platform_type.dart';
 import 'package:catcher/model/report.dart';
-import 'package:catcher/model/report_mode.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_atoms/integrations/analytics.dart';
 
