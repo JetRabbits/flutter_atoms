@@ -8,6 +8,8 @@ class NavigationPage {
 
   Map<String, ScreenGroup> screenGroupsMap = <String, ScreenGroup>{};
 
+  BackButtonDispatcher backButtonDispatcher;
+
   void addGroup(ScreenGroup group) {
     if (path == null) _updatePathByScreenGroup(group);
     _checkPath(group);

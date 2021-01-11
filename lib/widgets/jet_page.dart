@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_atoms/blocs/blocs.dart';
 import 'package:flutter_atoms/blocs/navigator/nav_bar_cubit.dart';
 import 'package:flutter_atoms/models/app_navigation_state.dart';
+import 'package:flutter_atoms/models/navigation_page.dart';
 
 typedef NavigationStateBuilderType = Future<void> Function(
     BuildContext context, AppNavigationState state);
@@ -19,20 +20,23 @@ class JetPage extends StatefulWidget {
 }
 
 class _JetPageState extends State<JetPage> {
-  ChildBackButtonDispatcher _backButtonDispatcher;
+  NavigationPage _page;
 
   InnerRouterDelegate _routerDelegate;
 
   final GlobalKey<State> bottomNavigationBarKey = GlobalKey<State>();
+  BackButtonDispatcher _backButtonDispatcher;
 
   String _screenPath = "";
 
   NavBarCubit _navBarCubit;
 
-
   @override
   Widget build(BuildContext context) {
-    _backButtonDispatcher?.takePriority();
+    print("build!!!!");
+    _backButtonDispatcher.takePriority();
+    _page.backButtonDispatcher = _backButtonDispatcher;
+
 
     return BlocProvider<NavBarCubit>(
       create: (_) => _navBarCubit,
@@ -52,8 +56,7 @@ class _JetPageState extends State<JetPage> {
     return BlocBuilder<NavBarCubit, NavBarState>(
       builder: (context, state) {
         var navigationModel = widget.navigationState.navigationModel;
-        var buttons = navigationModel
-            .getPageByPath(widget.initialPageRoute)
+        var buttons = _page
             .screenGroupsMap
             .values
             .where((group) => group.index >= 0 && group.buttonBuilder != null)
@@ -92,23 +95,34 @@ class _JetPageState extends State<JetPage> {
     _routerDelegate =
         InnerRouterDelegate(
             widget.navigationState, widget.initialPageRoute, _navBarCubit);
+    _page = widget.navigationState.navigationModel
+        .getPageByPath(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
   }
 
-  // @override
-  // void didUpdateWidget(covariant JetPage oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   _routerDelegate.appState = widget.appState;
-  // }
+  @override
+  void didUpdateWidget(covariant JetPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget!!!!");
+    // _routerDelegate.appState = widget.appState;
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
-    _backButtonDispatcher = Router
+    var rootBackDispatcher = Router
         .of(context)
-        .backButtonDispatcher
+        .backButtonDispatcher;
+    // if (_backButtonDispatcher != null) rootBackDispatcher.forget(_backButtonDispatcher);
+    _backButtonDispatcher = rootBackDispatcher
         .createChildBackButtonDispatcher();
+    // rootBackDispatcher.addCallback(() async {
+    //   print("rootBackDispatcher !!!");
+    //   return true;
+    // });
+
+
   }
 }
 
@@ -131,6 +145,8 @@ class InnerNavigatorObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
     navBarCubit.updatePath(previousRoute.settings.name);
   }
+
+
 }
 
 class InnerRouterDelegate extends RouterDelegate<String>
@@ -156,6 +172,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   @override
   Widget build(BuildContext context) {
+    print("---->>>> ${navigatorKey}");
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
