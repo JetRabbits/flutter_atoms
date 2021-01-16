@@ -19,7 +19,7 @@ class BootBlocCubit extends Cubit<BootBlocState> {
     emit(BootBlocState.LOADING);
     bool result = true;
     if (onStart != null) result = await onStart();
-    await Future.delayed(Duration(seconds: 2));
+    // await Future.delayed(Duration(seconds: 2));
 
     if (result)
       emit(BootBlocState.READY);

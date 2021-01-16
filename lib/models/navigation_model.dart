@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
@@ -65,7 +64,10 @@ class NavigationModel extends RouteInformationParser<String> {
   ScreenGroup getScreenGroupByPath(String path) {
     var split = parseAndCheckFormat(path).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[path];
-    return split.length > 1 ? page?.screenGroupsMap["/${split[0]}/${split[1]}"] : page?.screenGroupsMap[path];
+    if (page == null) throw "No page found for ${path} check your navigation model";
+    var result = split.length > 1 ? page?.screenGroupsMap["/${split[0]}/${split[1]}"] : page?.screenGroupsMap[path];
+    if (result == null) throw "No screen group found for ${path}";
+    return result;
   }
 
   clear() {
