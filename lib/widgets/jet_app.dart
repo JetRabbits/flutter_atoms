@@ -32,7 +32,7 @@ class JetApp extends StatefulWidget {
 
   final String nextRoute;
 
-  final ThemeModel themeModel;
+  final ThemeModel Function(BuildContext context) themeModelBuilder;
 
   JetApp({
     Key key,
@@ -45,7 +45,7 @@ class JetApp extends StatefulWidget {
     this.bootWidget,
     this.topLevelProviders,
     this.topLevelBlocs,
-    this.themeModel,
+    this.themeModelBuilder,
   }) : super(key: key) {
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
@@ -102,7 +102,7 @@ class _JetAppState extends State<JetApp> {
 
   @override
   void initState() {
-    _themeModel = widget.themeModel ?? defaultThemeModel();
+    _themeModel = widget.themeModelBuilder != null ? widget.themeModelBuilder(context) : defaultThemeModel();
     _appRouterDelegate =
         JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
   }
