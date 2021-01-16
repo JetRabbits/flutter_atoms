@@ -67,6 +67,8 @@ class _JetAppState extends State<JetApp> {
 
   JetAppRouterDelegate _appRouterDelegate;
 
+  ThemeModel _themeModel;
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class _JetAppState extends State<JetApp> {
             ]
               ..addAll(widget.topLevelBlocs ?? []),
             child: PersistTheme(
-              model: widget.themeModel ?? defaultThemeModel(),
+              model: _themeModel,
               builder: (context, themeModel, child) {
                 return MaterialApp.router(
                   debugShowCheckedModeBanner: false,
@@ -100,6 +102,7 @@ class _JetAppState extends State<JetApp> {
 
   @override
   void initState() {
+    _themeModel = widget.themeModel ?? defaultThemeModel();
     _appRouterDelegate =
         JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
   }
