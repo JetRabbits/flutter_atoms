@@ -45,7 +45,7 @@ class UniversalPhotoWidget extends StatelessWidget {
           image: selectProvider(url),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 5.0)),
         border: Border.all(
           color: borderColor ?? Colors.grey,
           width: borderWidth ?? 1.0,
