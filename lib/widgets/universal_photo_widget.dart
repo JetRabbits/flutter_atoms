@@ -9,11 +9,23 @@ class UniversalPhotoWidget extends StatelessWidget {
   final double width;
   final double height;
 
+  final Color bodyColor;
+
+  final double borderRadius;
+
+  final Color borderColor;
+
+  final double borderWidth;
+
   UniversalPhotoWidget({
     Key key,
     @required this.url,
     this.width,
     this.height,
+    this.bodyColor,
+    this.borderRadius,
+    this.borderColor,
+    this.borderWidth,
   }) : super(key: key);
 
   ImageProvider selectProvider(String url){
@@ -28,15 +40,15 @@ class UniversalPhotoWidget extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: bodyColor ?? Colors.grey[300],
         image: DecorationImage(
           image: selectProvider(url),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
         border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
+          color: borderColor ?? Colors.grey,
+          width: borderWidth ?? 1.0,
         ),
       ),
     );
