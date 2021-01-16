@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/models/screen_group.dart';
+
 import 'models.dart';
+import 'navigation_page.dart';
+import 'navigation_screen.dart';
 
 class AppNavigationState extends ChangeNotifier {
   final List<String> historyRoutes = ["/"];

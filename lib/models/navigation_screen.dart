@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_atoms/flutter_atoms.dart';
+
+import 'screen_group.dart';
 
 class NavigationScreen {
   final String path;

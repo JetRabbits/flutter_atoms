@@ -33,7 +33,6 @@ class _JetPageState extends State<JetPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("build!!!!");
     _backButtonDispatcher.takePriority();
     _page.backButtonDispatcher = _backButtonDispatcher;
 
@@ -64,7 +63,6 @@ class _JetPageState extends State<JetPage> {
             .toList();
         var _group = navigationModel
             .getScreenGroupByPath(state.path);
-        print(_group.path);
         if (buttons.length >= 2 && _group.index >= 0)
           return BottomNavigationBar(
               key: bottomNavigationBarKey,
@@ -101,28 +99,14 @@ class _JetPageState extends State<JetPage> {
   }
 
   @override
-  void didUpdateWidget(covariant JetPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print("didUpdateWidget!!!!");
-    // _routerDelegate.appState = widget.appState;
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
     var rootBackDispatcher = Router
         .of(context)
         .backButtonDispatcher;
-    // if (_backButtonDispatcher != null) rootBackDispatcher.forget(_backButtonDispatcher);
     _backButtonDispatcher = rootBackDispatcher
         .createChildBackButtonDispatcher();
-    // rootBackDispatcher.addCallback(() async {
-    //   print("rootBackDispatcher !!!");
-    //   return true;
-    // });
-
-
   }
 }
 
@@ -172,7 +156,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   @override
   Widget build(BuildContext context) {
-    print("---->>>> ${navigatorKey}");
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
@@ -202,7 +185,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
   Future<void> setNewRoutePath(String path) async {
     assert(false);
     notifyListeners();
-    print("New path!!!");
   }
 
   PageRoute buildRoute(BuildContext context, String route,

@@ -3,10 +3,12 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_atoms/models/navigation_page.dart';
 
-import 'models.dart';
 import 'navigation_screen.dart';
+import 'screen_group.dart';
 
-typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(BuildContext context);
+typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
+    BuildContext context);
+
 ///
 /// Navigation model take routes as pattern /Flutter_Navigator_Route/Internal_of_Route_Screen_Name
 /// For example if you have main route with 3 bottom navigation buttons then your routes should be:
@@ -23,22 +25,39 @@ typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(BuildC
 /// After that you can ask NavigatorCubit.navigateTo('/main/second_screen/sub_screen_1')
 ///
 class NavigationModel extends RouteInformationParser<String> {
-
-  NavigationModel({@required Map<String, WidgetBuilder> routes, Map<String, BottomNavigationBarItemBuilder> buttons}) {
+  NavigationModel(
+      {@required Map<String, WidgetBuilder> routes,
+      Map<String, BottomNavigationBarItemBuilder> buttons}) {
     routes.keys.forEach((path) {
       addPath(path, routes[path], buttons: buttons);
     });
   }
 
-  void addPath(String path, WidgetBuilder builder, {Map<String, BottomNavigationBarItemBuilder> buttons}){
+  void addPath(String path, WidgetBuilder builder,
+      {Map<String, BottomNavigationBarItemBuilder> buttons}) {
     var uri = parseAndCheckFormat(path);
-    var pagePath = uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
-    var page = pagesMap.putIfAbsent(pagePath, () => NavigationPage(path: pagePath));
-    var groupPath = pagePath + (uri.pathSegments.length > 1 ? "/" + uri.pathSegments[1] : "");
-    var group = page.screenGroupsMap.putIfAbsent(groupPath,
-            () => ScreenGroup(path: groupPath, buttonBuilder: buttons != null ? buttons[groupPath] : null, page: page,
-                index: buttons != null && buttons[groupPath] != null ? page.screenGroupsMap.length: -1));
-    group.screenMaps.putIfAbsent(path, () => NavigationScreen(path: path, builder: builder, group: group, index: group.screenMaps.length));
+    var pagePath =
+        uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
+    var page =
+        pagesMap.putIfAbsent(pagePath, () => NavigationPage(path: pagePath));
+    var groupPath = pagePath +
+        (uri.pathSegments.length > 1 ? "/" + uri.pathSegments[1] : "");
+    var group = page.screenGroupsMap.putIfAbsent(
+        groupPath,
+        () => ScreenGroup(
+            path: groupPath,
+            buttonBuilder: buttons != null ? buttons[groupPath] : null,
+            page: page,
+            index: buttons != null && buttons[groupPath] != null
+                ? page.screenGroupsMap.length
+                : -1));
+    group.screenMaps.putIfAbsent(
+        path,
+        () => NavigationScreen(
+            path: path,
+            builder: builder,
+            group: group,
+            index: group.screenMaps.length));
   }
 
   static Uri parseAndCheckFormat(String path) {
@@ -54,24 +73,28 @@ class NavigationModel extends RouteInformationParser<String> {
 
   NavigationPage getPageByPath(String path) {
     var segs = parseAndCheckFormat(path).pathSegments;
-    var result = segs.length > 0 ? pagesMap["/${segs[0]}"]: pagesMap[path];
+    var result = segs.length > 0 ? pagesMap["/${segs[0]}"] : pagesMap[path];
     if (result == null) throw "No page group found for ${path}";
     return result;
   }
 
   NavigationScreen getScreenByPath(String path) {
-    var result =  getScreenGroupByPath(path)?.screenMaps[path];
-    if (result == null) throw "No screen found for ${path}";
+    var result = getScreenGroupByPath(path)?.screenMaps[path];
+    if (result == null)
+      throw "No screen found for ${path}. Check your navigation model";
     return result;
-
   }
 
   ScreenGroup getScreenGroupByPath(String path) {
     var split = parseAndCheckFormat(path).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[path];
-    if (page == null) throw "No page found for ${path} check your navigation model";
-    var result = split.length > 1 ? page?.screenGroupsMap["/${split[0]}/${split[1]}"] : page?.screenGroupsMap[path];
-    if (result == null) throw "No screen group found for ${path}";
+    if (page == null)
+      throw "No page found for ${path}. Check your navigation model";
+    var result = split.length > 1
+        ? page?.screenGroupsMap["/${split[0]}/${split[1]}"]
+        : page?.screenGroupsMap[path];
+    if (result == null)
+      throw "No screen group found for ${path}. Check your navigation model";
     return result;
   }
 
@@ -81,13 +104,11 @@ class NavigationModel extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
-    print("!!!!!!!");
     return Future.value(Uri.parse(routeInformation.location).path);
   }
 
   @override
   RouteInformation restoreRouteInformation(String configuration) {
-    print("!!!!!!!");
     return RouteInformation(location: configuration);
   }
 }

@@ -32,6 +32,8 @@ class JetApp extends StatefulWidget {
 
   final String nextRoute;
 
+  final ThemeModel themeModel;
+
   JetApp({
     Key key,
     @required this.navigationModel,
@@ -43,6 +45,7 @@ class JetApp extends StatefulWidget {
     this.bootWidget,
     this.topLevelProviders,
     this.topLevelBlocs,
+    this.themeModel,
   }) : super(key: key) {
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
@@ -61,7 +64,6 @@ class JetApp extends StatefulWidget {
 }
 
 class _JetAppState extends State<JetApp> {
-  ThemeModel _themeModel;
 
   JetAppRouterDelegate _appRouterDelegate;
 
@@ -83,7 +85,7 @@ class _JetAppState extends State<JetApp> {
             ]
               ..addAll(widget.topLevelBlocs ?? []),
             child: PersistTheme(
-              model: _themeModel,
+              model: widget.themeModel ?? defaultThemeModel(),
               builder: (context, themeModel, child) {
                 return MaterialApp.router(
                   debugShowCheckedModeBanner: false,
@@ -98,19 +100,22 @@ class _JetAppState extends State<JetApp> {
 
   @override
   void initState() {
+    _appRouterDelegate =
+        JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
+  }
+
+  ThemeModel defaultThemeModel(){
     var _textTheme =
     ThemeData
         .dark()
         .textTheme
         .apply(fontFamily: 'Core Sans DS');
 
-    _themeModel = ThemeModel(
+    return ThemeModel(
       customLightTheme: ThemeData(fontFamily: 'Core Sans DS'),
       customDarkTheme: ThemeData.dark().copyWith(textTheme: _textTheme),
     );
 
-    _appRouterDelegate =
-        JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
   }
 }
 
@@ -138,12 +143,6 @@ class JetAppRouterDelegate extends RouterDelegate<String>
         var _builder = isJetPage
             ? screen.builder
             : (context) => JetPage(screen.path, state);
-        // if (!isJetPage) {
-        //   screen.group.page.backButtonDispatcher = Router
-        //       .of(context)
-        //       .backButtonDispatcher;
-        //   screen.group.page.backButtonDispatcher.takePriority();
-        // }
         return MaterialPageRoute(settings: settings, builder: _builder);
       },
       initialRoute: "/",
@@ -171,22 +170,18 @@ class RootNavigatorObserver extends NavigatorObserver {
 
   @override
   void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
-    print("root observer replace");
   }
 
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {
-    print("root observer remove");
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
-    print("root observer pop: route - ${route.settings.name}, prev - ${previousRoute.settings.name}");
     var jetPage = navigationModel.getPageByPath(previousRoute.settings.name);
     // Нужно поискать другие варианты проставить backButtonDispatcher в случае, если пользователь возвращается через стрелку AppBar
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      print("Restore back button dispatcher");
       jetPage.backButtonDispatcher.takePriority();
     });
   }

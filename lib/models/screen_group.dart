@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'models.dart';
+import 'navigation_page.dart';
 import 'navigation_screen.dart';
 
 class ScreenGroup {
