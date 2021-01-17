@@ -185,7 +185,10 @@ class RootNavigatorObserver extends NavigatorObserver {
     var jetPage = navigationModel.getPageByPath(previousRoute.settings.name);
     // Нужно поискать другие варианты проставить backButtonDispatcher в случае, если пользователь возвращается через стрелку AppBar
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      jetPage.backButtonDispatcher.takePriority();
+      try {
+        jetPage.backButtonDispatcher.takePriority();
+      } catch (ignore) {
+      }
     });
   }
 }

@@ -25,9 +25,10 @@ typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
 /// After that you can ask NavigatorCubit.navigateTo('/main/second_screen/sub_screen_1')
 ///
 class NavigationModel extends RouteInformationParser<String> {
-  NavigationModel(
-      {@required Map<String, WidgetBuilder> routes,
-      Map<String, BottomNavigationBarItemBuilder> buttons}) {
+  NavigationModel({
+      @required Map<String, WidgetBuilder> routes,
+      Map<String, BottomNavigationBarItemBuilder> buttons
+  }) {
     routes.keys.forEach((path) {
       addPath(path, routes[path], buttons: buttons);
     });

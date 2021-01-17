@@ -33,7 +33,10 @@ class _JetPageState extends State<JetPage> {
 
   @override
   Widget build(BuildContext context) {
-    _backButtonDispatcher.takePriority();
+    try {
+      _backButtonDispatcher.takePriority();
+    } catch (ignore) {
+    }
     _page.backButtonDispatcher = _backButtonDispatcher;
 
 
