@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_atoms/blocs/boot/boot_bloc_cubit.dart';
@@ -34,6 +35,10 @@ class JetApp extends StatefulWidget {
 
   final ThemeModel Function(BuildContext context) themeModelBuilder;
 
+  final Iterable<Locale> supportedLocales;
+
+  final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
+
   JetApp({
     Key key,
     @required this.navigationModel,
@@ -46,6 +51,8 @@ class JetApp extends StatefulWidget {
     this.topLevelProviders,
     this.topLevelBlocs,
     this.themeModelBuilder,
+    this.supportedLocales,
+    this.localizationsDelegates,
   }) : super(key: key) {
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
@@ -90,6 +97,8 @@ class _JetAppState extends State<JetApp> {
               model: _themeModel,
               builder: (context, themeModel, child) {
                 return MaterialApp.router(
+                  localizationsDelegates: widget.localizationsDelegates,
+                  supportedLocales: widget.supportedLocales,
                   debugShowCheckedModeBanner: false,
                   theme: themeModel.theme,
                   onGenerateTitle: widget.onGenerateTitle,
