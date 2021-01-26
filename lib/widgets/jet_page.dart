@@ -42,15 +42,13 @@ class _JetPageState extends State<JetPage> {
 
     return BlocProvider<NavBarCubit>(
       create: (_) => _navBarCubit,
-      child: SafeArea(
-        child: Scaffold(
-            body: Router(
-              routerDelegate: _routerDelegate,
-              backButtonDispatcher: _backButtonDispatcher,
-              routeInformationParser: widget.navigationState.navigationModel,
-            ),
-            bottomNavigationBar: buildBottomNavigationBar(context)),
-      ),
+      child: Scaffold(
+        bottomNavigationBar: buildBottomNavigationBar(context),
+        body: Router(
+          routerDelegate: _routerDelegate,
+          backButtonDispatcher: _backButtonDispatcher,
+          routeInformationParser: widget.navigationState.navigationModel,
+        )),
     );
   }
 
