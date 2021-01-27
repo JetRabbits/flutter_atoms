@@ -6,8 +6,19 @@ import 'package:story_view/story_view.dart';
 
 
 class StoryPage extends StatelessWidget {
+  final Color closeButtonColor;
+  final Color closeButtonBackgroundColor;
+  final double closeButtonElevation;
 
   final controller = StoryController();
+
+  StoryPage({
+    Key key,
+    this.closeButtonColor = Colors.black,
+    this.closeButtonBackgroundColor = Colors.transparent,
+    this.closeButtonElevation = 0.1
+  })
+      : super(key: key);
 
 
   @override
@@ -49,9 +60,9 @@ class StoryPage extends StatelessWidget {
   Widget _makeFloatingCloseButton(BuildContext context) {
     return FloatingActionButton(
       backgroundColor: Colors.transparent,
-      elevation: 0.1,
+      elevation: closeButtonElevation,
       mini: true,
-      child: Icon(Icons.close),
+      child: Icon(Icons.close, color: closeButtonColor),
       onPressed: () => Navigator.of(context).pop()
     );
   }
