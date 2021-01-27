@@ -8,10 +8,6 @@ import 'package:http/http.dart' as http;
 class CachedStoriesProvider {
 
   Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
-  final String configUrl;
-
-
-  CachedStoriesProvider(this.configUrl);
 
 
   Map<String, StoriesEntity> get stories => _stories;
@@ -20,11 +16,11 @@ class CachedStoriesProvider {
   StoriesEntity operator [](String id) => stories[id];
 
 
-  Future<void> load() async {
-    stories.clear();
+  Future<void> load(String configUrl) async {
+    _cleanCache();
 
     try {
-      final String storiesConfigJson = await _loadStoriesConfigJson();
+      final String storiesConfigJson = await _loadStoriesConfigJson(configUrl);
 
       List<dynamic> storiesConfig = json.decode(storiesConfigJson);
 
@@ -40,7 +36,7 @@ class CachedStoriesProvider {
   }
 
 
-  Future<String> _loadStoriesConfigJson() async {
+  Future<String> _loadStoriesConfigJson(String configUrl) async {
     final String storiesConfigUrl =
         configUrl + "?" + DateTime.now().millisecondsSinceEpoch.toString();
     print("Request: $storiesConfigUrl");
@@ -64,17 +60,19 @@ class CachedStoriesProvider {
   Future<void> _cacheStories() async {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
-    try {
-      await cacheManager.emptyCache();
-    }
-    catch (e) {
-      // skip cache clean errors
-    }
-
     stories.values.forEach((s) {
       cacheManager.downloadFile(s.titleImage);
       s.images.forEach((i) => cacheManager.downloadFile(i));
     });
+  }
+
+
+  Future<void> _cleanCache() async {
+    if (stories.isNotEmpty) {
+      stories.clear();
+      final StoriesCacheManager cacheManager = StoriesCacheManager();
+      cacheManager.emptyCache();
+    }
   }
 }
 
