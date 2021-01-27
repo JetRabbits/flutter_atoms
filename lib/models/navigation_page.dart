@@ -28,6 +28,6 @@ class NavigationPage {
     assert(group != null, "group should not be null");
     assert(path != null, "page path is null");
     if (!group.path.startsWith(path)) throw "Group path: ${group
-        .path} does not match page path ${path}. Please check configuration";
+        .path} does not match page path $path. Please check configuration";
   }
 }

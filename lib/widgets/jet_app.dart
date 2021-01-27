@@ -11,6 +11,7 @@ import 'package:persist_theme/persist_theme.dart';
 
 import 'boot_page.dart';
 
+// ignore: must_be_immutable
 class JetApp extends StatefulWidget {
   static final appKey = GlobalKey<NavigatorState>();
   final List<RepositoryProvider> topLevelProviders;
@@ -19,9 +20,6 @@ class JetApp extends StatefulWidget {
   final GenerateAppTitle onGenerateTitle;
 
   final NavigationModel navigationModel;
-
-  final Map<String, WidgetBuilder> _routes = <String, WidgetBuilder>{};
-
 
   WidgetBuilder bootWidget;
 
@@ -111,6 +109,7 @@ class _JetAppState extends State<JetApp> {
 
   @override
   void initState() {
+    super.initState();
     _themeModel = widget.themeModelBuilder != null ? widget.themeModelBuilder(context) : defaultThemeModel();
     _appRouterDelegate =
         JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
@@ -166,7 +165,7 @@ class JetAppRouterDelegate extends RouterDelegate<String>
   GlobalKey<NavigatorState> get navigatorKey => jetAppNavigatorKey;
 
   @override
-  Future<void> setNewRoutePath(String configuration) {
+  Future<void> setNewRoutePath(String configuration) async {
     notifyListeners();
   }
 }

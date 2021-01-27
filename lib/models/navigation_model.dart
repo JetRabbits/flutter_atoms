@@ -75,14 +75,14 @@ class NavigationModel extends RouteInformationParser<String> {
   NavigationPage getPageByPath(String path) {
     var segs = parseAndCheckFormat(path).pathSegments;
     var result = segs.length > 0 ? pagesMap["/${segs[0]}"] : pagesMap[path];
-    if (result == null) throw "No page group found for ${path}";
+    if (result == null) throw "No page group found for $path";
     return result;
   }
 
   NavigationScreen getScreenByPath(String path) {
     var result = getScreenGroupByPath(path)?.screenMaps[path];
     if (result == null)
-      throw "No screen found for ${path}. Check your navigation model";
+      throw "No screen found for $path. Check your navigation model";
     return result;
   }
 
@@ -90,12 +90,12 @@ class NavigationModel extends RouteInformationParser<String> {
     var split = parseAndCheckFormat(path).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[path];
     if (page == null)
-      throw "No page found for ${path}. Check your navigation model";
+      throw "No page found for $path. Check your navigation model";
     var result = split.length > 1
         ? page?.screenGroupsMap["/${split[0]}/${split[1]}"]
         : page?.screenGroupsMap[path];
     if (result == null)
-      throw "No screen group found for ${path}. Check your navigation model";
+      throw "No screen group found for $path. Check your navigation model";
     return result;
   }
 

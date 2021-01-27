@@ -33,7 +33,7 @@ class ScreenGroup {
     assert(screen != null, "screen should not be null");
     assert(path != null, "screen group path is null");
     if (!screen.path.startsWith(path)) throw "Screen path: ${screen
-        .path} does not match screen group path ${path}. Please check configuration";
+        .path} does not match screen group path $path. Please check configuration";
     if (screenMaps[screen.path] != null) throw "Screen ${screen.path} already added. Please check configuration";
   }
 

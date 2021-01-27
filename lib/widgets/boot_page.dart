@@ -29,7 +29,7 @@ class BootPage extends StatelessWidget {
                 Navigator.of(context).pushReplacementNamed(nextRoute);
               }
             }, builder: (context, state) {
-              var bootCubit = context.bloc<BootBlocCubit>();
+              var bootCubit = BlocProvider.of<BootBlocCubit>(context);
               if (state == BootBlocState.INIT) bootCubit.start();
               if (state == BootBlocState.ERROR)
                 return Center(
