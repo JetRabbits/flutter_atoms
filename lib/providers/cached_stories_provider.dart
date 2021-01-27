@@ -64,7 +64,12 @@ class CachedStoriesProvider {
   Future<void> _cacheStories() async {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
-    await cacheManager.emptyCache();
+    try {
+      await cacheManager.emptyCache();
+    }
+    catch (e) {
+      // skip cache clean errors
+    }
 
     stories.values.forEach((s) {
       cacheManager.downloadFile(s.titleImage);
