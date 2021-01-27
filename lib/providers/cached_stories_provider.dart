@@ -17,7 +17,7 @@ class CachedStoriesProvider {
 
 
   Future<void> load(String configUrl) async {
-    _cleanCache();
+    await _cleanCache();
 
     try {
       final String storiesConfigJson = await _loadStoriesConfigJson(configUrl);
@@ -28,7 +28,7 @@ class CachedStoriesProvider {
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
           .forEach( (story) => stories.putIfAbsent(story.id, () => story) );
 
-      _cacheStories();
+      await _cacheStories();
     }
     catch (e, stacktrace) {
       print(e + stacktrace);
@@ -60,9 +60,9 @@ class CachedStoriesProvider {
   Future<void> _cacheStories() async {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
-    stories.values.forEach((s) {
-      cacheManager.downloadFile(s.titleImage);
-      s.images.forEach((i) => cacheManager.downloadFile(i));
+    stories.values.forEach((s) async {
+      await cacheManager.downloadFile(s.titleImage);
+      s.images.forEach((i) async => await cacheManager.downloadFile(i));
     });
   }
 
@@ -71,7 +71,7 @@ class CachedStoriesProvider {
     if (stories.isNotEmpty) {
       stories.clear();
       final StoriesCacheManager cacheManager = StoriesCacheManager();
-      cacheManager.emptyCache();
+      return cacheManager.emptyCache();
     }
   }
 }
