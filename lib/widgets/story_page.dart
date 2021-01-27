@@ -59,10 +59,10 @@ class StoryPage extends StatelessWidget {
 
   Widget _makeFloatingCloseButton(BuildContext context) {
     return FloatingActionButton(
-      backgroundColor: Colors.transparent,
-      elevation: closeButtonElevation,
+      backgroundColor: this.closeButtonBackgroundColor,
+      elevation: this.closeButtonElevation,
       mini: true,
-      child: Icon(Icons.close, color: closeButtonColor),
+      child: Icon(Icons.close, color: this.closeButtonColor),
       onPressed: () => Navigator.of(context).pop()
     );
   }
