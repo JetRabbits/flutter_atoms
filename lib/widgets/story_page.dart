@@ -33,7 +33,7 @@ class StoryPage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        key: Key("story_page"),
+        key: key ?? Key("story_page"),
         body: storyItems.length > 0
             ? StoryView(
                 storyItems: storyItems,
