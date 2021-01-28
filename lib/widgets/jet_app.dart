@@ -25,7 +25,7 @@ class JetApp extends StatefulWidget {
 
   final Widget logo;
 
-  final String repeatLoadLabel;
+  final String Function(BuildContext) repeatLoadLabel;
 
   final Future<bool> Function() onAppStart;
 
@@ -57,7 +57,7 @@ class JetApp extends StatefulWidget {
         assert(nextRoute != null, "Next route should be defined");
         bootWidget = (context) =>
             BootPage(logo: logo,
-                repeatLabelText: repeatLoadLabel,
+                repeatLabelText: repeatLoadLabel(context),
                 nextRoute: nextRoute);
       }
       navigationModel.addPath("/", bootWidget);
