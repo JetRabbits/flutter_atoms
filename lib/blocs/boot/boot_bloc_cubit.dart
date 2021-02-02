@@ -18,7 +18,11 @@ class BootBlocCubit extends Cubit<BootBlocState> {
   Future<void> start() async {
     emit(BootBlocState.LOADING);
     bool result = true;
-    if (onStart != null) result = await onStart();
+    try {
+      if (onStart != null) result = await onStart();
+    } catch (e, stacktrace) {
+      addError(e, stacktrace);
+    }
     // await Future.delayed(Duration(seconds: 2));
 
     if (result)
