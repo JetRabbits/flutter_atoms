@@ -10,7 +10,7 @@ class BootBlocCubit extends Cubit<BootBlocState> {
 
   @override
   void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
+    print(error);
     print(stackTrace);
     emit(BootBlocState.ERROR);
   }
@@ -20,15 +20,12 @@ class BootBlocCubit extends Cubit<BootBlocState> {
     bool result = true;
     try {
       if (onStart != null) result = await onStart();
+      if (result)
+        emit(BootBlocState.READY);
+      else
+        emit(BootBlocState.ERROR);
     } catch (e, stacktrace) {
       addError(e, stacktrace);
     }
-    // await Future.delayed(Duration(seconds: 2));
-
-    if (result)
-      emit(BootBlocState.READY);
-    else
-      emit(BootBlocState.ERROR);
-
   }
 }
