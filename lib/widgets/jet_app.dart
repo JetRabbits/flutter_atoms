@@ -37,6 +37,8 @@ class JetApp extends StatefulWidget {
 
   final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
 
+  final ThemeData splashThemeData;
+
   JetApp({
     Key key,
     @required this.navigationModel,
@@ -44,6 +46,7 @@ class JetApp extends StatefulWidget {
     this.onAppStart,
     this.nextRoute,
     this.logo,
+    this.splashThemeData,
     this.repeatLoadLabel,
     this.bootWidget,
     this.topLevelProviders,
@@ -55,10 +58,14 @@ class JetApp extends StatefulWidget {
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
         assert(nextRoute != null, "Next route should be defined");
-        bootWidget = (context) =>
-            BootPage(logo: logo,
-                repeatLabelText: repeatLoadLabel(context),
-                nextRoute: nextRoute);
+        bootWidget = (context) {
+          return Theme(
+              data: splashThemeData ?? ThemeData.light(),
+              child: BootPage(logo: logo,
+                  repeatLabelText: repeatLoadLabel(context),
+                  nextRoute: nextRoute),
+            );
+        };
       }
       navigationModel.addPath("/", bootWidget);
     }
