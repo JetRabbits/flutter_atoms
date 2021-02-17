@@ -37,7 +37,7 @@ class JetApp extends StatefulWidget {
 
   final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
 
-  final ThemeData splashThemeData;
+  final ThemeData bootPageThemeData;
 
   JetApp({
     Key key,
@@ -46,7 +46,7 @@ class JetApp extends StatefulWidget {
     this.onAppStart,
     this.nextRoute,
     this.logo,
-    this.splashThemeData,
+    this.bootPageThemeData,
     this.repeatLoadLabel,
     this.bootWidget,
     this.topLevelProviders,
@@ -60,7 +60,7 @@ class JetApp extends StatefulWidget {
         assert(nextRoute != null, "Next route should be defined");
         bootWidget = (context) {
           return Theme(
-              data: splashThemeData ?? ThemeData.light(),
+              data: bootPageThemeData ?? ThemeData.light(),
               child: BootPage(logo: logo,
                   repeatLabelText: repeatLoadLabel(context),
                   nextRoute: nextRoute),
