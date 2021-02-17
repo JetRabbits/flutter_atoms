@@ -53,8 +53,9 @@ class BootPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                ));
-              return Center(child: CircularProgressIndicator());
+                ),
+                );
+              return SizedBox(height: 100, child: Center(child: CircularProgressIndicator()));
             }),
           ),
         ],
