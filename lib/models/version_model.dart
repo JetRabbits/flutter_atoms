@@ -8,7 +8,7 @@ class VersionModel {
   String projectCode = "-";
   String projectAppID = "-";
 
-  load() async {
+  Future<void> load() async {
     try {
       platformVersion = await GetVersion.platformVersion;
     } on PlatformException {}

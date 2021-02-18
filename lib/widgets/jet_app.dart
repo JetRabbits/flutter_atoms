@@ -29,7 +29,7 @@ class JetApp extends StatefulWidget {
 
   final Future<bool> Function() onAppStart;
 
-  final String nextRoute;
+  final String Function() nextRoute;
 
   final ThemeModel Function(BuildContext context) themeModelBuilder;
 

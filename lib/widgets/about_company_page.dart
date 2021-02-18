@@ -16,20 +16,20 @@ class AboutCompanyPage extends StatelessWidget {
   List<Map<String, dynamic>> createInfo(BuildContext context){
     List<Map<String, dynamic>> info = [
       {"icon": Icons.business_center,
-        "subtitle": S.of(context).company,
+        "subtitle": AtomsStrings.of(context).company,
         "title": companyName,
         "tap": (context) async {
           await Clipboard.setData(ClipboardData(text: companyName));
           Scaffold.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 1),
-            content: AutoSizeText(S.of(context).copiedToClipboard),
+            content: AutoSizeText(AtomsStrings.of(context).copiedToClipboard),
           ));
         }, },
       {"icon": Icons.phone,
-        "subtitle": S.of(context).phone,
+        "subtitle": AtomsStrings.of(context).phone,
         "title": phone,
         "tap": (_) => launch("tel:$phone"),},
       {"icon": Icons.language,
-        "subtitle": S.of(context).website,
+        "subtitle": AtomsStrings.of(context).website,
         "title": webSite,
         "tap": (_) => launch(webSite), },
     ]..retainWhere((element) => element["title"] != null);
@@ -44,7 +44,7 @@ class AboutCompanyPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(S.of(context).about_company),
+        title: AutoSizeText(AtomsStrings.current.about_company),
       ),
       body: SingleChildScrollView(
         child: Padding(

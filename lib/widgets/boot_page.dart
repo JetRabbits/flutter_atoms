@@ -8,7 +8,7 @@ class BootPage extends StatelessWidget {
 
   final String repeatLabelText;
 
-  final String nextRoute;
+  final String Function() nextRoute;
 
   const BootPage(
       {Key key, this.logo, this.repeatLabelText, @required this.nextRoute})
@@ -26,7 +26,7 @@ class BootPage extends StatelessWidget {
             child: BlocConsumer<BootBlocCubit, BootBlocState>(
                 listener: (prev, current) {
               if (current == BootBlocState.READY) {
-                Navigator.of(context).pushReplacementNamed(nextRoute);
+                Navigator.of(context).pushReplacementNamed(nextRoute());
               }
             }, builder: (context, state) {
               var bootCubit = BlocProvider.of<BootBlocCubit>(context);

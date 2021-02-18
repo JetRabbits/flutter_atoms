@@ -13,27 +13,27 @@ import 'intl/messages_all.dart';
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
 // ignore_for_file: avoid_redundant_argument_values
 
-class S {
-  S();
+class AtomsStrings {
+  AtomsStrings();
   
-  static S current;
+  static AtomsStrings current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
-  static Future<S> load(Locale locale) {
+  static Future<AtomsStrings> load(Locale locale) {
     final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      S.current = S();
+      AtomsStrings.current = AtomsStrings();
       
-      return S.current;
+      return AtomsStrings.current;
     });
   } 
 
-  static S of(BuildContext context) {
-    return Localizations.of<S>(context, S);
+  static AtomsStrings of(BuildContext context) {
+    return Localizations.of<AtomsStrings>(context, AtomsStrings);
   }
 
   /// `About application`
@@ -217,7 +217,7 @@ class S {
   }
 }
 
-class AppLocalizationDelegate extends LocalizationsDelegate<S> {
+class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {
   const AppLocalizationDelegate();
 
   List<Locale> get supportedLocales {
@@ -230,7 +230,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
   @override
-  Future<S> load(Locale locale) => S.load(locale);
+  Future<AtomsStrings> load(Locale locale) => AtomsStrings.load(locale);
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

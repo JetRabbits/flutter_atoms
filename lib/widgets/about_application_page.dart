@@ -22,7 +22,7 @@ class AboutApplicationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: AutoSizeText(S.of(context).about_application),
+          title: AutoSizeText(AtomsStrings.current.about_application),
         ),
         body: SingleChildScrollView(
             child: ListBody(
@@ -33,7 +33,7 @@ class AboutApplicationPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.apps),
               title: AutoSizeText(version.projectName),
-              subtitle: AutoSizeText(S.of(context).application_title_text),
+              subtitle: AutoSizeText(AtomsStrings.of(context).application_title_text),
             ),
             Container(
               height: 10.0,
@@ -41,7 +41,7 @@ class AboutApplicationPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.devices),
               title: AutoSizeText(version.platformVersion),
-              subtitle: AutoSizeText(S.of(context).platform),
+              subtitle: AutoSizeText(AtomsStrings.of(context).platform),
             ),
             Divider(
               height: 20.0,
@@ -49,7 +49,7 @@ class AboutApplicationPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.new_releases),
               title: AutoSizeText(version.projectVersion),
-              subtitle: AutoSizeText(S.of(context).version_name),
+              subtitle: AutoSizeText(AtomsStrings.of(context).version_name),
             ),
             Divider(
               height: 20.0,
@@ -57,7 +57,7 @@ class AboutApplicationPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.filter_9_plus),
               title: AutoSizeText(version.projectCode),
-              subtitle: AutoSizeText(S.of(context).build),
+              subtitle: AutoSizeText(AtomsStrings.of(context).build),
             ),
             if (servers != null)
               ListTile(
@@ -68,7 +68,7 @@ class AboutApplicationPage extends StatelessWidget {
                           (e) => AutoSizeText(e),
                         )
                         .toList()),
-                subtitle: AutoSizeText(S.of(context).servers),
+                subtitle: AutoSizeText(AtomsStrings.of(context).servers),
 //todo: Сделать переход на страницу настроек
 //              onTap: () => Navigator.of(context)
 //                  .pushNamed(Constants.ROUTE_APPLICATION_SETTINGS_PAGE),
@@ -79,8 +79,8 @@ class AboutApplicationPage extends StatelessWidget {
               ),
             ListTile(
               leading: const Icon(Icons.text_snippet),
-              title: AutoSizeText(S.of(context).license_agreement),
-              subtitle: AutoSizeText(S.of(context).license_agreement),
+              title: AutoSizeText(AtomsStrings.of(context).license_agreement),
+              subtitle: AutoSizeText(AtomsStrings.of(context).license_agreement),
 //              onTap: () => Navigator.of(context)
 //                  .pushNamed(Constants.ROUTE_LICENSE_AGREEMENT_PAGE),
             ),
@@ -99,13 +99,13 @@ class AboutApplicationPage extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.email),
                 title: AutoSizeText(supportEmail),
-                subtitle: AutoSizeText(S.of(context).contact_email),
+                subtitle: AutoSizeText(AtomsStrings.of(context).contact_email),
               ),
             if (supportEmail != null) Divider(),
             ListTile(
                 leading: const Icon(Icons.note),
                 title: AutoSizeText(
-                  S.of(context).thirdPartyLicenses,
+                  AtomsStrings.of(context).thirdPartyLicenses,
                 ),
                 onTap: () {
                   showLicensePage(context: context);
