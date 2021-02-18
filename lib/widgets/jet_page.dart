@@ -115,7 +115,9 @@ class _JetPageState extends State<JetPage> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                IconTheme(data: _iconThemeData, child: item.icon),
+                isActive
+                    ? IconTheme(data: _iconThemeData, child: item.activeIcon)
+                    : IconTheme(data: _iconThemeData, child: item.icon),
                 item.title ??
                     AutoSizeText(
                       item.label,
