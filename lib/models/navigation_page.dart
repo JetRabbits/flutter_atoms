@@ -1,14 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'float_action_button_config.dart';
 import 'screen_group.dart';
 
 class NavigationPage {
   String path;
-  NavigationPage({this.path});
+  NavigationPage({this.path, this.floatActionButtonConfig});
 
   Map<String, ScreenGroup> screenGroupsMap = <String, ScreenGroup>{};
 
   BackButtonDispatcher backButtonDispatcher;
+
+  final FloatActionButtonConfig floatActionButtonConfig;
 
   void addGroup(ScreenGroup group) {
     if (path == null) _updatePathByScreenGroup(group);

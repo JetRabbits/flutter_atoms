@@ -1,0 +1,20 @@
+{
+  "about_application": "About application",
+  "about_company": "About company",
+  "application_settings": "Application Settings",
+  "application_title_text": "Application title",
+  "build": "Build",
+  "company": "Company",
+  "contact_email": "Contact e-mail",
+  "copiedToClipboard": "Copied to clipboard",
+  "license_agreement": "License agreement",
+  "more_page": "More",
+  "platform": "Platform",
+  "privacy_policy": "Privacy Policy",
+  "thirdPartyLicenses": "3rd party licenses",
+  "version_name": "Version",
+  "website": "Website",
+  "whats_new": "What's New",
+  "servers":"Servers",
+  "phone":"Phone"
+}

@@ -25,7 +25,7 @@ Future<void> main() async {
       "/main/lookup/catalog": (context) => Text("CatalogScreen"),
       "/main/profile": (context) => Text("ProfileScreen"),
       "/details": (context) => Text("DetailsScreen"),
-    }, buttons: {
+    }, navBarButtons: {
       "/main/lookup": (context) => BottomNavigationBarItem(icon: Icon(Icons.search)),
       "/main/profile": (context) => BottomNavigationBarItem(icon: Icon(Icons.person)),
     });
@@ -33,18 +33,18 @@ Future<void> main() async {
     expect(page.path, "/main");
     var group = navigationModel.getScreenGroupByPath("/main/lookup/catalog");
     expect(group.path, "/main/lookup");
-    expect(group.buttonBuilder, isNotNull);
+    expect(group.navBarButtonBuilder, isNotNull);
 
     var screen = navigationModel.getScreenByPath("/main/lookup/catalog");
     expect(screen.path, "/main/lookup/catalog");
 
     group = navigationModel.getScreenGroupByPath("/main/profile");
     expect(group.path, "/main/profile");
-    expect(group.buttonBuilder, isNotNull);
+    expect(group.navBarButtonBuilder, isNotNull);
 
     group = navigationModel.getScreenGroupByPath("/details");
     expect(group.path, "/details");
-    expect(group.buttonBuilder, isNull);
+    expect(group.navBarButtonBuilder, isNull);
 
     page = navigationModel.getPageByPath("/details");
     expect(page.path, "/details");

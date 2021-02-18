@@ -1,18 +1,29 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/blocs/blocs.dart';
 import 'package:flutter_atoms/blocs/navigator/nav_bar_cubit.dart';
 import 'package:flutter_atoms/models/app_navigation_state.dart';
 import 'package:flutter_atoms/models/navigation_page.dart';
+import 'package:flutter_atoms/models/screen_group.dart';
 
 typedef NavigationStateBuilderType = Future<void> Function(
     BuildContext context, AppNavigationState state);
 
 class JetPage extends StatefulWidget {
   final String initialPageRoute;
+  final double bottomNavigationHeight;
 
   final AppNavigationState navigationState;
 
-  JetPage(this.initialPageRoute, this.navigationState, {Key key})
+  final double iconSize;
+
+  final String centerItemText;
+
+  JetPage(this.initialPageRoute, this.navigationState,
+      {Key key,
+      this.bottomNavigationHeight = 56,
+      this.iconSize = 24,
+      this.centerItemText = ''})
       : super(key: key);
 
   @override
@@ -35,20 +46,86 @@ class _JetPageState extends State<JetPage> {
   Widget build(BuildContext context) {
     try {
       _backButtonDispatcher.takePriority();
-    } catch (ignore) {
-    }
+    } catch (ignore) {}
     _page.backButtonDispatcher = _backButtonDispatcher;
-
 
     return BlocProvider<NavBarCubit>(
       create: (_) => _navBarCubit,
       child: Scaffold(
-        bottomNavigationBar: buildBottomNavigationBar(context),
-        body: Router(
-          routerDelegate: _routerDelegate,
-          backButtonDispatcher: _backButtonDispatcher,
-          routeInformationParser: widget.navigationState.navigationModel,
-        )),
+          floatingActionButton: buildFloatActionButton(context),
+          floatingActionButtonLocation: buildFloatActionButtonLocation(),
+          bottomNavigationBar: buildBottomNavigationBar(context),
+          body: Router(
+            routerDelegate: _routerDelegate,
+            backButtonDispatcher: _backButtonDispatcher,
+            routeInformationParser: widget.navigationState.navigationModel,
+          )),
+    );
+  }
+
+  Widget _buildMiddleTabItem() {
+    return Expanded(
+      child: SizedBox(
+        height: widget.bottomNavigationHeight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: widget.iconSize),
+            Text(
+              widget.centerItemText ?? '',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
+    var navigationModel = widget.navigationState.navigationModel;
+
+    var isActive =
+        navigationModel.getScreenGroupByPath(_navBarCubit.state.path) == group;
+    TextStyle _style = isActive
+        ? Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).accentColor)
+        : Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).hintColor);
+
+    IconThemeData _iconThemeData = isActive
+        ? IconThemeData(color: Theme.of(context).accentColor)
+        : IconThemeData(color: Theme.of(context).hintColor);
+
+    return Expanded(
+      child: SizedBox(
+        height: widget.bottomNavigationHeight,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: () {
+              _screenPath = group.screenMaps.values.first.path;
+              Navigator.of(_routerDelegate.navigatorKey.currentContext)
+                  .pushNamed(_screenPath);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                IconTheme(data: _iconThemeData, child: item.icon),
+                item.title ??
+                    AutoSizeText(
+                      item.label,
+                      style: _style,
+                    )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -56,44 +133,46 @@ class _JetPageState extends State<JetPage> {
     return BlocBuilder<NavBarCubit, NavBarState>(
       builder: (context, state) {
         var navigationModel = widget.navigationState.navigationModel;
-        var buttons = _page
-            .screenGroupsMap
-            .values
-            .where((group) => group.index >= 0 && group.buttonBuilder != null)
-            .map<BottomNavigationBarItem>((e) => e.buttonBuilder(context))
+        var buttons = _page.screenGroupsMap.values
+            .where((group) =>
+                group.index >= 0 && group.navBarButtonBuilder != null)
+            .map<Widget>(
+                (g) => _buildTabItem(g.navBarButtonBuilder(context), g))
             .toList();
-        var _group = navigationModel
-            .getScreenGroupByPath(state.path);
+        buttons.insert(buttons.length >> 1, _buildMiddleTabItem());
+        var _group = navigationModel.getScreenGroupByPath(state.path);
         if (buttons.length >= 2 && _group.index >= 0)
-          return BottomNavigationBar(
+          return BottomAppBar(
               key: bottomNavigationBarKey,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _group.index,
-              onTap: (index) {
-                if (index == _group.index) return;
-                var newGroup = navigationModel
-                    .getPageByPath(widget.initialPageRoute)
-                    .screenGroupsMap
-                    .values
-                    .toList()[index];
-                _screenPath = newGroup.screenMaps.values.first.path;
-
-                Navigator.of(_routerDelegate.navigatorKey.currentContext)
-                    .pushNamed(_screenPath);
-              },
-              items: buttons);
+              shape: CircularNotchedRectangle(),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: buttons,
+              ));
         return Container();
       },
     );
+  }
+
+  Widget buildFloatActionButton(BuildContext context) {
+    return _page.floatActionButtonConfig != null
+        ? _page.floatActionButtonConfig.floatingActionButtonBuilder(context)
+        : null;
+  }
+
+  FloatingActionButtonLocation buildFloatActionButtonLocation() {
+    return _page.floatActionButtonConfig != null
+        ? _page.floatActionButtonConfig.floatingActionButtonLocation
+        : null;
   }
 
   @override
   void initState() {
     super.initState();
     _navBarCubit = NavBarCubit(widget.initialPageRoute);
-    _routerDelegate =
-        InnerRouterDelegate(
-            widget.navigationState, widget.initialPageRoute, _navBarCubit);
+    _routerDelegate = InnerRouterDelegate(
+        widget.navigationState, widget.initialPageRoute, _navBarCubit);
     _page = widget.navigationState.navigationModel
         .getPageByPath(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
@@ -103,11 +182,9 @@ class _JetPageState extends State<JetPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
-    var rootBackDispatcher = Router
-        .of(context)
-        .backButtonDispatcher;
-    _backButtonDispatcher = rootBackDispatcher
-        .createChildBackButtonDispatcher();
+    var rootBackDispatcher = Router.of(context).backButtonDispatcher;
+    _backButtonDispatcher =
+        rootBackDispatcher.createChildBackButtonDispatcher();
   }
 }
 
@@ -130,8 +207,6 @@ class InnerNavigatorObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
     navBarCubit.updatePath(previousRoute.settings.name);
   }
-
-
 }
 
 class InnerRouterDelegate extends RouterDelegate<String>
@@ -143,7 +218,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
   final String pageRoute;
 
   InnerNavigatorObserver _innerNavigatorObserver;
-
 
   final NavBarCubit navBarCubit;
 
@@ -160,22 +234,18 @@ class InnerRouterDelegate extends RouterDelegate<String>
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
-      onGenerateInitialRoutes: (navigatorState, initialRoute) =>
-      [
-        buildRoute(context, initialRoute, state.navigationModel
-            .getScreenByPath(initialRoute)
-            .builder)
+      onGenerateInitialRoutes: (navigatorState, initialRoute) => [
+        buildRoute(context, initialRoute,
+            state.navigationModel.getScreenByPath(initialRoute).builder)
       ],
-
       onGenerateRoute: (settings) {
         var screen = state.navigationModel.getScreenByPath(settings.name);
-        return buildRoute(
-            context, screen.path, screen.builder, settings: settings);
+        return buildRoute(context, screen.path, screen.builder,
+            settings: settings);
       },
       initialRoute: pageRoute,
     );
   }
-
 
   @override
   Future<bool> popRoute() {
@@ -188,13 +258,13 @@ class InnerRouterDelegate extends RouterDelegate<String>
     notifyListeners();
   }
 
-  PageRoute buildRoute(BuildContext context, String route,
-      WidgetBuilder screenBuilder, {RouteSettings settings}) =>
+  PageRoute buildRoute(
+          BuildContext context, String route, WidgetBuilder screenBuilder,
+          {RouteSettings settings}) =>
       MaterialPageRoute(
           settings: settings ?? RouteSettings(name: route),
           builder: (context) =>
-              PageStorage(bucket: _bucket,
-                  child: screenBuilder(context)));
+              PageStorage(bucket: _bucket, child: screenBuilder(context)));
 }
 
 class FadeAnimationPage extends Page {

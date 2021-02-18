@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_atoms/models/float_action_button_config.dart';
 import 'package:flutter_atoms/models/navigation_page.dart';
 
 import 'navigation_screen.dart';
@@ -26,39 +27,49 @@ typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
 ///
 class NavigationModel extends RouteInformationParser<String> {
   NavigationModel({
-      @required Map<String, WidgetBuilder> routes,
-      Map<String, BottomNavigationBarItemBuilder> buttons
+    @required Map<String, WidgetBuilder> routes,
+    Map<String, BottomNavigationBarItemBuilder> navBarButtons,
+    Map<String, FloatActionButtonConfig> floatButtons
   }) {
     routes.keys.forEach((path) {
-      addPath(path, routes[path], buttons: buttons);
+      addPath(path, routes[path], buttons: navBarButtons,
+          floatButtons: floatButtons);
     });
   }
 
   void addPath(String path, WidgetBuilder builder,
-      {Map<String, BottomNavigationBarItemBuilder> buttons}) {
+      {Map<String, BottomNavigationBarItemBuilder> buttons, Map<
+          String,
+          FloatActionButtonConfig> floatButtons}) {
     var uri = parseAndCheckFormat(path);
     var pagePath =
-        uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
+    uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
     var page =
-        pagesMap.putIfAbsent(pagePath, () => NavigationPage(path: pagePath));
+    pagesMap.putIfAbsent(pagePath, () =>
+        NavigationPage(path: pagePath,
+            floatActionButtonConfig: floatButtons != null ? floatButtons[pagePath] : null));
     var groupPath = pagePath +
         (uri.pathSegments.length > 1 ? "/" + uri.pathSegments[1] : "");
     var group = page.screenGroupsMap.putIfAbsent(
         groupPath,
-        () => ScreenGroup(
-            path: groupPath,
-            buttonBuilder: buttons != null ? buttons[groupPath] : null,
-            page: page,
-            index: buttons != null && buttons[groupPath] != null
-                ? page.screenGroupsMap.length
-                : -1));
+            () =>
+            ScreenGroup(
+                path: groupPath,
+                navBarButtonBuilder: buttons != null
+                    ? buttons[groupPath]
+                    : null,
+                page: page,
+                index: buttons != null && buttons[groupPath] != null
+                    ? page.screenGroupsMap.length
+                    : -1));
     group.screenMaps.putIfAbsent(
         path,
-        () => NavigationScreen(
-            path: path,
-            builder: builder,
-            group: group,
-            index: group.screenMaps.length));
+            () =>
+            NavigationScreen(
+                path: path,
+                builder: builder,
+                group: group,
+                index: group.screenMaps.length));
   }
 
   static Uri parseAndCheckFormat(String path) {
@@ -66,7 +77,7 @@ class NavigationModel extends RouteInformationParser<String> {
     var uri = Uri.file(path);
     List<String> split = uri.pathSegments;
     assert(path == "/" || (split.length > 0 && split.length < 4),
-        "screen path should be uri file format like: /{page}/{group of screens}/{screen} or be /");
+    "screen path should be uri file format like: /{page}/{group of screens}/{screen} or be /");
     return uri;
   }
 
@@ -105,7 +116,9 @@ class NavigationModel extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
-    return Future.value(Uri.parse(routeInformation.location).path);
+    return Future.value(Uri
+        .parse(routeInformation.location)
+        .path);
   }
 
   @override

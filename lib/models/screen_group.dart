@@ -10,9 +10,9 @@ class ScreenGroup {
 
   final int index;
 
-  ScreenGroup({@required this.path, @required this.page, @required this.index, this.buttonBuilder});
+  ScreenGroup({@required this.path, @required this.page, @required this.index, this.navBarButtonBuilder});
 
-  BottomNavigationBarItem Function(BuildContext context) buttonBuilder;
+  BottomNavigationBarItem Function(BuildContext context) navBarButtonBuilder;
   Map<String, NavigationScreen> screenMaps = <String, NavigationScreen>{};
 
   void addScreen(NavigationScreen screen) {

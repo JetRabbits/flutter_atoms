@@ -1,0 +1,21 @@
+{
+  "about_application": "О программе",
+  "about_company": "О компании",
+  "application_settings": "Настройки приложения",
+  "application_title_text": "Имя приложения",
+  "build": "Номер сборки",
+  "company": "Компания",
+  "contact_email": "e-mail для связи",
+  "copiedToClipboard": "Скопировано в буфер обмена",
+  "license_agreement": "Лицензионное соглашение",
+  "more_page": "Ещё",
+  "platform": "Платформа",
+  "privacy_policy": "Политика конфиденциальности",
+  "thirdPartyLicenses": "Лицензии используемого ПО",
+  "version_name": "Версия",
+  "website": "Сайт",
+  "whats_new": "Что нового?",
+  "servers":"Сервера",
+  "phone":"Телефон"
+
+}
