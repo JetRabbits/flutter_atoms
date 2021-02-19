@@ -21,9 +21,9 @@ class JetPage extends StatefulWidget {
 
   JetPage(this.initialPageRoute, this.navigationState,
       {Key key,
-      this.bottomNavigationHeight = 56,
-      this.iconSize = 24,
-      this.centerItemText = ''})
+        this.bottomNavigationHeight = 56,
+        this.iconSize = 24,
+        this.centerItemText = ''})
       : super(key: key);
 
   @override
@@ -83,22 +83,30 @@ class _JetPageState extends State<JetPage> {
 
   Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
     var navigationModel = widget.navigationState.navigationModel;
+    Color selectedColor = Theme
+        .of(context)
+        .accentColor;
+    Color unselectedColor = Theme
+        .of(context)
+        .hintColor;
 
     var isActive =
         navigationModel.getScreenGroupByPath(_navBarCubit.state.path) == group;
-    TextStyle _style = isActive
-        ? Theme.of(context)
-            .textTheme
-            .bodyText1
-            .copyWith(color: Theme.of(context).accentColor)
-        : Theme.of(context)
-            .textTheme
-            .bodyText1
-            .copyWith(color: Theme.of(context).hintColor);
+
+    var _textStyle = Theme
+        .of(context)
+        .textTheme
+        .bodyText1
+        .copyWith(color: isActive ? selectedColor : unselectedColor);
 
     IconThemeData _iconThemeData = isActive
-        ? IconThemeData(color: Theme.of(context).accentColor)
-        : IconThemeData(color: Theme.of(context).hintColor);
+        ? IconThemeData(color: selectedColor)
+        : IconThemeData(color: unselectedColor);
+
+
+    var label = item.title ??
+        AutoSizeText(
+            item.label);
 
     return Expanded(
       child: SizedBox(
@@ -107,9 +115,11 @@ class _JetPageState extends State<JetPage> {
           type: MaterialType.transparency,
           child: InkWell(
             onTap: () {
-              _screenPath = group.screenMaps.values.first.path;
-              Navigator.of(_routerDelegate.navigatorKey.currentContext)
-                  .pushNamed(_screenPath);
+              if (!isActive) {
+                _screenPath = group.screenMaps.values.first.path;
+                Navigator.of(_routerDelegate.navigatorKey.currentContext)
+                    .pushNamed(_screenPath);
+              }
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -118,11 +128,7 @@ class _JetPageState extends State<JetPage> {
                 isActive
                     ? IconTheme(data: _iconThemeData, child: item.activeIcon)
                     : IconTheme(data: _iconThemeData, child: item.icon),
-                item.title ??
-                    AutoSizeText(
-                      item.label,
-                      style: _style,
-                    )
+                DefaultTextStyle.merge(style: _textStyle, child: label),
               ],
             ),
           ),
@@ -137,11 +143,19 @@ class _JetPageState extends State<JetPage> {
         var navigationModel = widget.navigationState.navigationModel;
         var buttons = _page.screenGroupsMap.values
             .where((group) =>
-                group.index >= 0 && group.navBarButtonBuilder != null)
+        group.index >= 0 && group.navBarButtonBuilder != null)
             .map<Widget>(
                 (g) => _buildTabItem(g.navBarButtonBuilder(context), g))
             .toList();
-        buttons.insert(buttons.length >> 1, _buildMiddleTabItem());
+        if (_page.floatActionButtonConfig != null &&
+            _page.floatActionButtonConfig.floatingActionButtonBuilder != null &&
+            [
+              FloatingActionButtonLocation.centerDocked,
+              FloatingActionButtonLocation.miniCenterDocked
+            ].contains(
+                _page.floatActionButtonConfig.floatingActionButtonLocation)) {
+          buttons.insert(buttons.length >> 1, _buildMiddleTabItem());
+        }
         var _group = navigationModel.getScreenGroupByPath(state.path);
         if (buttons.length >= 2 && _group.index >= 0)
           return BottomAppBar(
@@ -184,7 +198,9 @@ class _JetPageState extends State<JetPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
-    var rootBackDispatcher = Router.of(context).backButtonDispatcher;
+    var rootBackDispatcher = Router
+        .of(context)
+        .backButtonDispatcher;
     _backButtonDispatcher =
         rootBackDispatcher.createChildBackButtonDispatcher();
   }
@@ -236,9 +252,12 @@ class InnerRouterDelegate extends RouterDelegate<String>
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
-      onGenerateInitialRoutes: (navigatorState, initialRoute) => [
+      onGenerateInitialRoutes: (navigatorState, initialRoute) =>
+      [
         buildRoute(context, initialRoute,
-            state.navigationModel.getScreenByPath(initialRoute).builder)
+            state.navigationModel
+                .getScreenByPath(initialRoute)
+                .builder)
       ],
       onGenerateRoute: (settings) {
         var screen = state.navigationModel.getScreenByPath(settings.name);
@@ -260,9 +279,9 @@ class InnerRouterDelegate extends RouterDelegate<String>
     notifyListeners();
   }
 
-  PageRoute buildRoute(
-          BuildContext context, String route, WidgetBuilder screenBuilder,
-          {RouteSettings settings}) =>
+  PageRoute buildRoute(BuildContext context, String route,
+      WidgetBuilder screenBuilder,
+      {RouteSettings settings}) =>
       MaterialPageRoute(
           settings: settings ?? RouteSettings(name: route),
           builder: (context) =>
