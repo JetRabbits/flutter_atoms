@@ -42,6 +42,8 @@ class _JetPageState extends State<JetPage> {
 
   NavBarCubit _navBarCubit;
 
+  BackButtonDispatcher _rootBackDispatcher;
+
   @override
   Widget build(BuildContext context) {
     try {
@@ -198,11 +200,20 @@ class _JetPageState extends State<JetPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
-    var rootBackDispatcher = Router
+    _rootBackDispatcher = Router
         .of(context)
         .backButtonDispatcher;
     _backButtonDispatcher =
-        rootBackDispatcher.createChildBackButtonDispatcher();
+        _rootBackDispatcher.createChildBackButtonDispatcher();
+  }
+
+  @override
+  void dispose() {
+    try {
+      _rootBackDispatcher.forget(_backButtonDispatcher);
+      super.dispose();
+    } catch (e) {
+    }
   }
 }
 
