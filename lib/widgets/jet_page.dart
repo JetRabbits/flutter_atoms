@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/blocs/blocs.dart';
 import 'package:flutter_atoms/blocs/navigator/nav_bar_cubit.dart';
@@ -21,7 +20,7 @@ class JetPage extends StatefulWidget {
 
   JetPage(this.initialPageRoute, this.navigationState,
       {Key key,
-        this.bottomNavigationHeight = 56,
+        this.bottomNavigationHeight = kBottomNavigationBarHeight,
         this.iconSize = 24,
         this.centerItemText = ''})
       : super(key: key);
@@ -107,8 +106,8 @@ class _JetPageState extends State<JetPage> {
 
 
     var label = item.title ??
-        AutoSizeText(
-            item.label);
+        Text(
+            item.label, overflow: TextOverflow.ellipsis, maxLines: 1,);
 
     return Expanded(
       child: SizedBox(
@@ -165,7 +164,7 @@ class _JetPageState extends State<JetPage> {
               shape: CircularNotchedRectangle(),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: buttons,
               ));
         return Container();
