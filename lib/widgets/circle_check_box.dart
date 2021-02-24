@@ -8,10 +8,13 @@ class CircleCheckBox extends StatelessWidget {
   final bool isChecked;
   final Function(bool value) onTap;
 
+  final EdgeInsetsGeometry padding;
+
   const CircleCheckBox({
     Key key,
     this.selectedColor,
     this.color,
+    this.padding = const EdgeInsets.all(4.0),
     this.isLoading = false,
     this.isChecked = false,
     this.isEnabled = true,
@@ -23,9 +26,12 @@ class CircleCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => isEnabled && !isLoading ? onTap(!isChecked) : null,
-      child: isLoading
-            ? _buildLoadingCheckBox(context)
-            : _buildLoadedCheckBox(context),
+      child: Padding(
+        padding: padding,
+        child: isLoading
+              ? _buildLoadingCheckBox(context)
+              : _buildLoadedCheckBox(context),
+      ),
     );
   }
 
