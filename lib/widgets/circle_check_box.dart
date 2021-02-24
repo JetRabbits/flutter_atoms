@@ -30,15 +30,12 @@ class CircleCheckBox extends StatelessWidget {
   }
 
   Widget _buildLoadingCheckBox(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 4.0),
-        child: Container(
-            width: _INTERNAL_RADIUS * 2,
-            height: _INTERNAL_RADIUS * 2,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(color ?? Theme.of(context).accentColor),
-              strokeWidth: _EXTERNAL_RADIUS - _INTERNAL_RADIUS
-            )
+    return Container(
+        width: _INTERNAL_RADIUS * 2,
+        height: _INTERNAL_RADIUS * 2,
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(color ?? Theme.of(context).accentColor),
+          strokeWidth: _EXTERNAL_RADIUS - _INTERNAL_RADIUS
         )
     );
   }
