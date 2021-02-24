@@ -209,9 +209,10 @@ class _JetPageState extends State<JetPage> {
 
   @override
   void dispose() {
+    super.dispose();
+
     try {
       _rootBackDispatcher.forget(_backButtonDispatcher);
-      super.dispose();
     } catch (e) {
     }
   }
