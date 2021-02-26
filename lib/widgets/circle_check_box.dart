@@ -26,11 +26,14 @@ class CircleCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => isEnabled && !isLoading ? onTap(!isChecked) : null,
-      child: Padding(
-        padding: padding,
-        child: isLoading
-              ? _buildLoadingCheckBox(context)
-              : _buildLoadedCheckBox(context),
+      child: Container(
+        decoration: BoxDecoration(color: Colors.transparent),
+        child: Padding(
+          padding: padding,
+          child: isLoading
+                ? _buildLoadingCheckBox(context)
+                : _buildLoadedCheckBox(context),
+        ),
       ),
     );
   }
