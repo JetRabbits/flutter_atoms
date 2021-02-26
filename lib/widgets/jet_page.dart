@@ -53,6 +53,7 @@ class _JetPageState extends State<JetPage> {
     return BlocProvider<NavBarCubit>(
       create: (_) => _navBarCubit,
       child: Scaffold(
+          extendBody: true,
           floatingActionButton: buildFloatActionButton(context),
           floatingActionButtonLocation: buildFloatActionButtonLocation(),
           bottomNavigationBar: buildBottomNavigationBar(context),
@@ -161,6 +162,7 @@ class _JetPageState extends State<JetPage> {
         if (buttons.length >= 2 && _group.index >= 0)
           return BottomAppBar(
               key: bottomNavigationBarKey,
+              clipBehavior: Clip.antiAlias,
               shape: CircularNotchedRectangle(),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
