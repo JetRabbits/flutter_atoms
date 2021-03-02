@@ -151,7 +151,6 @@ class JetAppRouterDelegate extends RouterDelegate<String>
 
   @override
   Widget build(BuildContext context) {
-//    _navigatorKey = GlobalKey<NavigatorState>();
     return Navigator(
       key: _navigatorKey,
       observers: [_observer],
