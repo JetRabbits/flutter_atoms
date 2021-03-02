@@ -215,6 +215,16 @@ class AtomsStrings {
       args: [],
     );
   }
+
+  /// `repeat load`
+  String get repeatLoad {
+    return Intl.message(
+      'repeat load',
+      name: 'repeatLoad',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {

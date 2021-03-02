@@ -71,7 +71,7 @@ class JetApp extends StatefulWidget {
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootPage(
                 logo: logo,
-                repeatLabelText: repeatLoadLabel(context),
+                repeatLabelText: repeatLoadLabel == null ? AtomsStrings.of(context).repeatLoad: repeatLoadLabel(context),
                 nextRoute: nextRoute),
           );
         };
@@ -140,7 +140,7 @@ class _JetAppState extends State<JetApp> {
 
 class JetAppRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final jetAppNavigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final AppNavigationState state;
   final Map<String, Widget> pageWidgets = {};
   RootNavigatorObserver _observer;
@@ -151,8 +151,9 @@ class JetAppRouterDelegate extends RouterDelegate<String>
 
   @override
   Widget build(BuildContext context) {
+//    _navigatorKey = GlobalKey<NavigatorState>();
     return Navigator(
-      key: navigatorKey,
+      key: _navigatorKey,
       observers: [_observer],
       onGenerateRoute: (settings) {
         Router.of(context).backButtonDispatcher.takePriority();
@@ -169,7 +170,7 @@ class JetAppRouterDelegate extends RouterDelegate<String>
 
   @override
   // TODO: implement navigatorKey
-  GlobalKey<NavigatorState> get navigatorKey => jetAppNavigatorKey;
+  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   @override
   Future<void> setNewRoutePath(String configuration) async {

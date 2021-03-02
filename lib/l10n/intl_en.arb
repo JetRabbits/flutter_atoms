@@ -16,5 +16,6 @@
   "website": "Website",
   "whats_new": "What's New",
   "servers":"Servers",
-  "phone":"Phone"
+  "phone":"Phone",
+  "repeatLoad": "repeat load"
 }

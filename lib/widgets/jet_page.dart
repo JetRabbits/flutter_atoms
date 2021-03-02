@@ -201,11 +201,13 @@ class _JetPageState extends State<JetPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Defer back button dispatching to the child router
-    _rootBackDispatcher = Router
-        .of(context)
-        .backButtonDispatcher;
-    _backButtonDispatcher =
-        _rootBackDispatcher.createChildBackButtonDispatcher();
+    if (_rootBackDispatcher == null) {
+      _rootBackDispatcher = Router
+          .of(context)
+          .backButtonDispatcher;
+      _backButtonDispatcher =
+          _rootBackDispatcher.createChildBackButtonDispatcher();
+    }
   }
 
   @override

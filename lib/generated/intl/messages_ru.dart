@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "phone" : MessageLookupByLibrary.simpleMessage("Телефон"),
     "platform" : MessageLookupByLibrary.simpleMessage("Платформа"),
     "privacy_policy" : MessageLookupByLibrary.simpleMessage("Политика конфиденциальности"),
+    "repeatLoad" : MessageLookupByLibrary.simpleMessage("повторить загрузку"),
     "servers" : MessageLookupByLibrary.simpleMessage("Сервера"),
     "thirdPartyLicenses" : MessageLookupByLibrary.simpleMessage("Лицензии используемого ПО"),
     "version_name" : MessageLookupByLibrary.simpleMessage("Версия"),
