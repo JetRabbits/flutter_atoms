@@ -27,7 +27,7 @@ dependencies:
   json_serializable: ^3.5.1
   auto_size_text: ^2.1.0
   url_launcher: ^5.7.10
-
+  flutter_whatsnew: ^1.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

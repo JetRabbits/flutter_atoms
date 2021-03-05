@@ -17,5 +17,7 @@
   "whats_new": "Что нового?",
   "servers":"Сервера",
   "phone":"Телефон",
-  "repeatLoad": "повторить загрузку"
+  "repeatLoad": "повторить загрузку",
+  "changesHistory": "История изменений",
+  "ok": "OK"
 }

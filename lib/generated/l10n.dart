@@ -225,6 +225,26 @@ class AtomsStrings {
       args: [],
     );
   }
+
+  /// `История изменений`
+  String get changesHistory {
+    return Intl.message(
+      'История изменений',
+      name: 'changesHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message(
+      'OK',
+      name: 'ok',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {

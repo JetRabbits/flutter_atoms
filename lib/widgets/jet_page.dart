@@ -47,7 +47,8 @@ class _JetPageState extends State<JetPage> {
   Widget build(BuildContext context) {
     try {
       _backButtonDispatcher.takePriority();
-    } catch (ignore) {}
+    } catch (ignore){
+    }
     _page.backButtonDispatcher = _backButtonDispatcher;
 
     return BlocProvider<NavBarCubit>(

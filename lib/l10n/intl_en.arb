@@ -17,5 +17,7 @@
   "whats_new": "What's New",
   "servers":"Servers",
   "phone":"Phone",
-  "repeatLoad": "repeat load"
+  "repeatLoad": "repeat load",
+  "changesHistory": "История изменений",
+  "ok": "OK"
 }
