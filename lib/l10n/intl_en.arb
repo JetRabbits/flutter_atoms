@@ -19,5 +19,9 @@
   "phone":"Phone",
   "repeatLoad": "repeat load",
   "changesHistory": "История изменений",
-  "ok": "OK"
+  "ok": "OK",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "yesterday": "Yesterday"
+
 }

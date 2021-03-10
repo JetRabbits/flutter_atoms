@@ -39,8 +39,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "repeatLoad" : MessageLookupByLibrary.simpleMessage("повторить загрузку"),
     "servers" : MessageLookupByLibrary.simpleMessage("Сервера"),
     "thirdPartyLicenses" : MessageLookupByLibrary.simpleMessage("Лицензии используемого ПО"),
+    "today" : MessageLookupByLibrary.simpleMessage("Сегодня"),
+    "tomorrow" : MessageLookupByLibrary.simpleMessage("Завтра"),
     "version_name" : MessageLookupByLibrary.simpleMessage("Версия"),
     "website" : MessageLookupByLibrary.simpleMessage("Сайт"),
-    "whats_new" : MessageLookupByLibrary.simpleMessage("Что нового?")
+    "whats_new" : MessageLookupByLibrary.simpleMessage("Что нового?"),
+    "yesterday" : MessageLookupByLibrary.simpleMessage("Вчера")
   };
 }

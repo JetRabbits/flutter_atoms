@@ -39,8 +39,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "repeatLoad" : MessageLookupByLibrary.simpleMessage("repeat load"),
     "servers" : MessageLookupByLibrary.simpleMessage("Servers"),
     "thirdPartyLicenses" : MessageLookupByLibrary.simpleMessage("3rd party licenses"),
+    "today" : MessageLookupByLibrary.simpleMessage("Today"),
+    "tomorrow" : MessageLookupByLibrary.simpleMessage("Tomorrow"),
     "version_name" : MessageLookupByLibrary.simpleMessage("Version"),
     "website" : MessageLookupByLibrary.simpleMessage("Website"),
-    "whats_new" : MessageLookupByLibrary.simpleMessage("What\'s New")
+    "whats_new" : MessageLookupByLibrary.simpleMessage("What\'s New"),
+    "yesterday" : MessageLookupByLibrary.simpleMessage("Yesterday")
   };
 }
