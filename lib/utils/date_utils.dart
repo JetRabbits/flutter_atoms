@@ -21,8 +21,10 @@ class JsonDateTimeText {
     if (_ == null) {
       //todo: split
       var split = value.split(RegExp(r'[Z+-]'));
+      //+0300,-0300,+00,-00,+03,-03,+02:30
       print(split);
       try {
+        //todo: Добавить Duration таймзоны
         _ = DateFormat(pattern ?? DateTimePatterns.SERVER_PATTERN_DATE_WITH_TIME)
             .parse(value)
             ?.toLocal();
