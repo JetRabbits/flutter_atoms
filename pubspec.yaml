@@ -28,9 +28,6 @@ dependencies:
   auto_size_text: ^2.1.0
   url_launcher: ^5.7.10
   flutter_whatsnew: ^1.0.3
-dependency_overrides:
-  firebase_core: 0.6.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
