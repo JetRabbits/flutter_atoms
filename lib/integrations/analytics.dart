@@ -28,8 +28,9 @@ class Analytics {
   static final Analytics _instance = Analytics._();
 
   static Future<void> initialize() async {
+    print("Firebase.initialize");
     await Firebase.initializeApp();
-    Analytics().configure(
+    await Analytics().configure(
         analytics: FirebaseAnalytics(),
         crashlytics: FirebaseCrashlytics.instance,
         options: AnalyticsOptions.guestOptions);
@@ -52,12 +53,15 @@ class Analytics {
       {FirebaseCrashlytics crashlytics,
       FirebaseAnalytics analytics,
       AnalyticsOptions options}) async {
+    print("Analytics configure");
     if (crashlytics != null) {
       _crashlytics = crashlytics;
       await _crashlytics.setCrashlyticsCollectionEnabled(true);
     }
+    print("Analytics object: $analytics");
     if (analytics != null) {
       _analytics = analytics;
+      print("Analytics create FirebaseAnalyticsObserver");
       _observer = FirebaseAnalyticsObserver(analytics: _analytics);
     }
     this.options = options;
@@ -104,14 +108,14 @@ class Analytics {
   void logTapEvent(String buttonName, {Map<String, dynamic> parameters}) {
     String eventName = "tap_$buttonName";
     _fillParams(_context).then(
-        (_) => _analytics.logEvent(name: eventName, parameters: parameters));
+        (_) => _analytics?.logEvent(name: eventName, parameters: parameters));
   }
 
   void logError(exception, stackTrace, Map<String, dynamic> parameters) {
     String eventName = "application_error_event";
     _fillParams(_context).then((_) async {
-      await _analytics.logEvent(name: eventName, parameters: parameters);
-      await _crashlytics.recordError(exception, stackTrace);
+      await _analytics?.logEvent(name: eventName, parameters: parameters);
+      await _crashlytics?.recordError(exception, stackTrace);
     });
   }
 }
