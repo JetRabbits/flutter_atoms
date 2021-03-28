@@ -26,7 +26,7 @@ class JsonDateTimeText {
       try {
         //todo: Добавить Duration таймзоны
         _ = DateFormat(pattern ?? DateTimePatterns.SERVER_PATTERN_DATE_WITH_TIME)
-            .parse(value)
+            .parse(value, )
             ?.toLocal();
       } catch (e) {
         print(e);

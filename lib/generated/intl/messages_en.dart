@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "copiedToClipboard" : MessageLookupByLibrary.simpleMessage("Copied to clipboard"),
     "license_agreement" : MessageLookupByLibrary.simpleMessage("License agreement"),
     "more_page" : MessageLookupByLibrary.simpleMessage("More"),
+    "no_answer" : MessageLookupByLibrary.simpleMessage("NO"),
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "phone" : MessageLookupByLibrary.simpleMessage("Phone"),
     "platform" : MessageLookupByLibrary.simpleMessage("Platform"),
@@ -44,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "version_name" : MessageLookupByLibrary.simpleMessage("Version"),
     "website" : MessageLookupByLibrary.simpleMessage("Website"),
     "whats_new" : MessageLookupByLibrary.simpleMessage("What\'s New"),
+    "yes_answer" : MessageLookupByLibrary.simpleMessage("YES"),
     "yesterday" : MessageLookupByLibrary.simpleMessage("Yesterday")
   };
 }

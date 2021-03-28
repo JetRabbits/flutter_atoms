@@ -275,6 +275,26 @@ class AtomsStrings {
       args: [],
     );
   }
+
+  /// `YES`
+  String get yes_answer {
+    return Intl.message(
+      'YES',
+      name: 'yes_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NO`
+  String get no_answer {
+    return Intl.message(
+      'NO',
+      name: 'no_answer',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {

@@ -33,5 +33,11 @@ Future<void> main() async {
       print(dt);
       expect(result, contains('2021-'));
     });
+    test('DateTimeFormat is ignore timezone', () async {
+      //yyyy-MM-dd HH:mm:ss
+      var createDateFormat = DateTimePatterns.createDateFormat(DateTimePatterns.PATTERN_DATE_WITH_FULL_TIME);
+      var parse = createDateFormat.parse("2021-01-03 10:00:00+01000000");
+      print(parse);
+    });
   });
 }

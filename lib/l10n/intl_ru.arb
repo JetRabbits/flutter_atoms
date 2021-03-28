@@ -22,5 +22,8 @@
   "ok": "OK",
   "today": "Сегодня",
   "tomorrow": "Завтра",
-  "yesterday": "Вчера"
+  "yesterday": "Вчера",
+  "yes_answer": "ДА",
+  "no_answer": "НЕТ"
+
 }

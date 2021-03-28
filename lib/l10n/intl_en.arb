@@ -22,6 +22,7 @@
   "ok": "OK",
   "today": "Today",
   "tomorrow": "Tomorrow",
-  "yesterday": "Yesterday"
-
+  "yesterday": "Yesterday",
+  "yes_answer": "YES",
+  "no_answer": "NO"
 }
