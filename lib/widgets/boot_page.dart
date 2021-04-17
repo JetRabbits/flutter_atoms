@@ -4,14 +4,14 @@ import 'package:flutter_atoms/blocs/boot/boot_bloc_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BootPage extends StatelessWidget {
-  final Widget logo;
+  final Widget? logo;
 
-  final String repeatLabelText;
+  final String? repeatLabelText;
 
-  final String Function() nextRoute;
+  final String Function()? nextRoute;
 
   const BootPage(
-      {Key key, this.logo, this.repeatLabelText, @required this.nextRoute})
+      {Key? key, this.logo, this.repeatLabelText, required this.nextRoute})
       : super(key: key);
 
   @override
@@ -26,14 +26,14 @@ class BootPage extends StatelessWidget {
             child: BlocConsumer<BootBlocCubit, BootBlocState>(
                 listener: (prev, current) {
               if (current == BootBlocState.READY) {
-                Navigator.of(context).pushReplacementNamed(nextRoute());
+                Navigator.of(context).pushReplacementNamed(nextRoute!());
               }
             }, builder: (context, state) {
               var bootCubit = BlocProvider.of<BootBlocCubit>(context);
               if (state == BootBlocState.INIT) bootCubit.start();
               if (state == BootBlocState.ERROR)
                 return Center(
-                    child: FlatButton(
+                    child: TextButton(
                   onPressed: () => bootCubit.start(),
                   child: SizedBox(
                     width: 200,

@@ -9,6 +9,7 @@ class BootBlocCubit extends Cubit<BootBlocState> {
   BootBlocCubit(this.onStart) : super(BootBlocState.INIT);
 
   @override
+  // ignore: must_call_super
   void onError(Object error, StackTrace stackTrace) {
     print(error);
     print(stackTrace);
@@ -19,7 +20,7 @@ class BootBlocCubit extends Cubit<BootBlocState> {
     emit(BootBlocState.LOADING);
     bool result = true;
     try {
-      if (onStart != null) result = await onStart();
+      result = await onStart();
       if (result)
         emit(BootBlocState.READY);
       else

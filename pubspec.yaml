@@ -1,37 +1,46 @@
 name: flutter_atoms
 description: Some best practice and ready to go solutions for flutter projects
-version: 0.0.2
+version: 0.0.3
 author: JetRabbits
 homepage: https://github.com/JetRabbits/flutter_atoms
+publish_to: none
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: 0.5.0+1
-  firebase_crashlytics: ^0.2.1+1
-  firebase_analytics: ^6.0.0
-  catcher: ^0.3.22
-  flutter_bloc: ^6.0.5
+  firebase_core: ^1.0.3
+  firebase_crashlytics: ^2.0.0
+  firebase_analytics: ^8.0.0
+  catcher: ^0.6.5
+  flutter_bloc: ^7.0.0
   persist_theme: ^1.7.0
-  get_version: ^0.2.2
-  equatable: ^1.2.5
-  cached_network_image: ^2.5.0
-  flutter_secure_storage: ^3.3.5
-  shared_preferences: ^0.5.12+4
-  flutter_cache_manager: ^2.1.1
-  story_view: ^0.12.7
-  json_serializable: ^3.5.1
+  get_version:
+    git: https://github.com/Creky/get_version.git
+  equatable: ^2.0.0
+  cached_network_image: ^3.0.0
+  flutter_secure_storage: ^4.1.0
+  shared_preferences: ^2.0.5
+  flutter_cache_manager: ^3.0.1
+  story_view: ^0.12.8
+  json_serializable: ^4.1.0
   auto_size_text: ^2.1.0
   url_launcher: ^5.7.10
   flutter_whatsnew: ^1.0.3
+  collection: ^1.15.0-nullsafety.4
+dependency_overrides:
+  flutter_cache_manager: ^3.0.1
+  rxdart: ^0.26.0
+  shared_preferences: ^2.0.5
+  provider: ^5.0.0
+  plugin_platform_interface: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.1.4
+  mockito: ^5.0.4
   build_runner:
 flutter:
   uses-material-design: true

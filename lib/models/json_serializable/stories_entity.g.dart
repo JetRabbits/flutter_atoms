@@ -8,10 +8,10 @@ part of 'stories_entity.dart';
 
 StoriesEntity _$StoriesEntityFromJson(Map<String, dynamic> json) {
   return StoriesEntity(
-    id: json['id'] as String,
-    title: json['title'] as String,
-    titleImage: json['title_image'] as String,
-    images: (json['images'] as List)?.map((e) => e as String)?.toList() ?? [],
+    id: json['id'] as String?,
+    title: json['title'] as String?,
+    titleImage: json['title_image'] as String?,
+    images: (json['images'] as List?)?.map((e) => e as String).toList() ?? [],
   );
 }
 

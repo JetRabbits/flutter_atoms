@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/integrations/analytics.dart';
 
@@ -24,7 +25,7 @@ Future<void> showAlertPopup(BuildContext context, String title, String detail) {
 ///
 /// Return true if user choose yes, else return false. Analytics send support
 ///
-Future<bool> showYesNoPopup(BuildContext context, String title, String detail) {
+Future<bool?> showYesNoPopup(BuildContext context, String title, String detail) {
   return showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -49,7 +50,7 @@ Future<bool> showYesNoPopup(BuildContext context, String title, String detail) {
 ///
 /// Return true if user choose option1, else return false. Analytics send support.
 ///
-Future<bool> showOptionsPopup(BuildContext context, String title, String detail, String option1, String option2) {
+Future<bool?> showOptionsPopup(BuildContext context, String title, String detail, String option1, String option2) {
   return showDialog<bool>(
       context: context,
       barrierDismissible: false,

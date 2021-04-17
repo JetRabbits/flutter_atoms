@@ -6,20 +6,20 @@ import 'package:flutter/widgets.dart';
 
 class UniversalPhotoWidget extends StatelessWidget {
   final String url;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
-  final Color bodyColor;
+  final Color? bodyColor;
 
-  final double borderRadius;
+  final double? borderRadius;
 
-  final Color borderColor;
+  final Color? borderColor;
 
-  final double borderWidth;
+  final double? borderWidth;
 
   UniversalPhotoWidget({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.width,
     this.height,
     this.bodyColor,

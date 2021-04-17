@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CircleCheckBox extends StatelessWidget {
-  final Color selectedColor;
-  final Color color;
+  final Color? selectedColor;
+  final Color? color;
   final bool isLoading;
   final bool isEnabled;
   final bool isChecked;
-  final Function(bool value) onTap;
+  final Function(bool value)? onTap;
 
   final EdgeInsetsGeometry padding;
 
   const CircleCheckBox({
-    Key key,
+    Key? key,
     this.selectedColor,
     this.color,
     this.padding = const EdgeInsets.all(4.0),
@@ -25,7 +25,7 @@ class CircleCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => isEnabled && !isLoading ? onTap(!isChecked) : null,
+      onTap: () => isEnabled && !isLoading ? onTap!(!isChecked) : null,
       child: Container(
         decoration: BoxDecoration(color: Colors.transparent),
         child: Padding(

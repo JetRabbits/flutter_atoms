@@ -1,24 +1,27 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/generated/l10n.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: import_of_legacy_library_into_null_safe
 import '../flutter_atoms.dart';
 
 class AboutApplicationPage extends StatefulWidget {
   final VersionModel version;
 
-  final List<String> servers;
+  final List<String>? servers;
 
-  final String supportEmail;
+  final String? supportEmail;
 
   final String supportSubject;
 
   final String supportEmailBody;
 
   const AboutApplicationPage({
-    Key key,
-    @required this.version,
+    Key? key,
+    required this.version,
     this.servers,
     this.supportEmail,
     this.supportSubject = "",
@@ -41,28 +44,28 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
         children: <Widget>[
           ListTile(
             leading: const Icon(Icons.apps),
-            subtitle: AutoSizeText(widget.version.projectName ?? ""),
+            subtitle: AutoSizeText(widget.version.projectName),
             title:
                 AutoSizeText(AtomsStrings.of(context).application_title_text),
           ),
           ListTile(
             leading: const Icon(Icons.devices),
-            subtitle: AutoSizeText(widget.version.platformVersion ?? ""),
+            subtitle: AutoSizeText(widget.version.platformVersion),
             title: AutoSizeText(AtomsStrings.of(context).platform),
           ),
           ListTile(
             leading: const Icon(Icons.shop),
-            subtitle: AutoSizeText(widget.version.projectAppID ?? ""),
+            subtitle: AutoSizeText(widget.version.projectAppID),
             title: const AutoSizeText('App ID'),
           ),
           ListTile(
             leading: const Icon(Icons.new_releases),
-            subtitle: AutoSizeText(widget.version.projectVersion ?? ""),
+            subtitle: AutoSizeText(widget.version.projectVersion),
             title: AutoSizeText(AtomsStrings.of(context).version_name),
           ),
           ListTile(
             leading: const Icon(Icons.filter_9_plus),
-            subtitle: AutoSizeText(widget.version.projectCode ?? ""),
+            subtitle: AutoSizeText(widget.version.projectCode),
             title: AutoSizeText(AtomsStrings.of(context).build),
           ),
           if (widget.servers != null)
@@ -73,7 +76,7 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
             ListTile(
               leading: const Icon(Icons.public),
               subtitle: Column(
-                  children: widget.servers
+                  children: widget.servers!
                       .map(
                         (e) => AutoSizeText(e),
                       )
@@ -87,22 +90,20 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
             Divider(
               height: 20.0,
             ),
-
           if (widget.supportEmail != null)
             ListTile(
               leading: const Icon(Icons.email),
               subtitle: AutoSizeText(widget.supportEmail ?? ""),
               title: AutoSizeText(AtomsStrings.of(context).contact_email),
-              onTap: ()=> launch("mailto:${widget.supportEmail}?subject=${widget.supportSubject}&body=${widget.supportEmailBody}"),
+              onTap: () => launch(
+                  "mailto:${widget.supportEmail}?subject=${widget.supportSubject}&body=${widget.supportEmailBody}"),
             ),
-
           Divider(
             height: 20.0,
           ),
           ListTile(
             leading: const Icon(Icons.text_snippet),
-            subtitle:
-            AutoSizeText(AtomsStrings.of(context).license_agreement),
+            subtitle: AutoSizeText(AtomsStrings.of(context).license_agreement),
             title: AutoSizeText(AtomsStrings.of(context).license_agreement),
 //              onTap: () => Navigator.of(context)
 //                  .pushNamed(Constants.ROUTE_LICENSE_AGREEMENT_PAGE),
@@ -118,7 +119,6 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
               onTap: () {
                 showLicensePage(context: context);
               }),
-
         ],
       )),
     );

@@ -9,7 +9,7 @@ import 'package:flutter_atoms/integrations/analytics.dart';
 ///
 class AnalyticsCatcherReportMode extends SilentReportMode {
   @override
-  void requestAction(Report report, BuildContext context) {
+  void requestAction(Report report, BuildContext? context) {
     Analytics.of(context)
         .logError(report.error, report.stackTrace, report.customParameters);
     super.requestAction(report, context);
@@ -21,10 +21,5 @@ class AnalyticsCatcherReportMode extends SilentReportMode {
   }
 
   @override
-  List<PlatformType> getSupportedPlatforms() => [
-        PlatformType.Android,
-        PlatformType.iOS,
-        PlatformType.Web,
-        PlatformType.Unknown
-      ];
+  List<PlatformType> getSupportedPlatforms() => PlatformType.values;
 }

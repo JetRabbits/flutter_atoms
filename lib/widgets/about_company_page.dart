@@ -1,17 +1,19 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_atoms/generated/l10n.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutCompanyPage extends StatelessWidget {
-  final String companyName;
+  final String? companyName;
 
-  final String phone;
+  final String? phone;
 
-  final String webSite;
+  final String? webSite;
 
-  const AboutCompanyPage({Key key, this.companyName, this.phone, this.webSite}) : super(key: key);
+  const AboutCompanyPage({Key? key, this.companyName, this.phone, this.webSite}) : super(key: key);
 
   List<Map<String, dynamic>> createInfo(BuildContext context){
     List<Map<String, dynamic>> info = [
@@ -20,7 +22,7 @@ class AboutCompanyPage extends StatelessWidget {
         "title": companyName,
         "tap": (context) async {
           await Clipboard.setData(ClipboardData(text: companyName));
-          Scaffold.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 1),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(duration: Duration(seconds: 1),
             content: AutoSizeText(AtomsStrings.of(context).copiedToClipboard),
           ));
         }, },
@@ -31,7 +33,7 @@ class AboutCompanyPage extends StatelessWidget {
       {"icon": Icons.language,
         "subtitle": AtomsStrings.of(context).website,
         "title": webSite,
-        "tap": (_) => launch(webSite), },
+        "tap": (_) => launch(webSite!), },
     ]..retainWhere((element) => element["title"] != null);
     return info;
 

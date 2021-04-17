@@ -7,13 +7,13 @@ import 'package:http/http.dart' as http;
 
 class CachedStoriesProvider {
 
-  Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
+  Map<String?, StoriesEntity> _stories = <String?, StoriesEntity>{};
 
 
-  Map<String, StoriesEntity> get stories => _stories;
+  Map<String?, StoriesEntity> get stories => _stories;
 
 
-  StoriesEntity operator [](String id) => stories[id];
+  StoriesEntity? operator [](String id) => stories[id];
 
 
   Future<void> load(String configUrl) async {
@@ -31,7 +31,7 @@ class CachedStoriesProvider {
       await _cacheStories();
     }
     catch (e, stacktrace) {
-      print(e + stacktrace);
+      print("$e $stacktrace");
     }
   }
 
@@ -42,7 +42,7 @@ class CachedStoriesProvider {
     print("Request: $storiesConfigUrl");
 
     try {
-      final http.Response response = await http.get(storiesConfigUrl);
+      final http.Response response = await http.get(Uri.parse(storiesConfigUrl));
       if (response.statusCode == 200) {
         var responseBody = utf8.decode(response.bodyBytes);
         print("Response: ${response.statusCode}: $responseBody");
@@ -61,8 +61,8 @@ class CachedStoriesProvider {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
     stories.values.forEach((s) async {
-      await cacheManager.downloadFile(s.titleImage);
-      s.images.forEach((i) async => await cacheManager.downloadFile(i));
+      await cacheManager.downloadFile(s.titleImage!);
+      s.images!.forEach((i) async => await cacheManager.downloadFile(i));
     });
   }
 
@@ -79,7 +79,7 @@ class CachedStoriesProvider {
 
 class StoriesCacheManager extends CacheManager {
 
-  static StoriesCacheManager _instance;
+  static StoriesCacheManager? _instance;
   static const key = "StoriesCacheManager";
 
 
@@ -87,7 +87,7 @@ class StoriesCacheManager extends CacheManager {
     if (_instance == null) {
       _instance = StoriesCacheManager._();
     }
-    return _instance;
+    return _instance!;
   }
 
 

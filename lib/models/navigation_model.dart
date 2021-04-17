@@ -27,9 +27,9 @@ typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
 ///
 class NavigationModel extends RouteInformationParser<String> {
   NavigationModel({
-    @required Map<String, WidgetBuilder> routes,
-    Map<String, BottomNavigationBarItemBuilder> navBarButtons,
-    Map<String, FloatActionButtonConfig> floatButtons
+    required Map<String, WidgetBuilder> routes,
+    Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
+    Map<String, FloatActionButtonConfig>? floatButtons
   }) {
     routes.keys.forEach((path) {
       addPath(path, routes[path], buttons: navBarButtons,
@@ -37,10 +37,10 @@ class NavigationModel extends RouteInformationParser<String> {
     });
   }
 
-  void addPath(String path, WidgetBuilder builder,
-      {Map<String, BottomNavigationBarItemBuilder> buttons, Map<
+  void addPath(String path, WidgetBuilder? builder,
+      {Map<String, BottomNavigationBarItemBuilder>? buttons, Map<
           String,
-          FloatActionButtonConfig> floatButtons}) {
+          FloatActionButtonConfig>? floatButtons}) {
     var uri = parseAndCheckFormat(path);
     var pagePath =
     uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
@@ -73,7 +73,6 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   static Uri parseAndCheckFormat(String path) {
-    assert(path != null, "path should not be null");
     var uri = Uri.file(path);
     List<String> split = uri.pathSegments;
     assert(path == "/" || (split.length > 0 && split.length < 4),
@@ -91,7 +90,7 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   NavigationScreen getScreenByPath(String path) {
-    var result = getScreenGroupByPath(path)?.screenMaps[path];
+    var result = getScreenGroupByPath(path).screenMaps[path];
     if (result == null)
       throw "No screen found for $path. Check your navigation model";
     return result;
@@ -103,8 +102,8 @@ class NavigationModel extends RouteInformationParser<String> {
     if (page == null)
       throw "No page found for $path. Check your navigation model";
     var result = split.length > 1
-        ? page?.screenGroupsMap["/${split[0]}/${split[1]}"]
-        : page?.screenGroupsMap[path];
+        ? page.screenGroupsMap["/${split[0]}/${split[1]}"]
+        : page.screenGroupsMap[path];
     if (result == null)
       throw "No screen group found for $path. Check your navigation model";
     return result;
@@ -117,7 +116,7 @@ class NavigationModel extends RouteInformationParser<String> {
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
     return Future.value(Uri
-        .parse(routeInformation.location)
+        .parse(routeInformation.location!)
         .path);
   }
 

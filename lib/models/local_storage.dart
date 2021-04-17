@@ -10,9 +10,9 @@ class LocalStorage {
     return _instance;
   }
 
-  SharedPreferences _sharedPreferences;
+  late SharedPreferences _sharedPreferences;
 
-  FlutterSecureStorage _secureStorage;
+  late FlutterSecureStorage _secureStorage;
 
   bool hasKey(String key){
     return _sharedPreferences.get(key) != null;
@@ -36,7 +36,7 @@ class LocalStorage {
     return result;
   }
 
-  Future<String> secureRead(String key) => _secureStorage.read(key: key);
+  Future<String?> secureRead(String key) => _secureStorage.read(key: key);
 
   Future<void> secureWrite(String key, String value) =>
       _secureStorage.write(key: key, value: value);

@@ -1,3 +1,4 @@
+//@dart=2.9
 export 'package:persist_theme/persist_theme.dart';
 
 export 'local_storage.dart';

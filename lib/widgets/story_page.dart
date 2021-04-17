@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/models/json_serializable/stories_entity.dart';
 import 'package:flutter_atoms/providers/cached_stories_provider.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:story_view/story_view.dart';
 
 
@@ -13,7 +14,7 @@ class StoryPage extends StatelessWidget {
   final controller = StoryController();
 
   StoryPage({
-    Key key,
+    Key? key,
     this.closeButtonColor = Colors.black,
     this.closeButtonBackgroundColor = Colors.transparent,
     this.closeButtonElevation = 0.1
@@ -23,11 +24,11 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context).settings.arguments as StoryPageArgs;
+    var args = ModalRoute.of(context)!.settings.arguments as StoryPageArgs;
     final StoriesEntity story = args.story;
 
     List<StoryItem> storyItems =
-      story.images
+      story.images!
           .map((url) => _makeStoryItemFromUrl(url))
           .toList();
 

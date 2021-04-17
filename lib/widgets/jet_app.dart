@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_atoms/blocs/boot/boot_bloc_cubit.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
 import 'package:flutter_atoms/models/app_navigation_state.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_atoms/models/navigation_model.dart';
 import 'package:flutter_atoms/models/version_model.dart';
 import 'package:flutter_atoms/widgets/jet_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
 
 import 'boot_page.dart';
@@ -15,37 +17,37 @@ import 'boot_page.dart';
 // ignore: must_be_immutable
 class JetApp extends StatefulWidget {
   static final appKey = GlobalKey<NavigatorState>();
-  final List<RepositoryProvider> topLevelProviders;
-  final List<BlocProvider> topLevelBlocs;
+  final List<RepositoryProvider>? topLevelProviders;
+  final List<BlocProvider>? topLevelBlocs;
 
   final GenerateAppTitle onGenerateTitle;
 
   final NavigationModel navigationModel;
 
-  WidgetBuilder bootWidget;
+  WidgetBuilder? bootWidget;
 
-  final Widget logo;
+  final Widget? logo;
 
-  final String Function(BuildContext) repeatLoadLabel;
+  final String Function(BuildContext)? repeatLoadLabel;
 
-  final Future<bool> Function() onAppStart;
+  final Future<bool> Function()? onAppStart;
 
-  final String Function() nextRoute;
+  final String Function()? nextRoute;
 
-  final ThemeModel Function(BuildContext context) themeModelBuilder;
+  final ThemeModel Function(BuildContext context)? themeModelBuilder;
 
-  final Iterable<Locale> supportedLocales;
+  final Iterable<Locale>? supportedLocales;
 
-  final List<LocalizationsDelegate<dynamic>> localizationsDelegates;
+  final List<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
-  final ThemeData bootPageThemeData;
+  final ThemeData? bootPageThemeData;
 
   final bool useAtomsIntl;
 
   JetApp({
-    Key key,
-    @required this.navigationModel,
-    @required this.onGenerateTitle,
+    Key? key,
+    required this.navigationModel,
+    required this.onGenerateTitle,
     this.onAppStart,
     this.nextRoute,
     this.logo,
@@ -61,7 +63,7 @@ class JetApp extends StatefulWidget {
   }) : super(key: key) {
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
-      localizationsDelegates.add(AtomsStrings.delegate);
+      localizationsDelegates!.add(AtomsStrings.delegate);
     }
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
@@ -71,7 +73,7 @@ class JetApp extends StatefulWidget {
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootPage(
                 logo: logo,
-                repeatLabelText: repeatLoadLabel == null ? AtomsStrings.of(context).repeatLoad: repeatLoadLabel(context),
+                repeatLabelText: repeatLoadLabel == null ? AtomsStrings.of(context).repeatLoad: repeatLoadLabel!(context),
                 nextRoute: nextRoute),
           );
         };
@@ -85,9 +87,9 @@ class JetApp extends StatefulWidget {
 }
 
 class _JetAppState extends State<JetApp> {
-  JetAppRouterDelegate _appRouterDelegate;
+  late JetAppRouterDelegate _appRouterDelegate;
 
-  ThemeModel _themeModel;
+  late ThemeModel _themeModel;
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +101,14 @@ class _JetAppState extends State<JetApp> {
         child: MultiBlocProvider(
             providers: [
               BlocProvider<BootBlocCubit>(
-                  create: (context) => BootBlocCubit(widget.onAppStart))
+                  create: (context) => BootBlocCubit(widget.onAppStart!))
             ]..addAll(widget.topLevelBlocs ?? []),
             child: PersistTheme(
               model: _themeModel,
               builder: (context, themeModel, child) {
                 return MaterialApp.router(
                   localizationsDelegates: widget.localizationsDelegates,
-                  supportedLocales: widget.supportedLocales,
+                  supportedLocales: widget.supportedLocales!,
                   debugShowCheckedModeBanner: false,
                   theme: themeModel.theme,
                   onGenerateTitle: widget.onGenerateTitle,
@@ -121,7 +123,7 @@ class _JetAppState extends State<JetApp> {
   void initState() {
     super.initState();
     _themeModel = widget.themeModelBuilder != null
-        ? widget.themeModelBuilder(context)
+        ? widget.themeModelBuilder!(context)
         : defaultThemeModel();
     _appRouterDelegate =
         JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
@@ -143,7 +145,7 @@ class JetAppRouterDelegate extends RouterDelegate<String>
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final AppNavigationState state;
   final Map<String, Widget> pageWidgets = {};
-  RootNavigatorObserver _observer;
+  RootNavigatorObserver? _observer;
 
   JetAppRouterDelegate(this.state) {
     _observer = RootNavigatorObserver(state.navigationModel);
@@ -153,14 +155,14 @@ class JetAppRouterDelegate extends RouterDelegate<String>
   Widget build(BuildContext context) {
     return Navigator(
       key: _navigatorKey,
-      observers: [_observer],
+      observers: [_observer!],
       onGenerateRoute: (settings) {
-        Router.of(context).backButtonDispatcher.takePriority();
-        var screen = state.navigationModel.getScreenByPath(settings.name);
+        Router.of(context).backButtonDispatcher!.takePriority();
+        var screen = state.navigationModel.getScreenByPath(settings.name!);
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
-            ? screen.builder
-            : (context) => JetPage(screen.path, state);
+            ? screen.builder!
+            : (dynamic context) => JetPage(screen.path, state);
         return MaterialPageRoute(settings: settings, builder: _builder);
       },
       initialRoute: "/",
@@ -183,21 +185,21 @@ class RootNavigatorObserver extends NavigatorObserver {
   RootNavigatorObserver(this.navigationModel);
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {}
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {}
 
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {}
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {}
 
   @override
-  void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {}
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {}
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
-    var jetPage = navigationModel.getPageByPath(previousRoute.settings.name);
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    var jetPage = navigationModel.getPageByPath(previousRoute!.settings.name!);
     // Нужно поискать другие варианты проставить backButtonDispatcher в случае, если пользователь возвращается через стрелку AppBar
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       try {
-        jetPage.backButtonDispatcher.takePriority();
+        jetPage.backButtonDispatcher!.takePriority();
       } catch (ignore) {}
     });
   }

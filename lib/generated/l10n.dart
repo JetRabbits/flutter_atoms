@@ -15,9 +15,14 @@ import 'intl/messages_all.dart';
 
 class AtomsStrings {
   AtomsStrings();
-  
-  static AtomsStrings current;
-  
+
+  static AtomsStrings? _current;
+
+  static AtomsStrings get current {
+    assert(_current != null, 'No instance of AtomsStrings was loaded. Try to initialize the AtomsStrings delegate before accessing AtomsStrings.current.');
+    return _current!;
+  }
+
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
 
@@ -26,13 +31,20 @@ class AtomsStrings {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      AtomsStrings.current = AtomsStrings();
-      
-      return AtomsStrings.current;
+      final instance = AtomsStrings();
+      AtomsStrings._current = instance;
+ 
+      return instance;
     });
   } 
 
   static AtomsStrings of(BuildContext context) {
+    final instance = AtomsStrings.maybeOf(context);
+    assert(instance != null, 'No instance of AtomsStrings present in the widget tree. Did you add AtomsStrings.delegate in localizationsDelegates?');
+    return instance!;
+  }
+
+  static AtomsStrings? maybeOf(BuildContext context) {
     return Localizations.of<AtomsStrings>(context, AtomsStrings);
   }
 
@@ -315,11 +327,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {
   bool shouldReload(AppLocalizationDelegate old) => false;
 
   bool _isSupported(Locale locale) {
-    if (locale != null) {
-      for (var supportedLocale in supportedLocales) {
-        if (supportedLocale.languageCode == locale.languageCode) {
-          return true;
-        }
+    for (var supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode) {
+        return true;
       }
     }
     return false;

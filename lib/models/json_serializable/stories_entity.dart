@@ -6,12 +6,12 @@ part 'stories_entity.g.dart';
 @JsonSerializable()
 class StoriesEntity {
 
-  final String id;
-  final String title;
-  final String titleImage;
+  final String? id;
+  final String? title;
+  final String? titleImage;
 
   @JsonKey(defaultValue: [])
-  final List<String> images;
+  final List<String>? images;
 
 
   StoriesEntity({this.id, this.title, this.titleImage, this.images});
