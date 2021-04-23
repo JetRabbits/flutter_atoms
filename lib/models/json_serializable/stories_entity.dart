@@ -6,7 +6,7 @@ part 'stories_entity.g.dart';
 @JsonSerializable()
 class StoriesEntity {
 
-  final String? id;
+  final String id;
   final String? title;
   final String? titleImage;
 
@@ -14,7 +14,7 @@ class StoriesEntity {
   final List<String>? images;
 
 
-  StoriesEntity({this.id, this.title, this.titleImage, this.images});
+  StoriesEntity({required this.id, this.title, this.titleImage, this.images});
 
 
   factory StoriesEntity.fromJson(Map<String, dynamic> json) =>

@@ -7,10 +7,10 @@ import 'package:http/http.dart' as http;
 
 class CachedStoriesProvider {
 
-  Map<String?, StoriesEntity> _stories = <String?, StoriesEntity>{};
+  Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
 
 
-  Map<String?, StoriesEntity> get stories => _stories;
+  Map<String, StoriesEntity> get stories => _stories;
 
 
   StoriesEntity? operator [](String id) => stories[id];

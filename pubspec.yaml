@@ -26,11 +26,11 @@ dependencies:
   shared_preferences: ^2.0.5
   flutter_cache_manager: ^3.0.1
   story_view: ^0.12.8
-  json_serializable: ^4.1.0
+  json_serializable: ^4.1.1
   auto_size_text: ^2.1.0
   url_launcher: ^5.7.10
   flutter_whatsnew: ^1.0.3
-  collection: ^1.15.0-nullsafety.4
+  collection: ^1.15.0
 dependency_overrides:
   flutter_cache_manager: ^3.0.1
   rxdart: ^0.26.0
@@ -40,7 +40,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.0.4
+  mockito: ^5.0.5
   build_runner:
 flutter:
   uses-material-design: true

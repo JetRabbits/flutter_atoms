@@ -39,7 +39,7 @@ class _JetPageState extends State<JetPage> {
 
   String _screenPath = "";
 
-  NavBarCubit? _navBarCubit;
+  late NavBarCubit _navBarCubit;
 
   BackButtonDispatcher? _rootBackDispatcher;
 
@@ -51,9 +51,8 @@ class _JetPageState extends State<JetPage> {
     }
     _page.backButtonDispatcher = _backButtonDispatcher;
 
-    return BlocProvider<NavBarCubit>(
-      create: (_) => _navBarCubit!,
-      child: Scaffold(
+    return
+      Scaffold(
           extendBody: true,
           floatingActionButton: buildFloatActionButton(context),
           floatingActionButtonLocation: buildFloatActionButtonLocation(),
@@ -62,7 +61,8 @@ class _JetPageState extends State<JetPage> {
             routerDelegate: _routerDelegate,
             backButtonDispatcher: _backButtonDispatcher,
             routeInformationParser: widget.navigationState.navigationModel,
-          )),
+            routeInformationProvider: PlatformRouteInformationProvider(initialRouteInformation: RouteInformation(location: widget.initialPageRoute)),
+          )
     );
   }
 
@@ -94,7 +94,7 @@ class _JetPageState extends State<JetPage> {
         .hintColor;
 
     var isActive =
-        navigationModel.getScreenGroupByPath(_navBarCubit!.state.path) == group;
+        navigationModel.getScreenGroupByPath(_navBarCubit.state.path) == group;
 
     var _textStyle = Theme
         .of(context)
@@ -142,6 +142,7 @@ class _JetPageState extends State<JetPage> {
 
   Widget buildBottomNavigationBar(BuildContext context) {
     return BlocBuilder<NavBarCubit, NavBarState>(
+      bloc: _navBarCubit,
       builder: (context, state) {
         var navigationModel = widget.navigationState.navigationModel;
         var buttons = _page.screenGroupsMap.values
@@ -290,7 +291,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   @override
   Future<void> setNewRoutePath(String path) async {
-    assert(false);
     notifyListeners();
   }
 
