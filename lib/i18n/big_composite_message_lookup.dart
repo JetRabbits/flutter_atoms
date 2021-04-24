@@ -55,11 +55,11 @@ class BigCompositeMessageLookup implements MessageLookup {
   /// So this creates the chain of message libraries function which can be lookup until appropriated lib will be found
   void addLocale(String localeName, Function findLocale) {
     var canonical = Intl.canonicalizedLocale(localeName);
-    var newLocale = findLocale(canonical);
-    if (newLocale != null) {
-      availableMessages.putIfAbsent(localeName, () => [newLocale]);
-      availableMessages.putIfAbsent(canonical, () => [newLocale]);
-      if (_lastLocale == newLocale) {
+    var newLocaleFunc = findLocale(canonical);
+    if (newLocaleFunc != null) {
+      availableMessages.putIfAbsent(localeName, () => [])..add(newLocaleFunc);
+      availableMessages.putIfAbsent(canonical, () => [])..add(newLocaleFunc);
+      if (_lastLocale == newLocaleFunc) {
         _lastLocale = null;
         _lastLookupLibs = null;
       }
