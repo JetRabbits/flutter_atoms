@@ -125,23 +125,4 @@ class NavigationModel extends RouteInformationParser<String> {
   RouteInformation restoreRouteInformation(String configuration) {
     return RouteInformation(location: configuration);
   }
-
-  @override
-  void addListener(listener) {
-    // TODO: implement addListener
-  }
-
-  @override
-  void removeListener(listener) {
-    // TODO: implement removeListener
-  }
-
-  @override
-  void routerReportsNewRouteInformation(RouteInformation routeInformation) {
-    // TODO: implement routerReportsNewRouteInformation
-  }
-
-  @override
-  // TODO: implement value
-  RouteInformation? get value => throw UnimplementedError();
 }
