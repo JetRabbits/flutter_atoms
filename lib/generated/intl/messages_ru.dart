@@ -32,8 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "copiedToClipboard" : MessageLookupByLibrary.simpleMessage("Скопировано в буфер обмена"),
     "license_agreement" : MessageLookupByLibrary.simpleMessage("Лицензионное соглашение"),
     "more_page" : MessageLookupByLibrary.simpleMessage("Ещё"),
-    "no_answer" : MessageLookupByLibrary.simpleMessage("НЕТ"),
-    "ok" : MessageLookupByLibrary.simpleMessage("OK"),
     "phone" : MessageLookupByLibrary.simpleMessage("Телефон"),
     "platform" : MessageLookupByLibrary.simpleMessage("Платформа"),
     "privacy_policy" : MessageLookupByLibrary.simpleMessage("Политика конфиденциальности"),
@@ -45,7 +43,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "version_name" : MessageLookupByLibrary.simpleMessage("Версия"),
     "website" : MessageLookupByLibrary.simpleMessage("Сайт"),
     "whats_new" : MessageLookupByLibrary.simpleMessage("Что нового?"),
-    "yes_answer" : MessageLookupByLibrary.simpleMessage("ДА"),
     "yesterday" : MessageLookupByLibrary.simpleMessage("Вчера")
   };
 }

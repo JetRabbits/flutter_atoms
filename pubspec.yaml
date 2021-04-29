@@ -12,17 +12,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.0.4
-  firebase_crashlytics: ^2.0.1
-  firebase_analytics: ^8.0.1
-  catcher: ^0.6.5
   flutter_bloc: ^7.0.0
   persist_theme: ^1.7.0
   get_version:
     git: https://github.com/Creky/get_version.git
   equatable: ^2.0.0
   cached_network_image: ^3.0.0
-  flutter_secure_storage: ^4.1.0
+  flutter_secure_storage: ^4.2.0
   shared_preferences: ^2.0.5
   flutter_cache_manager: ^3.0.1
   story_view: ^0.12.8
@@ -31,6 +27,7 @@ dependencies:
   url_launcher: ^5.7.10
   flutter_whatsnew: ^1.0.3
   collection: ^1.15.0
+  intl: ^0.17.0
 dependency_overrides:
   flutter_cache_manager: ^3.0.1
   rxdart: ^0.26.0
@@ -42,7 +39,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.5
-  mocktail: ^0.1.1
+  mocktail: ^0.1.2
   build_runner:
 flutter:
   uses-material-design: true

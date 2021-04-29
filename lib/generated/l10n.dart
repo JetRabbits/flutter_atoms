@@ -248,16 +248,6 @@ class AtomsStrings {
     );
   }
 
-  /// `OK`
-  String get ok {
-    return Intl.message(
-      'OK',
-      name: 'ok',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Today`
   String get today {
     return Intl.message(
@@ -283,26 +273,6 @@ class AtomsStrings {
     return Intl.message(
       'Yesterday',
       name: 'yesterday',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `YES`
-  String get yes_answer {
-    return Intl.message(
-      'YES',
-      name: 'yes_answer',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `NO`
-  String get no_answer {
-    return Intl.message(
-      'NO',
-      name: 'no_answer',
       desc: '',
       args: [],
     );
