@@ -27,6 +27,7 @@ dependencies:
   url_launcher: ^5.7.10
   flutter_whatsnew: ^1.0.3
   collection: ^1.15.0
+  crypted_preferences: ^0.0.2
   intl: ^0.17.0
 dependency_overrides:
   flutter_cache_manager: ^3.0.1

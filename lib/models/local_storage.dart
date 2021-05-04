@@ -1,6 +1,7 @@
+import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LocalStorage {
   static final LocalStorage _instance = LocalStorage._internal();
@@ -12,16 +13,21 @@ class LocalStorage {
 
   late SharedPreferences _sharedPreferences;
 
+  late Preferences _securePreferences;
+
   late FlutterSecureStorage _secureStorage;
 
   bool hasKey(String key){
     return _sharedPreferences.get(key) != null;
   }
 
-
-  Future<void> load() async {
+  Future<void> load({webSecurePath = './secure/preferences'}) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    _secureStorage = FlutterSecureStorage();
+    if (kIsWeb) {
+      _securePreferences = await Preferences.preferences(path: webSecurePath);
+    } else {
+      _secureStorage = FlutterSecureStorage();
+    }
   }
 
   Future<bool> setString(String key, String value) =>
@@ -36,14 +42,31 @@ class LocalStorage {
     return result;
   }
 
-  Future<String?> secureRead(String key) => _secureStorage.read(key: key);
+  Future<String?> secureRead(String key) {
+    if (kIsWeb) {
+      return Future.value(_securePreferences.getString(key));
+    } else {
+      return _secureStorage.read(key: key);
+    }
+  }
 
-  Future<void> secureWrite(String key, String value) =>
-      _secureStorage.write(key: key, value: value);
+  Future<void> secureWrite(String key, String value) async {
+    if (kIsWeb) {
+      var result = await _securePreferences.setString(key, value);
+      if (!result)
+        throw "Exception when writing preference $key";
+    } else {
+      return _secureStorage.write(key: key, value: value);
+    }
+  }
 
   Future<void> deleteAll() async {
     await _sharedPreferences.clear();
-    await _secureStorage.deleteAll();
+    if (kIsWeb) {
+      await _securePreferences.clear();
+    } else {
+      await _secureStorage.deleteAll();
+    }
   }
 
   Future<bool> setBool(String key, bool value) =>
