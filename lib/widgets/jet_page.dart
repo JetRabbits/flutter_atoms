@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/blocs/blocs.dart';
 import 'package:flutter_atoms/blocs/navigator/nav_bar_cubit.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_atoms/models/app_navigation_state.dart';
 import 'package:flutter_atoms/models/navigation_page.dart';
 import 'package:flutter_atoms/models/navigation_screen.dart';
 import 'package:flutter_atoms/models/screen_group.dart';
-import 'dart:developer' as developer;
 
 typedef NavigationStateBuilderType = Future<void> Function(
     BuildContext context, AppNavigationState state);
@@ -195,7 +196,6 @@ class _JetPageState extends State<JetPage> {
         var _group = navigationModel.getScreenGroupByPath(state.path);
         if (buttons.length >= 2 && _group.sideBarIndex >= 0)
           return NavigationRail(
-            onDestinationSelected: (int index) => Navigator.of(context).,
             destinations: buttons,
             selectedIndex: _group.sideBarIndex);
         return Container();
