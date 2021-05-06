@@ -11,7 +11,7 @@ import 'package:flutter_atoms/widgets/jet_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
-
+import 'dart:developer' as developer;
 import 'boot_page.dart';
 
 // ignore: must_be_immutable
@@ -157,7 +157,8 @@ class JetAppRouterDelegate extends RouterDelegate<String>
       key: _navigatorKey,
       observers: [_observer!],
       onGenerateRoute: (settings) {
-        Router.of(context).backButtonDispatcher!.takePriority();
+        developer.log("onGenerateRoute ${settings.name}", name: "JetAppRouterDelegate");
+//        Router.of(context).backButtonDispatcher!.takePriority();
         var screen = state.navigationModel.getScreenByPath(settings.name!);
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
@@ -174,9 +175,18 @@ class JetAppRouterDelegate extends RouterDelegate<String>
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   @override
-  Future<void> setNewRoutePath(String configuration) async {
+  Future<void> setNewRoutePath(String path) async {
+    developer.log("setNewRoutePath $path", name: "JetAppRouterDelegate");
+    state.push(path);
     notifyListeners();
   }
+
+  @override
+  String get currentConfiguration {
+    developer.log("currentConfiguration call ${state.currentScreen.path}",  name: "JetAppRouterDelegate");
+    return state.currentScreen.path;
+  }
+
 }
 
 class RootNavigatorObserver extends NavigatorObserver {

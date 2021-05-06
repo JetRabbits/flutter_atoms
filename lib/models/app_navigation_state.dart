@@ -26,7 +26,7 @@ class AppNavigationState extends ChangeNotifier {
   }
 
   int get currentScreenGroupIndex {
-    return currentScreen.group.index;
+    return currentScreen.group.navBarIndex;
   }
 
   int get currentScreenIndex {

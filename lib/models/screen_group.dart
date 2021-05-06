@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'navigation_model.dart';
 import 'navigation_page.dart';
 import 'navigation_screen.dart';
 
@@ -8,11 +9,14 @@ class ScreenGroup {
 
   final NavigationPage page;
 
-  final int index;
+  int navBarIndex;
+  int sideBarIndex;
 
-  ScreenGroup({required this.path, required this.page, required this.index, this.navBarButtonBuilder});
+  NavigationRailDestinationBuilder? sideBarButtonBuilder;
+  BottomNavigationBarItemBuilder? navBarButtonBuilder;
 
-  BottomNavigationBarItem Function(BuildContext context)? navBarButtonBuilder;
+  ScreenGroup({required this.path, required this.page, this.navBarIndex = -1, this.sideBarIndex = -1, this.navBarButtonBuilder, this.sideBarButtonBuilder});
+
   Map<String, NavigationScreen> screenMaps = <String, NavigationScreen>{};
 
   void addScreen(NavigationScreen screen) {

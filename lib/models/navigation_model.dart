@@ -1,13 +1,17 @@
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/material/navigation_rail.dart';
 import 'package:flutter_atoms/models/float_action_button_config.dart';
 import 'package:flutter_atoms/models/navigation_page.dart';
 
 import 'navigation_screen.dart';
 import 'screen_group.dart';
+import 'dart:developer' as developer;
 
 typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
+    BuildContext context);
+typedef NavigationRailDestinationBuilder = NavigationRailDestination Function(
     BuildContext context);
 
 ///
@@ -26,58 +30,68 @@ typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
 /// After that you can ask NavigatorCubit.navigateTo('/main/second_screen/sub_screen_1')
 ///
 class NavigationModel extends RouteInformationParser<String> {
-
   NavigationModel({
     required Map<String, WidgetBuilder> routes,
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
-    Map<String, FloatActionButtonConfig>? floatButtons
+    Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
+    Map<String, FloatActionButtonConfig>? floatButtons,
   }) {
     routes.keys.forEach((path) {
-      addPath(path, routes[path], buttons: navBarButtons,
-          floatButtons: floatButtons);
+      addPath(path, routes[path],
+          navButtons: navBarButtons, floatButtons: floatButtons, sideBarButtons: sideBarButtons);
     });
   }
 
+  int _getKeyIndex(Map<String, dynamic> map, String key ) {
+    var indexOf = map.keys.toList().indexOf(key);
+    developer.log("$key = $indexOf", name: "NavigationModel");
+    return indexOf;
+  }
+
   void addPath(String path, WidgetBuilder? builder,
-      {Map<String, BottomNavigationBarItemBuilder>? buttons, Map<
-          String,
-          FloatActionButtonConfig>? floatButtons}) {
+      {Map<String, BottomNavigationBarItemBuilder>? navButtons,
+      Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
+      Map<String, FloatActionButtonConfig>? floatButtons}) {
     var uri = parseAndCheckFormat(path);
     var pagePath =
-    uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
-    var page =
-    pagesMap.putIfAbsent(pagePath, () =>
-        NavigationPage(path: pagePath,
-            floatActionButtonConfig: floatButtons != null ? floatButtons[pagePath] : null));
+        uri.pathSegments.length > 0 ? "/${uri.pathSegments[0]}" : path;
+    var page = pagesMap.putIfAbsent(
+        pagePath,
+        () => NavigationPage(
+            path: pagePath,
+            floatActionButtonConfig:
+                floatButtons != null ? floatButtons[pagePath] : null));
     var groupPath = pagePath +
         (uri.pathSegments.length > 1 ? "/" + uri.pathSegments[1] : "");
     var group = page.screenGroupsMap.putIfAbsent(
         groupPath,
-            () =>
-            ScreenGroup(
-                path: groupPath,
-                navBarButtonBuilder: buttons != null
-                    ? buttons[groupPath]
-                    : null,
-                page: page,
-                index: buttons != null && buttons[groupPath] != null
-                    ? page.screenGroupsMap.length
+        () => ScreenGroup(
+            path: groupPath,
+            navBarButtonBuilder: navButtons != null ? navButtons[groupPath] : null,
+            sideBarButtonBuilder:
+                sideBarButtons != null ? sideBarButtons[groupPath] : null,
+            page: page,
+            navBarIndex: navButtons != null && navButtons[groupPath] != null
+                ? _getKeyIndex(navButtons, groupPath)
+                : -1,
+            sideBarIndex:
+                sideBarButtons != null
+                    ? _getKeyIndex(sideBarButtons, groupPath)
                     : -1));
     group.screenMaps.putIfAbsent(
         path,
-            () =>
-            NavigationScreen(
-                path: path,
-                builder: builder,
-                group: group,
-                index: group.screenMaps.length));
+        () => NavigationScreen(
+            path: path,
+            builder: builder,
+            group: group,
+            index: group.screenMaps.length));
   }
 
   static Uri parseAndCheckFormat(String path) {
     var uri = Uri.file(path);
     List<String> split = uri.pathSegments;
     assert(path == "/" || (split.length > 0 && split.length < 4),
-    "screen path should be uri file format like: /{page}/{group of screens}/{screen} or be /");
+        "screen path should be uri file format like: /{page}/{group of screens}/{screen} or be /");
     return uri;
   }
 
@@ -116,9 +130,7 @@ class NavigationModel extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
-    return Future.value(Uri
-        .parse(routeInformation.location!)
-        .path);
+    return Future.value(Uri.parse(routeInformation.location!).path);
   }
 
   @override
