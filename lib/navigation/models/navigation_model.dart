@@ -1,18 +1,21 @@
 import 'dart:core';
+import 'dart:developer' as developer;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/material/navigation_rail.dart';
-import 'package:flutter_atoms/models/float_action_button_config.dart';
-import 'package:flutter_atoms/models/navigation_page.dart';
+import 'package:flutter/widgets.dart';
 
+import 'button_config.dart';
+import 'float_action_button_config.dart';
+import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
-import 'dart:developer' as developer;
 
 typedef BottomNavigationBarItemBuilder = BottomNavigationBarItem Function(
     BuildContext context);
 typedef NavigationRailDestinationBuilder = NavigationRailDestination Function(
     BuildContext context);
+
+typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 
 ///
 /// Navigation model take routes as pattern /Flutter_Navigator_Route/Internal_of_Route_Screen_Name

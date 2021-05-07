@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/models/screen_group.dart';
 
+import 'navigation_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'models.dart';
 import 'navigation_page.dart';
 import 'navigation_screen.dart';
+import 'screen_group.dart';
 
 class AppNavigationState extends ChangeNotifier {
+  static final _instance = AppNavigationState._internal();
   final List<String> historyRoutes = ["/"];
   // final List<Map<String, dynamic>> historyData = [];
-  final NavigationModel navigationModel;
+  late final NavigationModel navigationModel;
 
-  AppNavigationState(this.navigationModel);
+  factory AppNavigationState(){
+    return _instance;
+  }
+
+  factory AppNavigationState.init(NavigationModel navigationModel){
+    _instance.navigationModel = navigationModel;
+    return _instance;
+  }
 
   NavigationScreen get currentScreen {
     return navigationModel.getScreenByPath(historyRoutes.last);
@@ -55,6 +63,8 @@ class AppNavigationState extends ChangeNotifier {
     historyRoutes.removeLast();
     notifyListeners();
   }
+
+  AppNavigationState._internal();
 
 
 }

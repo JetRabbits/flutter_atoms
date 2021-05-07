@@ -1,22 +1,20 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_atoms/blocs/boot/boot_bloc_cubit.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
-import 'package:flutter_atoms/models/app_navigation_state.dart';
-import 'package:flutter_atoms/models/navigation_model.dart';
-import 'package:flutter_atoms/models/version_model.dart';
-import 'package:flutter_atoms/widgets/jet_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
-import 'dart:developer' as developer;
-import 'boot_page.dart';
+
+import '../blocs/boot/boot_bloc_cubit.dart';
+import '../navigation.dart';
+import 'boot_screen.dart';
 
 // ignore: must_be_immutable
 class JetApp extends StatefulWidget {
-  static final appKey = GlobalKey<NavigatorState>();
   final List<RepositoryProvider>? topLevelProviders;
   final List<BlocProvider>? topLevelBlocs;
 
@@ -71,9 +69,11 @@ class JetApp extends StatefulWidget {
         bootWidget = (context) {
           return Theme(
             data: bootPageThemeData ?? ThemeData.light(),
-            child: BootPage(
+            child: BootScreen(
                 logo: logo,
-                repeatLabelText: repeatLoadLabel == null ? AtomsStrings.of(context).repeatLoad: repeatLoadLabel!(context),
+                repeatLabelText: repeatLoadLabel == null
+                    ? AtomsStrings.of(context).repeatLoad
+                    : repeatLoadLabel!(context),
                 nextRoute: nextRoute),
           );
         };
@@ -126,7 +126,7 @@ class _JetAppState extends State<JetApp> {
         ? widget.themeModelBuilder!(context)
         : defaultThemeModel();
     _appRouterDelegate =
-        JetAppRouterDelegate(AppNavigationState(widget.navigationModel));
+        JetAppRouterDelegate(AppNavigationState.init(widget.navigationModel));
   }
 
   ThemeModel defaultThemeModel() {
@@ -142,22 +142,24 @@ class _JetAppState extends State<JetApp> {
 
 class JetAppRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final AppNavigationState state;
   final Map<String, Widget> pageWidgets = {};
   RootNavigatorObserver? _observer;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   JetAppRouterDelegate(this.state) {
     _observer = RootNavigatorObserver(state.navigationModel);
+    KeyRegister.instance.register("/", _navigatorKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      key: _navigatorKey,
+      key: navigatorKey,
       observers: [_observer!],
       onGenerateRoute: (settings) {
-        developer.log("onGenerateRoute ${settings.name}", name: "JetAppRouterDelegate");
+        developer.log("onGenerateRoute ${settings.name}",
+            name: "JetAppRouterDelegate");
 //        Router.of(context).backButtonDispatcher!.takePriority();
         var screen = state.navigationModel.getScreenByPath(settings.name!);
         var isJetPage = screen.path == screen.group.page.path;
@@ -183,10 +185,10 @@ class JetAppRouterDelegate extends RouterDelegate<String>
 
   @override
   String get currentConfiguration {
-    developer.log("currentConfiguration call ${state.currentScreen.path}",  name: "JetAppRouterDelegate");
+    developer.log("currentConfiguration call ${state.currentScreen.path}",
+        name: "JetAppRouterDelegate");
     return state.currentScreen.path;
   }
-
 }
 
 class RootNavigatorObserver extends NavigatorObserver {

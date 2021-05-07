@@ -29,6 +29,7 @@ dependencies:
   collection: ^1.15.0
   crypted_preferences: ^0.0.2
   intl: ^0.17.0
+  logging: ^1.0.1
 dependency_overrides:
   flutter_cache_manager: ^3.0.1
   rxdart: ^0.26.0

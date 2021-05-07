@@ -1,12 +1,10 @@
 import 'dart:developer' as developer;
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/blocs/blocs.dart';
-import 'package:flutter_atoms/blocs/navigator/nav_bar_cubit.dart';
-import 'package:flutter_atoms/models/app_navigation_state.dart';
-import 'package:flutter_atoms/models/navigation_page.dart';
-import 'package:flutter_atoms/models/navigation_screen.dart';
-import 'package:flutter_atoms/models/screen_group.dart';
+
+import '../navigation.dart';
+
 
 typedef NavigationStateBuilderType = Future<void> Function(
     BuildContext context, AppNavigationState state);
@@ -46,12 +44,19 @@ class _JetPageState extends State<JetPage> {
 
   BackButtonDispatcher? _rootBackDispatcher;
 
+  late NavigationScreen _screen;
+
   @override
   Widget build(BuildContext context) {
     try {
       _backButtonDispatcher!.takePriority();
     } catch (ignore) {}
     _page.backButtonDispatcher = _backButtonDispatcher;
+
+    if (_screenPath == '/') {
+      developer.log("screenPath = /", name: "JetPage");
+      return Scaffold(body: _screen.builder!(context));
+    }
 
     return Scaffold(
         extendBody: true,
@@ -127,8 +132,7 @@ class _JetPageState extends State<JetPage> {
             onTap: () {
               if (!isActive) {
                 _screenPath = group.screenMaps.values.first.path;
-                Navigator.of(_routerDelegate.navigatorKey.currentContext!)
-                    .pushNamed(_screenPath);
+                _screenPath.go();
               }
             },
             child: Column(
@@ -145,6 +149,11 @@ class _JetPageState extends State<JetPage> {
         ),
       ),
     );
+  }
+
+  NavigationRailDestination _buildSideBarButton(
+      NavigationRailDestinationBuilder builder, ScreenGroup group) {
+    return builder(context);
   }
 
   Widget buildBottomNavigationBar(BuildContext context) {
@@ -191,13 +200,22 @@ class _JetPageState extends State<JetPage> {
             .where((group) =>
                 group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
             .map<NavigationRailDestination>(
-                (g) => g.sideBarButtonBuilder!(context))
+                (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
             .toList();
         var _group = navigationModel.getScreenGroupByPath(state.path);
         if (buttons.length >= 2 && _group.sideBarIndex >= 0)
           return NavigationRail(
-            destinations: buttons,
-            selectedIndex: _group.sideBarIndex);
+              onDestinationSelected: (value) {
+                var _screenGroup = _page.screenGroupsMap.values
+                    .firstWhereOrNull((g) => g.sideBarIndex == value);
+                if (_screenGroup != null) {
+                  var _path = _screenGroup.screenMaps.values.first.path;
+                  _path.go();
+                }
+              },
+              extended: MediaQuery.of(context).size.width > 1024,
+              destinations: buttons,
+              selectedIndex: _group.sideBarIndex);
         return Container();
       },
     );
@@ -218,13 +236,19 @@ class _JetPageState extends State<JetPage> {
   @override
   void initState() {
     super.initState();
-    developer.log("initialPageRoute = ${widget.initialPageRoute}", name: "JetPage");
-    _navBarCubit = NavBarCubit(widget.initialPageRoute);
-    _routerDelegate = InnerRouterDelegate(
-        widget.navigationState, widget.navigationState.currentScreen.path, _navBarCubit);
+    developer.log("initialPageRoute = ${widget.initialPageRoute}",
+        name: "JetPage");
+
     _page = widget.navigationState.navigationModel
         .getPageByPath(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
+    _screen = widget.navigationState.currentScreen;
+
+    if (_screenPath != '/') {
+      _navBarCubit = NavBarCubit(widget.initialPageRoute);
+      _routerDelegate = InnerRouterDelegate(
+          widget.navigationState, widget.initialPageRoute, _navBarCubit);
+    }
   }
 
   @override
@@ -271,7 +295,6 @@ class InnerNavigatorObserver extends NavigatorObserver {
 }
 
 class JetNavPage extends Page {
-
   final NavigationScreen screen;
   final PageStorageBucket storageBucket;
 
@@ -279,11 +302,13 @@ class JetNavPage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
         settings: this,
-        builder: (context) =>
-            PageStorage(bucket: storageBucket, child: screen.builder!(context)));
+        builder: (context) => PageStorage(
+            bucket: storageBucket, child: screen.builder!(context)));
   }
 
-  JetNavPage(this.screen, this.storageBucket, {
+  JetNavPage(
+    this.screen,
+    this.storageBucket, {
     key,
     String? name,
     Object? arguments,
@@ -293,8 +318,6 @@ class JetNavPage extends Page {
 
 class InnerRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   final AppNavigationState state;
 
   final String pageRoute;
@@ -305,8 +328,13 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   final PageStorageBucket _bucket = PageStorageBucket();
 
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
   InnerRouterDelegate(this.state, this.pageRoute, this.navBarCubit) {
+    developer.log("Creating with pageRoute = $pageRoute",
+        name: "InnerRouterDelegate");
     _innerNavigatorObserver = InnerNavigatorObserver(navBarCubit);
+    KeyRegister.instance.register(this.pageRoute, _navigatorKey);
   }
 
   @override
@@ -325,16 +353,17 @@ class InnerRouterDelegate extends RouterDelegate<String>
 //                  .getScreenByPath(initialRoute)
 //                  .builder)
 //        ],
-        onGenerateRoute: (settings) {
-          Router.of(context).backButtonDispatcher!.takePriority();
-          var screen = state.navigationModel.getScreenByPath(settings.name!);
-          state.push(screen.path);
-          notifyListeners();
-          return buildRoute(context, screen.path, screen.builder,
-              settings: settings);
-        },
+      onGenerateRoute: (settings) {
+        Router.of(context).backButtonDispatcher!.takePriority();
+        var screen = state.navigationModel.getScreenByPath(settings.name!);
+        state.push(screen.path);
+        notifyListeners();
+        return buildRoute(context, screen.path, screen.builder,
+            settings: settings);
+      },
       onPopPage: (Route<dynamic> route, dynamic result) {
-        developer.log("onPopPage call ${route.settings.name}", name: "InnerRouterDelegate");
+        developer.log("onPopPage call ${route.settings.name}",
+            name: "InnerRouterDelegate");
         if (!route.didPop(result)) {
           return false;
         }
@@ -347,7 +376,8 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   @override
   String get currentConfiguration {
-    developer.log("currentConfiguration call ${state.currentScreen.path}", name: "InnerRouterDelegate");
+    developer.log("currentConfiguration call ${state.currentScreen.path}",
+        name: "InnerRouterDelegate");
     return state.currentScreen.path;
   }
 
@@ -365,6 +395,10 @@ class InnerRouterDelegate extends RouterDelegate<String>
           settings: settings ?? RouteSettings(name: route),
           builder: (context) =>
               PageStorage(bucket: _bucket, child: screenBuilder!(context)));
+
+  @override
+  // TODO: implement navigatorKey
+  GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
 }
 
 class FadeAnimationPage extends Page {
