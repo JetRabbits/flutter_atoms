@@ -2,8 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/widgets.dart';
 
-import 'file:///E:/mormih/Projects/jetrabbits/flutter_atoms/lib/navigation/models/app_navigation_state.dart';
-
+import 'app_navigation_state.dart';
 import 'key_register.dart';
 
 class JetCompass {
