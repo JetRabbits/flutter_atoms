@@ -1,6 +1,5 @@
 export 'blocs/blocs.dart';
 export 'blocs/navigator/nav_bar_cubit.dart';
-export 'extensions/navigation_config.dart';
 export 'extensions/routes.dart';
 export 'models/app_navigation_state.dart';
 export 'models/button_config.dart';
