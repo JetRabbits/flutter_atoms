@@ -2,14 +2,16 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
 
-import '../blocs/boot/boot_bloc_cubit.dart';
 import '../navigation.dart';
 import 'boot_screen.dart';
 
@@ -59,6 +61,8 @@ class JetApp extends StatefulWidget {
     this.localizationsDelegates,
     this.useAtomsIntl = true,
   }) : super(key: key) {
+    atomsSetup();
+
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
       localizationsDelegates!.add(AtomsStrings.delegate);
@@ -66,10 +70,11 @@ class JetApp extends StatefulWidget {
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
         assert(nextRoute != null, "Next route should be defined");
+        assert(onAppStart != null, "onAppStart should be defined");
         bootWidget = (context) {
           return Theme(
             data: bootPageThemeData ?? ThemeData.light(),
-            child: BootScreen(
+            child: BootScreen(GetIt.I()..onStart = onAppStart!,
                 logo: logo,
                 repeatLabelText: repeatLoadLabel == null
                     ? AtomsStrings.of(context).repeatLoad
@@ -98,25 +103,20 @@ class _JetAppState extends State<JetApp> {
           RepositoryProvider<VersionModel>(
               create: (context) => VersionModel()..load()),
         ]..addAll(widget.topLevelProviders ?? []),
-        child: MultiBlocProvider(
-            providers: [
-              BlocProvider<BootBlocCubit>(
-                  create: (context) => BootBlocCubit(widget.onAppStart!))
-            ]..addAll(widget.topLevelBlocs ?? []),
-            child: PersistTheme(
-              model: _themeModel,
-              builder: (context, themeModel, child) {
-                return MaterialApp.router(
-                  localizationsDelegates: widget.localizationsDelegates,
-                  supportedLocales: widget.supportedLocales!,
-                  debugShowCheckedModeBanner: false,
-                  theme: themeModel.theme,
-                  onGenerateTitle: widget.onGenerateTitle,
-                  routerDelegate: _appRouterDelegate,
-                  routeInformationParser: widget.navigationModel,
-                );
-              },
-            )));
+        child: PersistTheme(
+          model: _themeModel,
+          builder: (context, themeModel, child) {
+            return MaterialApp.router(
+              localizationsDelegates: widget.localizationsDelegates,
+              supportedLocales: widget.supportedLocales!,
+              debugShowCheckedModeBanner: false,
+              theme: themeModel.theme,
+              onGenerateTitle: widget.onGenerateTitle,
+              routerDelegate: _appRouterDelegate,
+              routeInformationParser: widget.navigationModel,
+            );
+          },
+        ));
   }
 
   @override

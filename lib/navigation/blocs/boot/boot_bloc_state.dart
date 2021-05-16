@@ -1,4 +1,4 @@
-part of 'boot_bloc_cubit.dart';
+part of 'boot_bloc.dart';
 
 enum BootBlocState {
   INIT,

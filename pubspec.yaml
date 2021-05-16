@@ -30,6 +30,8 @@ dependencies:
   crypted_preferences: ^0.0.2
   intl: ^0.17.0
   logging: ^1.0.1
+  get_it: ^6.1.1
+  injectable: ^1.2.2
 dependency_overrides:
   flutter_cache_manager: ^3.0.1
   rxdart: ^0.26.0
@@ -42,6 +44,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.0.5
   mocktail: ^0.1.2
+  injectable_generator:
   build_runner:
 flutter:
   uses-material-design: true

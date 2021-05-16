@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/navigation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/boot/boot_bloc_cubit.dart';
 
 class BootScreen extends StatelessWidget {
   final Widget? logo;
@@ -11,7 +11,9 @@ class BootScreen extends StatelessWidget {
 
   final String Function()? nextRoute;
 
-  const BootScreen(
+  final BootBloc bootBloc;
+
+  const BootScreen(this.bootBloc,
       {Key? key, this.logo, this.repeatLabelText, required this.nextRoute})
       : super(key: key);
 
@@ -24,18 +26,19 @@ class BootScreen extends StatelessWidget {
           logo ?? FlutterLogo(size: 100),
           Padding(
             padding: const EdgeInsets.all(24.0),
-            child: BlocConsumer<BootBlocCubit, BootBlocState>(
+            child: BlocConsumer<BootBloc, BootBlocState>(
                 listener: (prev, current) {
               if (current == BootBlocState.READY) {
-                nextRoute!().go();
+                nextRoute!().compass().replace().go();
               }
-            }, builder: (context, state) {
-              var bootCubit = BlocProvider.of<BootBlocCubit>(context);
-              if (state == BootBlocState.INIT) bootCubit.start();
+            },
+                bloc: bootBloc,
+                builder: (context, state) {
+              if (state == BootBlocState.INIT) bootBloc.start();
               if (state == BootBlocState.ERROR)
                 return Center(
                   child: TextButton(
-                    onPressed: () => bootCubit.start(),
+                    onPressed: () => bootBloc.start(),
                     child: SizedBox(
                       width: 200,
                       height: 32,
