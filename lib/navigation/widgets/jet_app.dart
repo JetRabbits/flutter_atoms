@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:persist_theme/persist_theme.dart';
 
 import '../navigation.dart';
+import 'app_router_delegate.dart';
 import 'boot_screen.dart';
 
 // ignore: must_be_immutable
@@ -61,7 +62,7 @@ class JetApp extends StatefulWidget {
     this.localizationsDelegates,
     this.useAtomsIntl = true,
   }) : super(key: key) {
-    atomsSetup();
+    atomsSetup(navigationModel);
 
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
@@ -92,7 +93,6 @@ class JetApp extends StatefulWidget {
 }
 
 class _JetAppState extends State<JetApp> {
-  late JetAppRouterDelegate _appRouterDelegate;
 
   late ThemeModel _themeModel;
 
@@ -112,7 +112,7 @@ class _JetAppState extends State<JetApp> {
               debugShowCheckedModeBanner: false,
               theme: themeModel.theme,
               onGenerateTitle: widget.onGenerateTitle,
-              routerDelegate: _appRouterDelegate,
+              routerDelegate: GetIt.I<JetAppRouterDelegate>(),
               routeInformationParser: widget.navigationModel,
             );
           },
@@ -125,8 +125,6 @@ class _JetAppState extends State<JetApp> {
     _themeModel = widget.themeModelBuilder != null
         ? widget.themeModelBuilder!(context)
         : defaultThemeModel();
-    _appRouterDelegate =
-        JetAppRouterDelegate(AppNavigationState.init(widget.navigationModel));
   }
 
   ThemeModel defaultThemeModel() {
@@ -140,79 +138,5 @@ class _JetAppState extends State<JetApp> {
   }
 }
 
-class JetAppRouterDelegate extends RouterDelegate<String>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final AppNavigationState state;
-  final Map<String, Widget> pageWidgets = {};
-  RootNavigatorObserver? _observer;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  JetAppRouterDelegate(this.state) {
-    _observer = RootNavigatorObserver(state.navigationModel);
-    KeyRegister.instance.register("/", _navigatorKey);
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      observers: [_observer!],
-      onGenerateRoute: (settings) {
-        developer.log("onGenerateRoute ${settings.name}",
-            name: "JetAppRouterDelegate");
-//        Router.of(context).backButtonDispatcher!.takePriority();
-        var screen = state.navigationModel.getScreenByPath(settings.name!);
-        var isJetPage = screen.path == screen.group.page.path;
-        var _builder = isJetPage
-            ? screen.builder!
-            : (dynamic context) => JetPage(screen.path, state);
-        return MaterialPageRoute(settings: settings, builder: _builder);
-      },
-      initialRoute: "/",
-    );
-  }
-
-  @override
-  // TODO: implement navigatorKey
-  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
-
-  @override
-  Future<void> setNewRoutePath(String path) async {
-    developer.log("setNewRoutePath $path", name: "JetAppRouterDelegate");
-    state.push(path);
-    notifyListeners();
-  }
-
-  @override
-  String get currentConfiguration {
-    developer.log("currentConfiguration call ${state.currentScreen.path}",
-        name: "JetAppRouterDelegate");
-    return state.currentScreen.path;
-  }
-}
-
-class RootNavigatorObserver extends NavigatorObserver {
-  final NavigationModel navigationModel;
-
-  RootNavigatorObserver(this.navigationModel);
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {}
-
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {}
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {}
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    var jetPage = navigationModel.getPageByPath(previousRoute!.settings.name!);
-    // Нужно поискать другие варианты проставить backButtonDispatcher в случае, если пользователь возвращается через стрелку AppBar
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      try {
-        jetPage.backButtonDispatcher!.takePriority();
-      } catch (ignore) {}
-    });
-  }
-}

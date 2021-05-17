@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 import 'navigation_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -6,20 +7,13 @@ import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
 
+@singleton
 class AppNavigationState extends ChangeNotifier {
-  static final _instance = AppNavigationState._internal();
   final List<String> historyRoutes = ["/"];
   // final List<Map<String, dynamic>> historyData = [];
-  late final NavigationModel navigationModel;
+  final NavigationModel navigationModel;
 
-  factory AppNavigationState(){
-    return _instance;
-  }
-
-  factory AppNavigationState.init(NavigationModel navigationModel){
-    _instance.navigationModel = navigationModel;
-    return _instance;
-  }
+  AppNavigationState(this.navigationModel);
 
   NavigationScreen get currentScreen {
     return navigationModel.getScreenByPath(historyRoutes.last);
@@ -63,8 +57,4 @@ class AppNavigationState extends ChangeNotifier {
     historyRoutes.removeLast();
     notifyListeners();
   }
-
-  AppNavigationState._internal();
-
-
 }

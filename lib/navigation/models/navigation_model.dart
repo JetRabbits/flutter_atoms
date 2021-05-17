@@ -1,8 +1,10 @@
 import 'dart:core';
 import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/src/material/navigation_rail.dart';
 import 'package:flutter/widgets.dart';
+import 'package:injectable/injectable.dart';
 
 import 'button_config.dart';
 import 'float_action_button_config.dart';
@@ -108,13 +110,18 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   NavigationScreen getScreenByPath(String path) {
-    var result = getScreenGroupByPath(path).screenMaps[path];
+    log("getScreenByPath ${path}", name: "NavigationModel");
+    var screenGroup = getScreenGroupByPath(path);
+    var result = screenGroup.screenMaps[path];
+    result = result ?? screenGroup.screenMaps.values.first;
+
     if (result == null)
       throw "No screen found for $path. Check your navigation model";
     return result;
   }
 
   ScreenGroup getScreenGroupByPath(String path) {
+    log("getScreenGroupByPath ${path}", name: "NavigationModel");
     var split = parseAndCheckFormat(path).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[path];
     if (page == null)
@@ -122,6 +129,8 @@ class NavigationModel extends RouteInformationParser<String> {
     var result = split.length > 1
         ? page.screenGroupsMap["/${split[0]}/${split[1]}"]
         : page.screenGroupsMap[path];
+    result = result ?? page.screenGroupsMap.values.first;
+
     if (result == null)
       throw "No screen group found for $path. Check your navigation model";
     return result;

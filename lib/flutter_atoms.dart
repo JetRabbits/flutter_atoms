@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'flutter_atoms.config.dart';
+import 'navigation/models/navigation_model.dart';
 ///
 /// Service locator instance
 ///
@@ -21,4 +22,7 @@ import 'flutter_atoms.config.dart';
   preferRelativeImports: true, // default
   asExtension: false, // default
 )
-void atomsSetup() => $initGetIt(GetIt.I);
+void atomsSetup(NavigationModel navigationModel) {
+  GetIt.I.registerSingleton<NavigationModel>(navigationModel);
+  $initGetIt(GetIt.I);
+}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/navigation.dart';
@@ -28,12 +30,15 @@ class BootScreen extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: BlocConsumer<BootBloc, BootBlocState>(
                 listener: (prev, current) {
+                  log("${current}");
               if (current == BootBlocState.READY) {
+                log("Application is ready");
                 nextRoute!().compass().replace().go();
               }
             },
                 bloc: bootBloc,
                 builder: (context, state) {
+                  log("${state}");
               if (state == BootBlocState.INIT) bootBloc.start();
               if (state == BootBlocState.ERROR)
                 return Center(
