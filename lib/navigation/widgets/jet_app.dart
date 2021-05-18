@@ -19,7 +19,6 @@ import 'boot_screen.dart';
 // ignore: must_be_immutable
 class JetApp extends StatefulWidget {
   final List<RepositoryProvider>? topLevelProviders;
-  final List<BlocProvider>? topLevelBlocs;
 
   final GenerateAppTitle onGenerateTitle;
 
@@ -56,7 +55,6 @@ class JetApp extends StatefulWidget {
     this.repeatLoadLabel,
     this.bootWidget,
     this.topLevelProviders,
-    this.topLevelBlocs,
     this.themeModelBuilder,
     this.supportedLocales,
     this.localizationsDelegates,

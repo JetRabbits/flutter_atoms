@@ -35,10 +35,13 @@ typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 /// After that you can ask NavigatorCubit.navigateTo('/main/second_screen/sub_screen_1')
 ///
 class NavigationModel extends RouteInformationParser<String> {
+  Widget? sideBarLogo;
+
   NavigationModel({
     required Map<String, WidgetBuilder> routes,
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
     Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
+    this.sideBarLogo,
     Map<String, FloatActionButtonConfig>? floatButtons,
   }) {
     routes.keys.forEach((path) {

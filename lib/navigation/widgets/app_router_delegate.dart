@@ -40,6 +40,17 @@ class JetAppRouterDelegate extends RouterDelegate<String>
             : (dynamic context) => JetPage(screen.path, state);
         return MaterialPageRoute(settings: settings, builder: _builder);
       },
+      onGenerateInitialRoutes: (NavigatorState navigator, String initialRoute) {
+        developer.log("onGenerateInitialRoutes ${initialRoute}",
+            name: _loggerName);
+//        Router.of(context).backButtonDispatcher!.takePriority();
+        var screen = state.navigationModel.getScreenByPath(initialRoute);
+        var isJetPage = screen.path == screen.group.page.path;
+        var _builder = isJetPage
+            ? screen.builder!
+            : (dynamic context) => JetPage(screen.path, state);
+        return [MaterialPageRoute(settings: RouteSettings(name: initialRoute), builder: _builder)];
+      },
       initialRoute: state.currentScreen.path,
     );
   }

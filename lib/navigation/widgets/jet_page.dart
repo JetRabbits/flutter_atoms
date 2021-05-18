@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _JetPageState extends State<JetPage> {
     _page.backButtonDispatcher = _backButtonDispatcher;
 
     if (_screenPath == '/') {
-      developer.log("screenPath = /", name: "JetPage");
+      log("screenPath = /", name: "JetPage");
       return Scaffold(body: _screen.builder!(context));
     }
 
@@ -207,6 +208,7 @@ class _JetPageState extends State<JetPage> {
         var _group = navigationModel.getScreenGroupByPath(state.path);
         if (buttons.length >= 2 && _group.sideBarIndex >= 0)
           return NavigationRail(
+              leading: navigationModel.sideBarLogo,
               onDestinationSelected: (value) {
                 var _screenGroup = _page.screenGroupsMap.values
                     .firstWhereOrNull((g) => g.sideBarIndex == value);
