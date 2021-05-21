@@ -29,7 +29,7 @@ class JetCompass {
     return this;
   }
 
-  Future<T?> go<T>() async {
+  Future<T?> go<T>([Map<String, String>? params]) async {
     developer.log("go to path $path, replace = $_replace, use root = $_root", name: loggerName);
     var rootNavigator = navigatorsRegistry.getRoot().currentState;
     if (rootNavigator == null) return Future.value(null);

@@ -22,6 +22,10 @@ class BootBloc extends Cubit<BootBlocState> {
     emit(BootBlocState.ERROR);
   }
 
+  void reset(){
+    emit(BootBlocState.INIT);
+  }
+
   Future<void> start() async {
     emit(BootBlocState.LOADING);
     bool result = true;
