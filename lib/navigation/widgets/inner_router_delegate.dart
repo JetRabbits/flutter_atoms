@@ -35,20 +35,21 @@ class InnerRouterDelegate extends RouterDelegate<String>
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
-      pages: state.historyRoutes.map<Page>((path) {
-        var screen = state.navigationModel.getScreenByPath(path);
+      //only our pages mapped by pageRoute
+      pages: state.historyRoutes.where((path) => path.startsWith(RegExp('$pageRoute.*'))).map<Page>((path) {
+        var screen = state.navigationModel.getScreenByRoute(path);
         return JetNavPage(screen, _bucket, name: screen.path);
       }).toList(),
-//        onGenerateInitialRoutes: (navigatorState, initialRoute) =>
-//        [
-//          buildRoute(context, initialRoute,
-//              state.navigationModel
-//                  .getScreenByPath(initialRoute)
-//                  .builder)
-//        ],
+       onGenerateInitialRoutes: (navigatorState, initialRoute) =>
+       [
+         buildRoute(context, initialRoute,
+             state.navigationModel
+                 .getScreenByRoute(initialRoute)
+                 .builder)
+       ],
       onGenerateRoute: (settings) {
         Router.of(context).backButtonDispatcher!.takePriority();
-        var screen = state.navigationModel.getScreenByPath(settings.name!);
+        var screen = state.navigationModel.getScreenByRoute(settings.name!);
         state.push(screen.path);
         notifyListeners();
         return buildRoute(context, screen.path, screen.builder,

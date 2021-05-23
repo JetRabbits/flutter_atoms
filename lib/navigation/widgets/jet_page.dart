@@ -1,4 +1,3 @@
-import 'dart:developer' as developer;
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
@@ -108,7 +107,7 @@ class _JetPageState extends State<JetPage> {
     Color unselectedColor = Theme.of(context).hintColor;
 
     var isActive =
-        navigationModel.getScreenGroupByPath(_navBarCubit.state.path) == group;
+        navigationModel.getScreenGroupByRoute(_navBarCubit.state.path) == group;
 
     var _textStyle = Theme.of(context)
         .textTheme
@@ -178,9 +177,10 @@ class _JetPageState extends State<JetPage> {
                 _page.floatActionButtonConfig!.floatingActionButtonLocation)) {
           buttons.insert(buttons.length >> 1, _buildMiddleTabItem());
         }
-        var _group = navigationModel.getScreenGroupByPath(state.path);
+        var _group = navigationModel.getScreenGroupByRoute(state.path);
         if (buttons.length >= 2 && _group.navBarIndex >= 0)
           return BottomAppBar(
+              elevation: 0,
               key: bottomNavigationBarKey,
               clipBehavior: Clip.antiAlias,
               shape: CircularNotchedRectangle(),
@@ -205,7 +205,7 @@ class _JetPageState extends State<JetPage> {
             .map<NavigationRailDestination>(
                 (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
             .toList();
-        var _group = navigationModel.getScreenGroupByPath(state.path);
+        var _group = navigationModel.getScreenGroupByRoute(state.path);
         if (buttons.length >= 2 && _group.sideBarIndex >= 0)
           return NavigationRail(
               leading: navigationModel.sideBarLogo,
@@ -240,11 +240,11 @@ class _JetPageState extends State<JetPage> {
   @override
   void initState() {
     super.initState();
-    developer.log("initialPageRoute = ${widget.initialPageRoute}",
+    log("initialPageRoute = ${widget.initialPageRoute}",
         name: "JetPage");
 
     _page = widget.navigationState.navigationModel
-        .getPageByPath(widget.initialPageRoute);
+        .getPageByRoute(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
     _screen = widget.navigationState.currentScreen;
 

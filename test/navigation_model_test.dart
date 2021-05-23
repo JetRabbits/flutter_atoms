@@ -21,27 +21,27 @@ Future<void> main() async {
       "/main/lookup": (context) => BottomNavigationBarItem(icon: Icon(Icons.search)),
       "/main/profile": (context) => BottomNavigationBarItem(icon: Icon(Icons.person)),
     });
-    var page = navigationModel.getPageByPath("/main/lookup/search");
+    var page = navigationModel.getPageByRoute("/main/lookup/search");
     expect(page.path, "/main");
-    var group = navigationModel.getScreenGroupByPath("/main/lookup/catalog");
+    var group = navigationModel.getScreenGroupByRoute("/main/lookup/catalog");
     expect(group.path, "/main/lookup");
     expect(group.navBarButtonBuilder, isNotNull);
 
-    var screen = navigationModel.getScreenByPath("/main/lookup/catalog");
+    var screen = navigationModel.getScreenByRoute("/main/lookup/catalog");
     expect(screen.path, "/main/lookup/catalog");
 
-    group = navigationModel.getScreenGroupByPath("/main/profile");
+    group = navigationModel.getScreenGroupByRoute("/main/profile");
     expect(group.path, "/main/profile");
     expect(group.navBarButtonBuilder, isNotNull);
 
-    group = navigationModel.getScreenGroupByPath("/details");
+    group = navigationModel.getScreenGroupByRoute("/details");
     expect(group.path, "/details");
     expect(group.navBarButtonBuilder, isNull);
 
-    page = navigationModel.getPageByPath("/details");
+    page = navigationModel.getPageByRoute("/details");
     expect(page.path, "/details");
 
-    screen = navigationModel.getScreenByPath("/details");
+    screen = navigationModel.getScreenByRoute("/details");
     expect(screen.path, "/details");
   });
 }

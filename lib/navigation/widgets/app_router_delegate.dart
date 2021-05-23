@@ -5,7 +5,6 @@ import 'package:flutter_atoms/navigation/models/navigators_register.dart';
 import 'package:injectable/injectable.dart';
 
 import '../navigation.dart';
-import 'package:get_it/get_it.dart';
 import 'root_navigator_observer.dart';
 
 @injectable
@@ -30,10 +29,9 @@ class JetAppRouterDelegate extends RouterDelegate<String>
       key: navigatorKey,
       observers: [rootObserver],
       onGenerateRoute: (settings) {
-        developer.log("onGenerateRoute ${settings.name}",
-            name: _loggerName);
+        developer.log("onGenerateRoute ${settings.name}", name: _loggerName);
 //        Router.of(context).backButtonDispatcher!.takePriority();
-        var screen = state.navigationModel.getScreenByPath(settings.name!);
+        var screen = state.navigationModel.getScreenByRoute(settings.name!);
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
             ? screen.builder!
@@ -41,15 +39,18 @@ class JetAppRouterDelegate extends RouterDelegate<String>
         return MaterialPageRoute(settings: settings, builder: _builder);
       },
       onGenerateInitialRoutes: (NavigatorState navigator, String initialRoute) {
-        developer.log("onGenerateInitialRoutes ${initialRoute}",
+        developer.log("onGenerateInitialRoutes $initialRoute",
             name: _loggerName);
 //        Router.of(context).backButtonDispatcher!.takePriority();
-        var screen = state.navigationModel.getScreenByPath(initialRoute);
+        var screen = state.navigationModel.getScreenByRoute(initialRoute);
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
             ? screen.builder!
             : (dynamic context) => JetPage(screen.path, state);
-        return [MaterialPageRoute(settings: RouteSettings(name: initialRoute), builder: _builder)];
+        return [
+          MaterialPageRoute(
+              settings: RouteSettings(name: initialRoute), builder: _builder)
+        ];
       },
       initialRoute: state.currentScreen.path,
     );

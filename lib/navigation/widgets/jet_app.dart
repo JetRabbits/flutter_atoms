@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
@@ -42,6 +44,8 @@ class JetApp extends StatefulWidget {
 
   final bool useAtomsIntl;
 
+  late final BootBloc bootBloc;
+
   JetApp({
     Key? key,
     required this.navigationModel,
@@ -59,13 +63,12 @@ class JetApp extends StatefulWidget {
     this.useAtomsIntl = true,
   }) : super(key: key) {
     atomsSetup(navigationModel);
-    var bootBloc = GetIt.I<BootBloc>()..onStart = onAppStart!;
-    if (bootBloc.state == BootBlocState.READY) bootBloc.reset();
 
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
       localizationsDelegates!.add(AtomsStrings.delegate);
     }
+    bootBloc = GetIt.I<BootBloc>()..onStart = onAppStart!;
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidget == null) {
         assert(nextRoute != null, "Next route should be defined");
@@ -82,7 +85,7 @@ class JetApp extends StatefulWidget {
           );
         };
       }
-      navigationModel.addPath("/", bootWidget);
+      navigationModel.addRoutePattern("/", bootWidget);
     }
   }
 
@@ -95,30 +98,34 @@ class _JetAppState extends State<JetApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider<VersionModel>(
-              create: (context) => VersionModel()..load()),
-        ]..addAll(widget.topLevelProviders ?? []),
-        child: PersistTheme(
-          model: _themeModel,
-          builder: (context, themeModel, child) {
-            return MaterialApp.router(
-              localizationsDelegates: widget.localizationsDelegates,
-              supportedLocales: widget.supportedLocales!,
-              debugShowCheckedModeBanner: false,
-              theme: themeModel.theme,
-              onGenerateTitle: widget.onGenerateTitle,
-              routerDelegate: GetIt.I<JetAppRouterDelegate>(),
-              routeInformationParser: widget.navigationModel,
-            );
-          },
-        ));
+    return PersistTheme(
+      model: _themeModel,
+      builder: (context, themeModel, child) {
+        return MaterialApp.router(
+          localizationsDelegates: widget.localizationsDelegates,
+          supportedLocales: widget.supportedLocales!,
+          debugShowCheckedModeBanner: false,
+          theme: themeModel.theme,
+          onGenerateTitle: widget.onGenerateTitle,
+          routerDelegate: GetIt.I<JetAppRouterDelegate>(),
+          routeInformationParser: widget.navigationModel,
+        );
+      },
+    );
   }
 
   @override
   void initState() {
     super.initState();
+
+    log("JetApp initState");
+    log("widget.bootBloc.state = ${widget.bootBloc.state}");
+
+    if (widget.bootBloc.state == BootBlocState.READY){
+      log("Reset boot");
+      widget.bootBloc.reset();
+    }
+
     _themeModel = widget.themeModelBuilder != null
         ? widget.themeModelBuilder!(context)
         : defaultThemeModel();
