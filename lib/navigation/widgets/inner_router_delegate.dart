@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/navigation/models/navigators_register.dart';
@@ -11,7 +12,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
   final AppNavigationState state;
 
-  final String? pageRoute;
+  final String? initialRoute;
 
   late final InnerNavigatorObserver _innerNavigatorObserver;
 
@@ -23,72 +24,64 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   final NavigatorsRegister navigatorsRegister;
 
-  InnerRouterDelegate(@factoryParam this.pageRoute, @factoryParam this.navBarCubit, this.state, this.navigatorsRegister) {
-    developer.log("Creating with pageRoute = $pageRoute",
-        name: "InnerRouterDelegate");
-    _innerNavigatorObserver = InnerNavigatorObserver(navBarCubit!);
-    navigatorsRegister.register(this.pageRoute!, _navigatorKey);
+  static final _loggerName = 'InnerRouterDelegate';
+
+  InnerRouterDelegate(@factoryParam this.initialRoute, @factoryParam this.navBarCubit, this.state, this.navigatorsRegister) {
+    log("Creating with pageRoute = $initialRoute",
+        name: _loggerName);
+    _innerNavigatorObserver = InnerNavigatorObserver(navBarCubit!, state);
+    navigatorsRegister.register(this.initialRoute!, _navigatorKey);
   }
 
   @override
   Widget build(BuildContext context) {
+    log("build", name: _loggerName);
     return Navigator(
       key: navigatorKey,
       observers: [_innerNavigatorObserver],
-      //only our pages mapped by pageRoute
-      pages: state.historyRoutes.where((path) => path.startsWith(RegExp('$pageRoute.*'))).map<Page>((path) {
-        var screen = state.navigationModel.getScreenByRoute(path);
-        return JetNavPage(screen, _bucket, name: screen.path);
-      }).toList(),
-       onGenerateInitialRoutes: (navigatorState, initialRoute) =>
-       [
+       onGenerateInitialRoutes: (navigatorState, initialRoute) {
+        log('onGenerateInitialRoutes $initialRoute', name: _loggerName);
+        return [
          buildRoute(context, initialRoute,
              state.navigationModel
                  .getScreenByRoute(initialRoute)
                  .builder)
-       ],
+       ];
+       },
+      initialRoute: initialRoute,
       onGenerateRoute: (settings) {
+        log('onGenerateRoute ${settings.name}', name: _loggerName);
         Router.of(context).backButtonDispatcher!.takePriority();
         var screen = state.navigationModel.getScreenByRoute(settings.name!);
-        state.push(screen.path);
-        notifyListeners();
+        state.currentRoute = settings.name!;
         return buildRoute(context, screen.path, screen.builder,
             settings: settings);
-      },
-      onPopPage: (Route<dynamic> route, dynamic result) {
-        developer.log("onPopPage call ${route.settings.name}",
-            name: "InnerRouterDelegate");
-        if (!route.didPop(result)) {
-          return false;
-        }
-        state.pop();
-        notifyListeners();
-        return true;
-      },
-    );
+      });
   }
+
+
 
   @override
   String get currentConfiguration {
-    developer.log("currentConfiguration call ${state.currentScreen.path}",
-        name: "InnerRouterDelegate");
-    return state.currentScreen.path;
+    log("currentConfiguration call ${state.currentRoute}",
+        name: _loggerName);
+    return state.currentRoute;
   }
 
   @override
   Future<void> setNewRoutePath(String path) async {
-    developer.log("setNewRoutePath $path", name: "InnerRouterDelegate");
-    state.push(path);
-    notifyListeners();
+    log("setNewRoutePath $path", name: _loggerName);
   }
 
   PageRoute buildRoute(
           BuildContext context, String route, WidgetBuilder? screenBuilder,
-          {RouteSettings? settings}) =>
-      MaterialPageRoute(
+          {RouteSettings? settings}) {
+    notifyListeners();
+    return MaterialPageRoute(
           settings: settings ?? RouteSettings(name: route),
           builder: (context) =>
               PageStorage(bucket: _bucket, child: screenBuilder!(context)));
+  }
 
   @override
   GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;

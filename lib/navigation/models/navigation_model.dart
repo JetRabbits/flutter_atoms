@@ -168,7 +168,7 @@ class NavigationModel extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
-    return Future.value(Uri.parse(routeInformation.location!).path);
+    return Future<String>.value(Uri.parse(routeInformation.location!).path);
   }
 
   @override

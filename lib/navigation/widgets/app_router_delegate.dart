@@ -25,6 +25,8 @@ class JetAppRouterDelegate extends RouterDelegate<String>
 
   @override
   Widget build(BuildContext context) {
+    developer.log("build", name: _loggerName);
+
     return Navigator(
       key: navigatorKey,
       observers: [rootObserver],
@@ -35,24 +37,28 @@ class JetAppRouterDelegate extends RouterDelegate<String>
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
             ? screen.builder!
-            : (dynamic context) => JetPage(screen.path, state);
+            : (dynamic context) => JetPage(settings.name!, state);
+        state.currentRoute = settings.name!;
+        notifyListeners();
         return MaterialPageRoute(settings: settings, builder: _builder);
       },
       onGenerateInitialRoutes: (NavigatorState navigator, String initialRoute) {
         developer.log("onGenerateInitialRoutes $initialRoute",
             name: _loggerName);
-//        Router.of(context).backButtonDispatcher!.takePriority();
+       Router.of(context).backButtonDispatcher!.takePriority();
         var screen = state.navigationModel.getScreenByRoute(initialRoute);
         var isJetPage = screen.path == screen.group.page.path;
         var _builder = isJetPage
             ? screen.builder!
             : (dynamic context) => JetPage(screen.path, state);
+        state.currentRoute = initialRoute;
+        notifyListeners();
         return [
           MaterialPageRoute(
               settings: RouteSettings(name: initialRoute), builder: _builder)
         ];
       },
-      initialRoute: state.currentScreen.path,
+      initialRoute: state.currentRoute,
     );
   }
 
@@ -63,14 +69,13 @@ class JetAppRouterDelegate extends RouterDelegate<String>
   @override
   Future<void> setNewRoutePath(String path) async {
     developer.log("setNewRoutePath $path", name: _loggerName);
-    state.push(path);
-    notifyListeners();
+    path.compass().replace().go();
   }
 
   @override
   String get currentConfiguration {
     developer.log("currentConfiguration call ${state.currentScreen.path}",
         name: _loggerName);
-    return state.currentScreen.path;
+    return state.currentRoute;
   }
 }

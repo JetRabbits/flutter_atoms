@@ -279,21 +279,30 @@ class _JetPageState extends State<JetPage> {
 class InnerNavigatorObserver extends NavigatorObserver {
   final NavBarCubit navBarCubit;
 
-  InnerNavigatorObserver(this.navBarCubit);
+  final AppNavigationState state;
 
+  InnerNavigatorObserver(this.navBarCubit, this.state);
+
+  void _update(Route<dynamic> route){
+    var routePath = route.settings.name;
+    if (routePath != null){
+      // state.currentRoute = routePath;
+      navBarCubit.updatePath(routePath);
+    }
+  }
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    navBarCubit.updatePath(route.settings.name);
+    _update(route);
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    navBarCubit.updatePath(newRoute!.settings.name);
+    _update(newRoute!);
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    navBarCubit.updatePath(previousRoute!.settings.name);
+    _update(route);
   }
 }
 

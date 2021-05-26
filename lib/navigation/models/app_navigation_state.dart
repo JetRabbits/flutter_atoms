@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:injectable/injectable.dart';
 
 import 'navigation_model.dart';
@@ -10,15 +13,17 @@ import 'screen_group.dart';
 
 @singleton
 class AppNavigationState extends ChangeNotifier {
-  final List<String> historyRoutes = ["/"];
+  static final _loggerName = 'AppNavigationState';
 
   // final List<Map<String, dynamic>> historyData = [];
   final NavigationModel navigationModel;
 
+  dynamic lastPopResult;
+
   AppNavigationState(this.navigationModel);
 
   NavigationScreen get currentScreen {
-    return navigationModel.getScreenByRoute(historyRoutes.last);
+    return navigationModel.getScreenByRoute(currentRoute);
   }
 
   NavigationPage get currentPage {
@@ -37,27 +42,12 @@ class AppNavigationState extends ChangeNotifier {
     return currentScreen.index;
   }
 
-  String route = "/";
+  String currentRoute = "/";
 
   // Map<String, dynamic> routeData = <String, dynamic> {};
 
-  void push(String route) {
-    historyRoutes.add(route);
-    notifyListeners();
-  }
 
-  void remove(String route) {
-    historyRoutes.removeWhere((e) => e.startsWith(route));
-    notifyListeners();
-  }
-
-  void removeAll() {
-    historyRoutes.clear();
-    notifyListeners();
-  }
-
-  void pop() {
-    historyRoutes.removeLast();
-    notifyListeners();
+  void _notifyListeners() {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) { notifyListeners(); });
   }
 }
