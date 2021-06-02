@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'navigation_model.dart';
@@ -11,11 +12,16 @@ import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
 
+final tracker = GetIt.I<AppNavigationState>();
+
 @singleton
 class AppNavigationState extends ChangeNotifier {
   static final _loggerName = 'AppNavigationState';
+  Map<String, dynamic> get data => historyData[currentRoute]!;
 
-  // final List<Map<String, dynamic>> historyData = [];
+  final List<String> history = ["/"];
+  final Map<String, Map<String, dynamic>> historyData = {"/": {}};
+
   final NavigationModel navigationModel;
 
   dynamic lastPopResult;
@@ -42,12 +48,36 @@ class AppNavigationState extends ChangeNotifier {
     return currentScreen.index;
   }
 
-  String currentRoute = "/";
+  String get currentRoute => history.last;
 
-  // Map<String, dynamic> routeData = <String, dynamic> {};
+
+  void push(String route){
+    try {
+      navigationModel.getScreenByRoute(route);
+      history.add(route);
+      historyData[route] = navigationModel.getParametersFromRoute(route).cast();
+    } catch (e) {
+      history.add('/404');
+    }
+  }
+
+  void pop(){
+    history.removeLast();
+  }
+
+  void clear(){
+    history.clear();
+    push("/");
+  }
 
 
   void _notifyListeners() {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) { notifyListeners(); });
+  }
+
+  void update() {
+    log("update", name: _loggerName);
+    log("hasListeners $hasListeners", name: _loggerName);
+    notifyListeners();
   }
 }

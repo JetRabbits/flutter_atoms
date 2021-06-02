@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
 import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
+import 'package:flutter_atoms/navigation/widgets/not_found_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,7 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:persist_theme/persist_theme.dart';
 
 import '../navigation.dart';
-import 'app_router_delegate.dart';
+import 'root_router_delegate.dart';
 import 'boot_screen.dart';
 
 // ignore: must_be_immutable
@@ -86,6 +87,9 @@ class JetApp extends StatefulWidget {
         };
       }
       navigationModel.addRoutePattern("/", bootWidget);
+      if (navigationModel.pagesMap["/404"] == null) {
+        navigationModel.addRoutePattern("/404", (context) => const NotFoundScreen());
+      }
     }
   }
 
@@ -107,7 +111,7 @@ class _JetAppState extends State<JetApp> {
           debugShowCheckedModeBanner: false,
           theme: themeModel.theme,
           onGenerateTitle: widget.onGenerateTitle,
-          routerDelegate: GetIt.I<JetAppRouterDelegate>(),
+          routerDelegate: GetIt.I<RootRouterDelegate>(),
           routeInformationParser: widget.navigationModel,
         );
       },

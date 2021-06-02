@@ -76,6 +76,6 @@ class BootScreen extends StatelessWidget {
 
   Widget buildLoading() {
     return SizedBox(
-        height: 100, child: Center(child: CircularProgressIndicator()));
+        height: 100, child: Center(child: const CircularProgressIndicator()));
   }
 }

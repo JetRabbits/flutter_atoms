@@ -2,11 +2,10 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:injectable/injectable.dart';
+import 'package:get_it/get_it.dart';
 
 import '../navigation.dart';
 import 'inner_router_delegate.dart';
-import 'package:get_it/get_it.dart';
 
 typedef NavigationStateBuilderType = Future<void> Function(
     BuildContext context, AppNavigationState state);
@@ -35,7 +34,7 @@ class JetPage extends StatefulWidget {
 class _JetPageState extends State<JetPage> {
   late NavigationPage _page;
 
-  late InnerRouterDelegate _routerDelegate;
+  InnerRouterDelegate? _innerRouterDelegate;
 
   final GlobalKey<State> bottomNavigationBarKey = GlobalKey<State>();
   BackButtonDispatcher? _backButtonDispatcher;
@@ -48,17 +47,27 @@ class _JetPageState extends State<JetPage> {
 
   late NavigationScreen _screen;
 
+  static final _loggerName = 'JetPage';
+
   @override
   Widget build(BuildContext context) {
-    try {
-      _backButtonDispatcher!.takePriority();
-    } catch (ignore) {}
-    _page.backButtonDispatcher = _backButtonDispatcher;
+    log("build", name: _loggerName);
 
-    if (_screenPath == '/') {
-      log("screenPath = /", name: "JetPage");
-      return Scaffold(body: _screen.builder!(context));
+    if (_innerRouterDelegate == null) {
+      log("no inner navigator", name: _loggerName);
+      var screenWidget = _screen.builder!(context);
+      if (screenWidget is Scaffold) {
+        return screenWidget;
+      }
+      return Scaffold(body: screenWidget);
     }
+
+    log("with inner navigator", name: _loggerName);
+
+    // try {
+    //   _backButtonDispatcher!.takePriority();
+    // } catch (ignore) {}
+    // _page.backButtonDispatcher = _backButtonDispatcher;
 
     return Scaffold(
         extendBody: true,
@@ -71,7 +80,7 @@ class _JetPageState extends State<JetPage> {
 //            VerticalDivider(),
             Expanded(
               child: Router(
-                routerDelegate: _routerDelegate,
+                routerDelegate: _innerRouterDelegate!,
                 backButtonDispatcher: _backButtonDispatcher,
                 routeInformationParser: widget.navigationState.navigationModel,
                 routeInformationProvider: PlatformRouteInformationProvider(
@@ -240,17 +249,17 @@ class _JetPageState extends State<JetPage> {
   @override
   void initState() {
     super.initState();
-    log("initialPageRoute = ${widget.initialPageRoute}",
-        name: "JetPage");
+    log("initialPageRoute = ${widget.initialPageRoute}", name: "JetPage");
 
     _page = widget.navigationState.navigationModel
         .getPageByRoute(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
     _screen = widget.navigationState.currentScreen;
 
-    if (_screenPath != '/') {
+    if (_screen.path != _page.path) {
       _navBarCubit = NavBarCubit(widget.initialPageRoute);
-      _routerDelegate = GetIt.I<InnerRouterDelegate>(param1: widget.initialPageRoute, param2: _navBarCubit);
+      _innerRouterDelegate = GetIt.I<InnerRouterDelegate>(
+          param1: widget.initialPageRoute, param2: _navBarCubit);
     }
   }
 
@@ -283,13 +292,14 @@ class InnerNavigatorObserver extends NavigatorObserver {
 
   InnerNavigatorObserver(this.navBarCubit, this.state);
 
-  void _update(Route<dynamic> route){
+  void _update(Route<dynamic> route) {
     var routePath = route.settings.name;
-    if (routePath != null){
+    if (routePath != null) {
       // state.currentRoute = routePath;
       navBarCubit.updatePath(routePath);
     }
   }
+
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _update(route);
@@ -306,26 +316,63 @@ class InnerNavigatorObserver extends NavigatorObserver {
   }
 }
 
-class JetNavPage extends Page {
+class SimpleRouteScreenPage extends Page {
   final NavigationScreen screen;
-  final PageStorageBucket storageBucket;
+  final PageStorageBucket? storageBucket;
+
+  final String route;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
         settings: this,
-        builder: (context) => PageStorage(
-            bucket: storageBucket, child: screen.builder!(context)));
+        builder: (context) => storageBucket == null
+            ? screen.builder!(context)
+            : PageStorage(
+                bucket: storageBucket!, child: screen.builder!(context)));
   }
 
-  JetNavPage(
+  SimpleRouteScreenPage(
+    this.route,
     this.screen,
-    this.storageBucket, {
-    key,
+    {
+    this.storageBucket,
     String? name,
     Object? arguments,
     restorationId,
-  }) : super(key: key, name: name, arguments: arguments);
+  }) : super(key: null, name: name, arguments: arguments);
+}
+
+class NavigableRoutePage extends Page {
+  final PageStorageBucket? storageBucket;
+
+  final String route;
+
+  final AppNavigationState state;
+
+  @override
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+        settings: this,
+        builder: (context) {
+          var widget = JetPage(route, state);
+
+          return storageBucket == null
+            ? widget
+            : PageStorage(
+                bucket: storageBucket!, child: widget);
+        });
+  }
+
+
+  NavigableRoutePage(
+    this.route,
+    this.state,
+    {
+    this.storageBucket,
+    Object? arguments,
+    restorationId,
+  }) : super(key: ValueKey(route), name: route, arguments: arguments);
 }
 
 class FadeAnimationPage extends Page {

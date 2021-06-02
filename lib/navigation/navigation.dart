@@ -4,7 +4,7 @@ export 'extensions/routes.dart';
 export 'models/app_navigation_state.dart';
 export 'models/button_config.dart';
 export 'models/float_action_button_config.dart';
-export 'models/jet_compass.dart';
+export 'models/compass.dart';
 export 'models/navigators_register.dart';
 export 'models/navigation_model.dart';
 export 'models/navigation_page.dart';

@@ -9,14 +9,14 @@ import 'package:injectable/injectable.dart' as _i2;
 
 import 'navigation/blocs/boot/boot_bloc.dart' as _i11;
 import 'navigation/models/app_navigation_state.dart' as _i10;
-import 'navigation/models/jet_compass.dart' as _i9;
+import 'navigation/models/compass.dart' as _i9;
 import 'navigation/models/navigation_model.dart' as _i6;
 import 'navigation/models/navigators_register.dart' as _i8;
 import 'navigation/navigation.dart' as _i4;
-import 'navigation/widgets/app_router_delegate.dart' as _i7;
 import 'navigation/widgets/inner_router_delegate.dart' as _i3;
-import 'navigation/widgets/root_navigator_observer.dart'
-    as _i5; // ignore_for_file: unnecessary_lambdas
+import 'navigation/widgets/root_navigator_observer.dart' as _i5;
+import 'navigation/widgets/root_router_delegate.dart'
+    as _i7; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -24,18 +24,18 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
     {String? environment, _i2.EnvironmentFilter? environmentFilter}) {
   final gh = _i2.GetItHelper(get, environment, environmentFilter);
   gh.factoryParam<_i3.InnerRouterDelegate, String?, _i4.NavBarCubit?>(
-      (pageRoute, navBarCubit) => _i3.InnerRouterDelegate(
-          pageRoute,
+      (initialRoute, navBarCubit) => _i3.InnerRouterDelegate(
+          initialRoute,
           navBarCubit,
           get<_i4.AppNavigationState>(),
           get<_i4.NavigatorsRegister>()));
   gh.factory<_i5.RootNavigatorObserver>(
       () => _i5.RootNavigatorObserver(get<_i6.NavigationModel>()));
-  gh.factory<_i7.JetAppRouterDelegate>(() => _i7.JetAppRouterDelegate(
+  gh.factory<_i7.RootRouterDelegate>(() => _i7.RootRouterDelegate(
       get<_i4.AppNavigationState>(),
       get<_i5.RootNavigatorObserver>(),
       get<_i8.NavigatorsRegister>()));
-  gh.factoryParam<_i9.JetCompass, String?, dynamic>((path, _) => _i9.JetCompass(
+  gh.factoryParam<_i9.Compass, String?, dynamic>((path, _) => _i9.Compass(
       path, get<_i8.NavigatorsRegister>(), get<_i10.AppNavigationState>()));
   gh.singleton<_i10.AppNavigationState>(
       _i10.AppNavigationState(get<_i6.NavigationModel>()));
