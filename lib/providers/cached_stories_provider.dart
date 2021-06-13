@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_atoms/models/json_serializable/stories_entity.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:collection/collection.dart';
 
 class CachedStoriesProvider {
 
@@ -11,20 +11,37 @@ class CachedStoriesProvider {
 
 
   Map<String, StoriesEntity> get stories => _stories;
+  StoriesEntity? get onBoardingStory => _stories.values.firstWhereOrNull((element) => element.details.onBoarding);
+
+  late String configUrl;
 
 
   StoriesEntity? operator [](String id) => stories[id];
 
-
-  Future<void> load(String configUrl) async {
+  Future<void> load({String? url}) async {
     await _cleanCache();
+    if (url != null) configUrl = url;
 
     try {
       final String storiesConfigJson = await _loadStoriesConfigJson(configUrl);
 
-      List<dynamic> storiesConfig = json.decode(storiesConfigJson);
+      List<dynamic> storiesConfig = json.decode(storiesConfigJson)["stories"];
 
       storiesConfig
+          .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
+          .forEach( (story) => stories.putIfAbsent(story.id, () => story) );
+
+      await _cacheStories();
+    }
+    catch (e, stacktrace) {
+      print("$e $stacktrace");
+    }
+  }
+
+  Future<void> fromJson(dynamic storiesConfig) async {
+    await _cleanCache();
+    try {
+      (storiesConfig["stories"] as List)
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
           .forEach( (story) => stories.putIfAbsent(story.id, () => story) );
 
@@ -61,8 +78,8 @@ class CachedStoriesProvider {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
     stories.values.forEach((s) async {
-      await cacheManager.downloadFile(s.titleImage!);
-      s.images!.forEach((i) async => await cacheManager.downloadFile(i));
+      await cacheManager.downloadFile(s.titleImage);
+      s.storyItems.forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
     });
   }
 
