@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_atoms/models/json_serializable/stories_entity.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
-import 'package:collection/collection.dart';
 
 class CachedStoriesProvider {
 
@@ -11,7 +11,10 @@ class CachedStoriesProvider {
 
 
   Map<String, StoriesEntity> get stories => _stories;
-  StoriesEntity? get onBoardingStory => _stories.values.firstWhereOrNull((element) => element.details.onBoarding);
+  StoriesEntity? get onBoardingStory {
+    print("!!!!!");
+    return _stories.values.firstWhereOrNull((element) => element.details.onBoarding);
+  }
 
   late String configUrl;
 
@@ -80,6 +83,10 @@ class CachedStoriesProvider {
     stories.values.forEach((s) async {
       await cacheManager.downloadFile(s.titleImage);
       s.storyItems.forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
+      print("!!!!on_boarding = ${s.details.onBoarding}");
+      s.storyItems.forEach((element) {
+        print(s.storyItems.length);
+      });
     });
   }
 
