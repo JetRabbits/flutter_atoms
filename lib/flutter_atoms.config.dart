@@ -29,8 +29,8 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       get<_i6.AppNavigationState>(),
       get<_i3.RootNavigatorObserver>(),
       get<_i7.NavigatorsRegister>()));
-  gh.factoryParam<_i8.Compass, String?, dynamic>((route, _) => _i8.Compass(
-      route, get<_i7.NavigatorsRegister>(), get<_i9.AppNavigationState>()));
+  gh.factoryParam<_i8.Compass, String?, dynamic>((path, _) => _i8.Compass(
+      path, get<_i7.NavigatorsRegister>(), get<_i9.AppNavigationState>()));
   gh.factoryParam<_i10.InnerRouterDelegate, String?, _i6.NavBarCubit?>(
       (initialRoute, navBarCubit) => _i10.InnerRouterDelegate(
           initialRoute,

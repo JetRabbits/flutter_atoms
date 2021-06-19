@@ -1,10 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'app_navigation_state.dart';
 import 'navigators_register.dart';
+
+get compass => GetIt.I<Compass>();
 
 @injectable
 class Compass {
@@ -14,15 +19,17 @@ class Compass {
 
   bool _root = false;
   bool _replace = false;
-  String? path;
+  late String path;
 
   bool _clear = false;
-  bool _switchOn = true;
+  bool _switchOn = false;
 
 
 
-  Compass(@factoryParam this.path, this.navigatorsRegistry,
-      this.appNavigationState);
+  Compass(@factoryParam String? path, this.navigatorsRegistry,
+      this.appNavigationState) {
+    this.path = path ?? appNavigationState.currentRoute;
+  }
 
   Compass root() {
     _root = true;
@@ -44,7 +51,10 @@ class Compass {
     return this;
   }
 
-
+  void back(){
+    appNavigationState.pop();
+    appNavigationState.update();
+  }
 
   Future<T?> go<T>([Map<String, String>? params]) async {
     log("go to path $path, replace = $_replace, use root = $_root",
@@ -67,14 +77,16 @@ class Compass {
     // }
     if (_clear) appNavigationState.history.clear();
 
+    if (_switchOn) {
+      appNavigationState.remove(path);
+      appNavigationState.push(path);
+    } else
     if (_replace) {
       appNavigationState.pop();
-      appNavigationState.push(path!);
-      // return _operationNavigator?.pushReplacementNamed(path!) as Future<T?>;
+      appNavigationState.push(path);
     }
     else {
-      appNavigationState.push(path!);
-      // return _operationNavigator?.pushNamed(path!) as Future<T?>;
+      appNavigationState.push(path);
     }
 
     appNavigationState.update();

@@ -24,6 +24,10 @@ class AppNavigationState extends ChangeNotifier {
 
   final NavigationModel navigationModel;
 
+  final RouteInformationProvider routeInformationProvider = PlatformRouteInformationProvider(
+  initialRouteInformation:
+  RouteInformation(location: "/"));
+
   dynamic lastPopResult;
 
   AppNavigationState(this.navigationModel);
@@ -50,12 +54,12 @@ class AppNavigationState extends ChangeNotifier {
 
   String get currentRoute => history.last;
 
-
   void push(String route){
     try {
-      navigationModel.getScreenByRoute(route);
-      history.add(route);
-      historyData[route] = navigationModel.getParametersFromRoute(route).cast();
+      var validatedRoute = navigationModel.routesValidator.validate(route);
+      navigationModel.getScreenByRoute(validatedRoute);
+      history.add(validatedRoute);
+      historyData[validatedRoute] = navigationModel.getParametersFromRoute(route).cast();
     } catch (e) {
       history.add('/404');
     }
@@ -63,6 +67,10 @@ class AppNavigationState extends ChangeNotifier {
 
   void pop(){
     history.removeLast();
+  }
+
+  void remove(String path){
+    history.remove(path);
   }
 
   void clear(){

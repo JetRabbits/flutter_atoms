@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/navigation/models/inner_navigator_route_creator.dart';
 import 'package:flutter_atoms/navigation/models/navigators_register.dart';
 import 'package:injectable/injectable.dart';
 
@@ -13,7 +14,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   final String? initialRoute;
 
-  late final InnerNavigatorObserver _innerNavigatorObserver;
 
   final NavBarCubit? navBarCubit;
 
@@ -28,7 +28,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
   InnerRouterDelegate(@factoryParam this.initialRoute,
       @factoryParam this.navBarCubit, this.state, this.navigatorsRegister) {
     log("Creating with pageRoute = $initialRoute", name: _loggerName);
-    _innerNavigatorObserver = InnerNavigatorObserver(navBarCubit!, state);
     navigatorsRegister.register(this.initialRoute!, _navigatorKey);
     state.addListener(() {
       log("Notify AppNavigationState is called", name: _loggerName);
@@ -40,68 +39,59 @@ class InnerRouterDelegate extends RouterDelegate<String>
   Widget build(BuildContext context) {
     log("build", name: _loggerName);
     log("${state.history}", name: _loggerName);
+    log("current route = ${state.currentRoute}", name: _loggerName);
+    log("current screen = ${state.currentScreen.path}", name: _loggerName);
+    Map<String, InnerNavigatorRouteCreator> result = {};
+    state.history.forEach((route) {
+      var routePage = state.navigationModel.getPageByRoute(route);
+      var initialPage = state.navigationModel.getPageByRoute(initialRoute!);
+      log("routePage ${routePage.path} == ${initialPage.path} ${routePage.path == initialPage.path}");
+      if (routePage.path == initialPage.path) {
+        log("mapping route $route", name: _loggerName);
+        var screen = state.navigationModel.getScreenByRoute(route);
+        result.remove(route);
+        result[route] = InnerNavigatorRouteCreator(route, screen,
+            name: route, restorationId: route, key: ValueKey(route));
+      }
+    });
 
+    var _pages = result.values.toList();
     return Navigator(
-        key: navigatorKey,
-        pages: state.history.where((route) {
-          var routePage = state.navigationModel.getPageByRoute(route);
-          var initialPage = state.navigationModel.getPageByRoute(initialRoute!);
-          log("routePage ${routePage.path} == ${initialPage.path} ${routePage.path == initialPage.path}");
-          return routePage.path == initialPage.path;
-        }).map((route) {
-          log("mapping route $route", name: _loggerName);
-          var screen = state.navigationModel.getScreenByRoute(route);
-          return SimpleRouteScreenPage(route, screen,
-              name: route, restorationId: route);
-        }).toList(),
-        onPopPage: (route, result) {
-          log("Pop route ${route.settings.name}", name: _loggerName);
+      key: navigatorKey,
+      pages: _pages,
+      onPopPage: (route, result) {
+        log("Pop route ${route.settings.name}", name: _loggerName);
 
-          if (route.didPop(result)){
-            state.pop();
-            state.lastPopResult = result;
-            state.update();
-            return true;
-          }
-          return false;
-        },
-        observers: [_innerNavigatorObserver],
-        // onGenerateInitialRoutes: (navigatorState, initialRoute) {
-        //   log('onGenerateInitialRoutes $initialRoute', name: _loggerName);
-        //   return [
-        //     buildRoute(context, initialRoute,
-        //         state.navigationModel.getScreenByRoute(initialRoute).builder)
-        //   ];
-        // },
-        // initialRoute: initialRoute,
-        // onGenerateRoute: (settings) {
-        //   log('onGenerateRoute ${settings.name}', name: _loggerName);
-        //   Router.of(context).backButtonDispatcher!.takePriority();
-        //   var screen = state.navigationModel.getScreenByRoute(settings.name!);
-        //   return buildRoute(context, screen.path, screen.builder,
-        //       settings: settings);
-        // }
-        );
-  }
-
-  @override
-  String get currentConfiguration {
-    log("currentConfiguration call ${state.currentRoute}", name: _loggerName);
-    return state.currentRoute;
+        if (route.didPop(result)) {
+          state.pop();
+          state.lastPopResult = result;
+          state.update();
+          return true;
+        }
+        return false;
+      },
+      // onGenerateInitialRoutes: (navigatorState, initialRoute) {
+      //   log('onGenerateInitialRoutes $initialRoute', name: _loggerName);
+      //   return [
+      //     buildRoute(context, initialRoute,
+      //         state.navigationModel.getScreenByRoute(initialRoute).builder)
+      //   ];
+      // },
+      // initialRoute: initialRoute,
+      // onGenerateRoute: (settings) {
+      //   log('onGenerateRoute ${settings.name}', name: _loggerName);
+      //   Router.of(context).backButtonDispatcher!.takePriority();
+      //   var screen = state.navigationModel.getScreenByRoute(settings.name!);
+      //   return buildRoute(context, screen.path, screen.builder,
+      //       settings: settings);
+      // }
+    );
   }
 
   @override
   Future<void> setNewRoutePath(String path) async {
-    log("setNewRoutePath $path", name: _loggerName);
-  }
-
-  PageRoute buildRoute(
-      BuildContext context, String route, WidgetBuilder? screenBuilder,
-      {RouteSettings? settings}) {
-    notifyListeners();
-    return MaterialPageRoute(
-        settings: settings ?? RouteSettings(name: route),
-        builder: (context) => screenBuilder!(context));
+    // log('setNewRoutePath', name: _loggerName);
+    // notifyListeners();
   }
 
   @override

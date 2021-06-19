@@ -35,12 +35,15 @@ typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 class NavigationModel extends RouteInformationParser<String> {
   Widget? sideBarLogo;
 
+  RoutesValidator routesValidator;
+
   NavigationModel({
     required Map<String, WidgetBuilder> routes,
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
     Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
     this.sideBarLogo,
     Map<String, FloatActionButtonConfig>? floatButtons,
+    required this.routesValidator,
   }) {
     routes.keys.forEach((path) {
       addRoutePattern(path, routes[path],
@@ -174,5 +177,13 @@ class NavigationModel extends RouteInformationParser<String> {
   @override
   RouteInformation restoreRouteInformation(String configuration) {
     return RouteInformation(location: configuration);
+  }
+}
+
+class RoutesValidator {
+  final String Function(String) onValidate;
+  RoutesValidator({required this.onValidate});
+  String validate(String route){
+    return onValidate(route);
   }
 }

@@ -25,7 +25,7 @@ class JetApp extends StatefulWidget {
 
   final NavigationModel navigationModel;
 
-  WidgetBuilder? bootWidget;
+  WidgetBuilder? bootWidgetBuilder;
 
   final Widget? logo;
 
@@ -56,7 +56,7 @@ class JetApp extends StatefulWidget {
     this.logo,
     this.bootPageThemeData,
     this.repeatLoadLabel,
-    this.bootWidget,
+    this.bootWidgetBuilder,
     this.topLevelProviders,
     this.themeModelBuilder,
     this.supportedLocales,
@@ -71,10 +71,11 @@ class JetApp extends StatefulWidget {
     }
     bootBloc = GetIt.I<BootBloc>()..onStart = onAppStart!;
     if (navigationModel.pagesMap["/"] == null) {
-      if (bootWidget == null) {
+      if (bootWidgetBuilder == null) {
         assert(nextRoute != null, "Next route should be defined");
         assert(onAppStart != null, "onAppStart should be defined");
-        bootWidget = (context) {
+        bootWidgetBuilder = (context) {
+          bootBloc.start();
           return Theme(
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootScreen(bootBloc,
@@ -86,7 +87,7 @@ class JetApp extends StatefulWidget {
           );
         };
       }
-      navigationModel.addRoutePattern("/", bootWidget);
+      navigationModel.addRoutePattern("/", bootWidgetBuilder);
       if (navigationModel.pagesMap["/404"] == null) {
         navigationModel.addRoutePattern("/404", (context) => const NotFoundScreen());
       }
@@ -113,6 +114,7 @@ class _JetAppState extends State<JetApp> {
           onGenerateTitle: widget.onGenerateTitle,
           routerDelegate: GetIt.I<RootRouterDelegate>(),
           routeInformationParser: widget.navigationModel,
+          routeInformationProvider: GetIt.I<AppNavigationState>().routeInformationProvider,
         );
       },
     );

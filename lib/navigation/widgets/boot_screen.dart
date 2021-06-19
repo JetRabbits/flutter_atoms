@@ -38,7 +38,7 @@ class BootScreen extends StatelessWidget {
                     }
                   },
                   builder: (context, state) {
-                    if (state == BootBlocState.INIT) bootBloc.start();
+                    // if (state == BootBlocState.INIT) bootBloc.start();
                     if (state == BootBlocState.ERROR)
                       return buildRepeatButton();
                     return buildLoading();

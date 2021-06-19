@@ -20,7 +20,7 @@ Future<void> main() async {
     }, navBarButtons: {
       "/main/lookup": (context) => BottomNavigationBarItem(icon: Icon(Icons.search)),
       "/main/profile": (context) => BottomNavigationBarItem(icon: Icon(Icons.person)),
-    });
+    }, routesValidator: RoutesValidator(onValidate: (_)=> _));
     var page = navigationModel.getPageByRoute("/main/lookup/search");
     expect(page.path, "/main");
     var group = navigationModel.getScreenGroupByRoute("/main/lookup/catalog");

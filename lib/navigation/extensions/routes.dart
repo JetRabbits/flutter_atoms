@@ -7,7 +7,7 @@ extension JetCompassExt on String {
     return GetIt.I<Compass>(param1: this);
   }
 
-  Future<T?> go<T>({Map<String, String>? params, bool replace = false}) async {
-      return replace ? this.compass().replace().go<T>(): this.compass().go<T>(params);
+  Future<T?> go<T>({Map<String, String>? params}) async {
+      return this.compass().switchOn().go<T>();
   }
 }

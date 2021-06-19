@@ -1,7 +1,11 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/models/navigators_register.dart';
+import 'package:flutter_atoms/navigation/models/root_navigator_route_creator.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../navigation.dart';
@@ -17,7 +21,7 @@ class RootRouterDelegate extends RouterDelegate<String>
 
   final NavigatorsRegister navigatorsRegister;
 
-  static final _loggerName = "JetAppRouterDelegate";
+  static final _loggerName = "RootRouterDelegate";
 
   RootRouterDelegate(this.state, this.rootObserver, this.navigatorsRegister) {
     navigatorsRegister.register("/", _navigatorKey);
@@ -44,8 +48,8 @@ class RootRouterDelegate extends RouterDelegate<String>
 
     var pages = filteredHistory.values.map((route) {
       log("map page $route", name: _loggerName);
-      return NavigableRoutePage(route, state,
-          restorationId: route);
+      return RootNavigatorRouteCreator(route, state,
+          restorationId: route, key: ValueKey(route));
     }).toList();
 
     var navigator = Navigator(
@@ -95,13 +99,19 @@ class RootRouterDelegate extends RouterDelegate<String>
   }
 
   @override
-  // TODO: implement navigatorKey
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   @override
   Future<void> setNewRoutePath(String path) async {
     log("setNewRoutePath $path", name: _loggerName);
-    path.compass().replace().go();
+
+    if (GetIt.I<BootBloc>().state == BootBlocState.READY) {
+      path.compass().go();
+    } else {
+      state.pop();
+      state.push(path);
+    }
+    return SynchronousFuture<void>(null);
   }
 
   @override

@@ -83,9 +83,8 @@ class _JetPageState extends State<JetPage> {
                 routerDelegate: _innerRouterDelegate!,
                 backButtonDispatcher: _backButtonDispatcher,
                 routeInformationParser: widget.navigationState.navigationModel,
-                routeInformationProvider: PlatformRouteInformationProvider(
-                    initialRouteInformation:
-                        RouteInformation(location: widget.initialPageRoute)),
+                routeInformationProvider:
+                    widget.navigationState.routeInformationProvider,
               ),
             ),
           ],
@@ -143,7 +142,7 @@ class _JetPageState extends State<JetPage> {
             onTap: () {
               if (!isActive) {
                 _screenPath = group.screenMaps.values.first.path;
-                _screenPath.go();
+                _screenPath.compass().go();
               }
             },
             child: Column(
@@ -204,34 +203,29 @@ class _JetPageState extends State<JetPage> {
   }
 
   Widget buildSideBar(BuildContext context) {
-    return BlocBuilder<NavBarCubit, NavBarState>(
-      bloc: _navBarCubit,
-      builder: (context, state) {
-        var navigationModel = widget.navigationState.navigationModel;
-        var buttons = _page.screenGroupsMap.values
-            .where((group) =>
-                group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
-            .map<NavigationRailDestination>(
-                (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
-            .toList();
-        var _group = navigationModel.getScreenGroupByRoute(state.path);
-        if (buttons.length >= 2 && _group.sideBarIndex >= 0)
-          return NavigationRail(
-              leading: navigationModel.sideBarLogo,
-              onDestinationSelected: (value) {
-                var _screenGroup = _page.screenGroupsMap.values
-                    .firstWhereOrNull((g) => g.sideBarIndex == value);
-                if (_screenGroup != null) {
-                  var _path = _screenGroup.screenMaps.values.first.path;
-                  _path.go();
-                }
-              },
-              extended: MediaQuery.of(context).size.width > 1024,
-              destinations: buttons,
-              selectedIndex: _group.sideBarIndex);
-        return Container();
-      },
-    );
+    var navigationModel = widget.navigationState.navigationModel;
+    var buttons = _page.screenGroupsMap.values
+        .where((group) =>
+    group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
+        .map<NavigationRailDestination>(
+            (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
+        .toList();
+    var _group = navigationModel.getScreenGroupByRoute(widget.navigationState.currentRoute);
+    if (buttons.length >= 2 && _group.sideBarIndex >= 0)
+      return NavigationRail(
+          leading: navigationModel.sideBarLogo,
+          onDestinationSelected: (value) {
+            var _screenGroup = _page.screenGroupsMap.values
+                .firstWhereOrNull((g) => g.sideBarIndex == value);
+            if (_screenGroup != null) {
+              var _path = _screenGroup.screenMaps.values.first.path;
+              _path.compass().go();
+            }
+          },
+          extended: MediaQuery.of(context).size.width > 1024,
+          destinations: buttons,
+          selectedIndex: _group.sideBarIndex);
+    return Container();
   }
 
   Widget? buildFloatActionButton(BuildContext context) {
@@ -293,6 +287,7 @@ class InnerNavigatorObserver extends NavigatorObserver {
   InnerNavigatorObserver(this.navBarCubit, this.state);
 
   void _update(Route<dynamic> route) {
+    print("InnerNavigatorObserver._update");
     var routePath = route.settings.name;
     if (routePath != null) {
       // state.currentRoute = routePath;
@@ -316,80 +311,5 @@ class InnerNavigatorObserver extends NavigatorObserver {
   }
 }
 
-class SimpleRouteScreenPage extends Page {
-  final NavigationScreen screen;
-  final PageStorageBucket? storageBucket;
-
-  final String route;
-
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-        settings: this,
-        builder: (context) => storageBucket == null
-            ? screen.builder!(context)
-            : PageStorage(
-                bucket: storageBucket!, child: screen.builder!(context)));
-  }
-
-  SimpleRouteScreenPage(
-    this.route,
-    this.screen,
-    {
-    this.storageBucket,
-    String? name,
-    Object? arguments,
-    restorationId,
-  }) : super(key: null, name: name, arguments: arguments);
-}
-
-class NavigableRoutePage extends Page {
-  final PageStorageBucket? storageBucket;
-
-  final String route;
-
-  final AppNavigationState state;
-
-  @override
-  Route createRoute(BuildContext context) {
-    return MaterialPageRoute(
-        settings: this,
-        builder: (context) {
-          var widget = JetPage(route, state);
-
-          return storageBucket == null
-            ? widget
-            : PageStorage(
-                bucket: storageBucket!, child: widget);
-        });
-  }
 
 
-  NavigableRoutePage(
-    this.route,
-    this.state,
-    {
-    this.storageBucket,
-    Object? arguments,
-    restorationId,
-  }) : super(key: ValueKey(route), name: route, arguments: arguments);
-}
-
-class FadeAnimationPage extends Page {
-  final Widget? child;
-
-  FadeAnimationPage({Key? key, this.child}) : super(key: key as LocalKey?);
-
-  Route createRoute(BuildContext context) {
-    return PageRouteBuilder(
-      settings: this,
-      pageBuilder: (context, animation, animation2) {
-        var curveTween = CurveTween(curve: Curves.easeIn);
-        return FadeTransition(
-          opacity: animation.drive(curveTween),
-          child: child,
-        );
-      },
-    );
-  }
-}
