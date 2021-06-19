@@ -12,7 +12,6 @@ class CachedStoriesProvider {
 
   Map<String, StoriesEntity> get stories => _stories;
   StoriesEntity? get onBoardingStory {
-    print("!!!!!");
     return _stories.values.firstWhereOrNull((element) => element.details.onBoarding);
   }
 
