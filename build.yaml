@@ -5,6 +5,7 @@ targets:
         generate_for:
           include:
             - lib/models/**
+            - lib/stories/model/**
         options:
           # Options configure how source code is generated for every
           # `@JsonSerializable`-annotated class in the package.

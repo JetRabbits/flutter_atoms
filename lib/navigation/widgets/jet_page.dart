@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import '../navigation.dart';
+import '../../navigation.dart';
 import 'inner_router_delegate.dart';
 
 typedef NavigationStateBuilderType = Future<void> Function(
@@ -206,11 +206,12 @@ class _JetPageState extends State<JetPage> {
     var navigationModel = widget.navigationState.navigationModel;
     var buttons = _page.screenGroupsMap.values
         .where((group) =>
-    group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
+            group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
         .map<NavigationRailDestination>(
             (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
         .toList();
-    var _group = navigationModel.getScreenGroupByRoute(widget.navigationState.currentRoute);
+    var _group = navigationModel
+        .getScreenGroupByRoute(widget.navigationState.currentRoute);
     if (buttons.length >= 2 && _group.sideBarIndex >= 0)
       return NavigationRail(
           leading: navigationModel.sideBarLogo,
@@ -310,6 +311,3 @@ class InnerNavigatorObserver extends NavigatorObserver {
     _update(route);
   }
 }
-
-
-

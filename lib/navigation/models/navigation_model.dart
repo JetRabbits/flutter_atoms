@@ -56,18 +56,19 @@ class NavigationModel extends RouteInformationParser<String> {
   Map<String, String> getParametersFromRoute(String route) {
     var screenByRoute = getScreenByRoute(route);
     Map<String, String> result = {};
-    var pattern = screenByRoute.path
-        .replaceAllMapped(RegExp(r':(\w+)'), (match) {
+    var pattern =
+        screenByRoute.path.replaceAllMapped(RegExp(r':(\w+)'), (match) {
       return '(?<${match.group(1)!}>\\w+)?';
     });
     log('getParametersFromRoute pattern: $pattern', name: 'NavigationModel');
 
-    RegExp(pattern).allMatches(route).forEach((match) =>
-        match.groupNames.forEach((value) {
-          if (match.namedGroup(value) != null){
-            result.putIfAbsent(value, () => match.namedGroup(value)!);
-          }
-        }));
+    RegExp(pattern)
+        .allMatches(route)
+        .forEach((match) => match.groupNames.forEach((value) {
+              if (match.namedGroup(value) != null) {
+                result.putIfAbsent(value, () => match.namedGroup(value)!);
+              }
+            }));
     log('getParametersFromRoute: $result', name: 'NavigationModel');
     return result;
   }
@@ -138,9 +139,8 @@ class NavigationModel extends RouteInformationParser<String> {
     log("getScreenByRoute ${route}", name: "NavigationModel");
     var screenGroup = getScreenGroupByRoute(route);
     var split = parseAndCheckFormat(route).pathSegments;
-    var path = split.length > 1
-        ? "/${split[0]}/${split[1]}/${split[2]}"
-        : route;
+    var path =
+        split.length > 1 ? "/${split[0]}/${split[1]}/${split[2]}" : route;
     var result = screenGroup.screenMaps[path];
     result = result ?? screenGroup.screenMaps.values.first;
 
@@ -182,8 +182,10 @@ class NavigationModel extends RouteInformationParser<String> {
 
 class RoutesValidator {
   final String Function(String) onValidate;
+
   RoutesValidator({required this.onValidate});
-  String validate(String route){
+
+  String validate(String route) {
     return onValidate(route);
   }
 }

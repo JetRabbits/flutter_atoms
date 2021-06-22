@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/navigation.dart';
 import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
-import 'package:flutter_atoms/navigation/navigation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BootScreen extends StatelessWidget {

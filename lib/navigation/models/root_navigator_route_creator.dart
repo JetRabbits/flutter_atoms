@@ -25,11 +25,11 @@ class RootNavigatorRouteCreator extends Page {
   }
 
   RootNavigatorRouteCreator(
-      this.route,
-      this.state, {
-        LocalKey? key,
-        this.storageBucket,
-        Object? arguments,
-        restorationId,
-      }) : super(key: key, name: route, arguments: arguments, restorationId: route);
+    this.route,
+    this.state, {
+    LocalKey? key,
+    this.storageBucket,
+    Object? arguments,
+    restorationId,
+  }) : super(key: key, name: route, arguments: arguments, restorationId: route);
 }

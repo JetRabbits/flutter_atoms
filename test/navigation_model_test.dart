@@ -8,8 +8,7 @@ import 'package:mockito/mockito.dart';
 class MockContext extends Mock implements BuildContext {}
 
 Future<void> main() async {
-  setUp(() {
-  });
+  setUp(() {});
 
   test('Navigation Model parsing tests', () async {
     var navigationModel = NavigationModel(routes: {
@@ -18,9 +17,11 @@ Future<void> main() async {
       "/main/profile": (context) => Text("ProfileScreen"),
       "/details": (context) => Text("DetailsScreen"),
     }, navBarButtons: {
-      "/main/lookup": (context) => BottomNavigationBarItem(icon: Icon(Icons.search)),
-      "/main/profile": (context) => BottomNavigationBarItem(icon: Icon(Icons.person)),
-    }, routesValidator: RoutesValidator(onValidate: (_)=> _));
+      "/main/lookup": (context) =>
+          BottomNavigationBarItem(icon: Icon(Icons.search)),
+      "/main/profile": (context) =>
+          BottomNavigationBarItem(icon: Icon(Icons.person)),
+    }, routesValidator: RoutesValidator(onValidate: (_) => _));
     var page = navigationModel.getPageByRoute("/main/lookup/search");
     expect(page.path, "/main");
     var group = navigationModel.getScreenGroupByRoute("/main/lookup/catalog");

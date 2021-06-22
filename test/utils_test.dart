@@ -28,7 +28,8 @@ Future<void> main() async {
       expect(result, DateTime(2021, 1, 1, 14, 0));
     });
     test('DateTimeFormat', () async {
-      var createDateFormat = DateTimePatterns.createDateFormat(DateTimePatterns.PATTERN_DATE_WITH_FULL_TIME);
+      var createDateFormat = DateTimePatterns.createDateFormat(
+          DateTimePatterns.PATTERN_DATE_WITH_FULL_TIME);
       var dt = DateTime(2021, 1, 1, 14, 0);
       var result = createDateFormat.format(dt);
       print(result);
@@ -37,7 +38,8 @@ Future<void> main() async {
     });
     test('DateTimeFormat is ignore timezone', () async {
       //yyyy-MM-dd HH:mm:ss
-      var createDateFormat = DateTimePatterns.createDateFormat(DateTimePatterns.PATTERN_DATE_WITH_FULL_TIME);
+      var createDateFormat = DateTimePatterns.createDateFormat(
+          DateTimePatterns.PATTERN_DATE_WITH_FULL_TIME);
       var parse = createDateFormat.parse("2021-01-03 10:00:00+01000000");
       print(parse);
     });

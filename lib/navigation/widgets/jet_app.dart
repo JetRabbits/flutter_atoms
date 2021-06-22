@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
@@ -9,13 +8,12 @@ import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/widgets/not_found_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
 
-import '../navigation.dart';
-import 'root_router_delegate.dart';
+import '../../navigation.dart';
 import 'boot_screen.dart';
+import 'root_router_delegate.dart';
 
 // ignore: must_be_immutable
 class JetApp extends StatefulWidget {
@@ -63,7 +61,7 @@ class JetApp extends StatefulWidget {
     this.localizationsDelegates,
     this.useAtomsIntl = true,
   }) : super(key: key) {
-    atomsSetup(navigationModel);
+    setupNavigation(navigationModel);
 
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
@@ -89,7 +87,8 @@ class JetApp extends StatefulWidget {
       }
       navigationModel.addRoutePattern("/", bootWidgetBuilder);
       if (navigationModel.pagesMap["/404"] == null) {
-        navigationModel.addRoutePattern("/404", (context) => const NotFoundScreen());
+        navigationModel.addRoutePattern(
+            "/404", (context) => const NotFoundScreen());
       }
     }
   }
@@ -114,7 +113,8 @@ class _JetAppState extends State<JetApp> {
           onGenerateTitle: widget.onGenerateTitle,
           routerDelegate: GetIt.I<RootRouterDelegate>(),
           routeInformationParser: widget.navigationModel,
-          routeInformationProvider: GetIt.I<AppNavigationState>().routeInformationProvider,
+          routeInformationProvider:
+              GetIt.I<AppNavigationState>().routeInformationProvider,
         );
       },
     );
@@ -127,7 +127,7 @@ class _JetAppState extends State<JetApp> {
     log("JetApp initState");
     log("widget.bootBloc.state = ${widget.bootBloc.state}");
 
-    if (widget.bootBloc.state == BootBlocState.READY){
+    if (widget.bootBloc.state == BootBlocState.READY) {
       log("Reset boot");
       widget.bootBloc.reset();
     }

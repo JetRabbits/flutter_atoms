@@ -13,8 +13,10 @@ class WhatNewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: AutoSizeText(AtomsStrings.of(context).whats_new)),
       body: SafeArea(
-        child: ChangeLogView(path: Intl.getCurrentLocale() == 'ru' ? 'CHANGELOG_ru.md' : 'CHANGELOG_en.md')
-      ),
+          child: ChangeLogView(
+              path: Intl.getCurrentLocale() == 'ru'
+                  ? 'CHANGELOG_ru.md'
+                  : 'CHANGELOG_en.md')),
     );
   }
 }

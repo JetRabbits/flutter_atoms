@@ -6,6 +6,7 @@ import 'screen_group.dart';
 
 class NavigationPage {
   String? path;
+
   NavigationPage({this.path, this.floatActionButtonConfig});
 
   Map<String, ScreenGroup> screenGroupsMap = <String, ScreenGroup>{};
@@ -29,7 +30,7 @@ class NavigationPage {
 
   void _checkPath(ScreenGroup group) {
     assert(path != null, "page path is null");
-    if (!group.path.startsWith(path!)) throw "Group path: ${group
-        .path} does not match page path $path. Please check configuration";
+    if (!group.path.startsWith(path!))
+      throw "Group path: ${group.path} does not match page path $path. Please check configuration";
   }
 }

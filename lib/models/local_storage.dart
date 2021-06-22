@@ -1,13 +1,14 @@
 import 'package:crypted_preferences/crypted_preferences.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LocalStorage {
   static final LocalStorage _instance = LocalStorage._internal();
+
   LocalStorage._internal();
 
-  factory LocalStorage(){
+  factory LocalStorage() {
     return _instance;
   }
 
@@ -17,7 +18,7 @@ class LocalStorage {
 
   late FlutterSecureStorage _secureStorage;
 
-  bool hasKey(String key){
+  bool hasKey(String key) {
     return _sharedPreferences.get(key) != null;
   }
 
@@ -36,9 +37,8 @@ class LocalStorage {
   String getString(String key, {String value = ""}) {
     String result = value;
     try {
-      result = _sharedPreferences.getString(key)?? value;
-    } catch (e) {
-    }
+      result = _sharedPreferences.getString(key) ?? value;
+    } catch (e) {}
     return result;
   }
 
@@ -53,8 +53,7 @@ class LocalStorage {
   Future<void> secureWrite(String key, String value) async {
     if (kIsWeb) {
       var result = await _securePreferences.setString(key, value);
-      if (!result)
-        throw "Exception when writing preference $key";
+      if (!result) throw "Exception when writing preference $key";
     } else {
       return _secureStorage.write(key: key, value: value);
     }
@@ -76,8 +75,7 @@ class LocalStorage {
     bool result = value;
     try {
       result = _sharedPreferences.getBool(key) ?? value;
-    } catch (e) {
-    }
+    } catch (e) {}
     return result;
   }
 
@@ -85,12 +83,10 @@ class LocalStorage {
     int result = value;
     try {
       result = _sharedPreferences.getInt(key) ?? value;
-    } catch (e) {
-    }
+    } catch (e) {}
     return result;
   }
 
   Future<bool> setInt(String key, int value) =>
       _sharedPreferences.setInt(key, value);
-
 }

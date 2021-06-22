@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'navigation_model.dart';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'navigation_page.dart';
 import 'navigation_screen.dart';
@@ -17,6 +16,7 @@ final tracker = GetIt.I<AppNavigationState>();
 @singleton
 class AppNavigationState extends ChangeNotifier {
   static final _loggerName = 'AppNavigationState';
+
   Map<String, dynamic> get data => historyData[currentRoute]!;
 
   final List<String> history = ["/"];
@@ -24,9 +24,9 @@ class AppNavigationState extends ChangeNotifier {
 
   final NavigationModel navigationModel;
 
-  final RouteInformationProvider routeInformationProvider = PlatformRouteInformationProvider(
-  initialRouteInformation:
-  RouteInformation(location: "/"));
+  final RouteInformationProvider routeInformationProvider =
+      PlatformRouteInformationProvider(
+          initialRouteInformation: RouteInformation(location: "/"));
 
   dynamic lastPopResult;
 
@@ -54,33 +54,35 @@ class AppNavigationState extends ChangeNotifier {
 
   String get currentRoute => history.last;
 
-  void push(String route){
+  void push(String route) {
     try {
       var validatedRoute = navigationModel.routesValidator.validate(route);
       navigationModel.getScreenByRoute(validatedRoute);
       history.add(validatedRoute);
-      historyData[validatedRoute] = navigationModel.getParametersFromRoute(route).cast();
+      historyData[validatedRoute] =
+          navigationModel.getParametersFromRoute(route).cast();
     } catch (e) {
       history.add('/404');
     }
   }
 
-  void pop(){
+  void pop() {
     history.removeLast();
   }
 
-  void remove(String path){
+  void remove(String path) {
     history.remove(path);
   }
 
-  void clear(){
+  void clear() {
     history.clear();
     push("/");
   }
 
-
   void _notifyListeners() {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) { notifyListeners(); });
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
   }
 
   void update() {

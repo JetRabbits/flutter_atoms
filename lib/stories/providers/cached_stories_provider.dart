@@ -1,22 +1,21 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_atoms/models/json_serializable/stories_entity.dart';
+import 'package:flutter_atoms/stories/model/stories_entity.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 
 class CachedStoriesProvider {
-
   Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
 
-
   Map<String, StoriesEntity> get stories => _stories;
+
   StoriesEntity? get onBoardingStory {
-    return _stories.values.firstWhereOrNull((element) => element.details.onBoarding);
+    return _stories.values
+        .firstWhereOrNull((element) => element.details.onBoarding);
   }
 
   late String configUrl;
-
 
   StoriesEntity? operator [](String id) => stories[id];
 
@@ -31,11 +30,10 @@ class CachedStoriesProvider {
 
       storiesConfig
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
-          .forEach( (story) => stories.putIfAbsent(story.id, () => story) );
+          .forEach((story) => stories.putIfAbsent(story.id, () => story));
 
       await _cacheStories();
-    }
-    catch (e, stacktrace) {
+    } catch (e, stacktrace) {
       print("$e $stacktrace");
     }
   }
@@ -45,15 +43,13 @@ class CachedStoriesProvider {
     try {
       (storiesConfig["stories"] as List)
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
-          .forEach( (story) => stories.putIfAbsent(story.id, () => story) );
+          .forEach((story) => stories.putIfAbsent(story.id, () => story));
 
       await _cacheStories();
-    }
-    catch (e, stacktrace) {
+    } catch (e, stacktrace) {
       print("$e $stacktrace");
     }
   }
-
 
   Future<String> _loadStoriesConfigJson(String configUrl) async {
     final String storiesConfigUrl =
@@ -61,7 +57,8 @@ class CachedStoriesProvider {
     print("Request: $storiesConfigUrl");
 
     try {
-      final http.Response response = await http.get(Uri.parse(storiesConfigUrl));
+      final http.Response response =
+          await http.get(Uri.parse(storiesConfigUrl));
       if (response.statusCode == 200) {
         var responseBody = utf8.decode(response.bodyBytes);
         print("Response: ${response.statusCode}: $responseBody");
@@ -75,20 +72,19 @@ class CachedStoriesProvider {
     }
   }
 
-
   Future<void> _cacheStories() async {
     final StoriesCacheManager cacheManager = StoriesCacheManager();
 
     stories.values.forEach((s) async {
       await cacheManager.downloadFile(s.titleImage);
-      s.storyItems.forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
+      s.storyItems
+          .forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
       print("!!!!on_boarding = ${s.details.onBoarding}");
       s.storyItems.forEach((element) {
         print(s.storyItems.length);
       });
     });
   }
-
 
   Future<void> _cleanCache() async {
     if (stories.isNotEmpty) {
@@ -99,12 +95,9 @@ class CachedStoriesProvider {
   }
 }
 
-
 class StoriesCacheManager extends CacheManager {
-
   static StoriesCacheManager? _instance;
   static const key = "StoriesCacheManager";
-
 
   factory StoriesCacheManager() {
     if (_instance == null) {
@@ -112,7 +105,6 @@ class StoriesCacheManager extends CacheManager {
     }
     return _instance!;
   }
-
 
   StoriesCacheManager._() : super(Config(key, stalePeriod: Duration(hours: 1)));
 }

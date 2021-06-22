@@ -1,14 +1,11 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/models/json_serializable/stories_entity.dart';
-import 'package:flutter_atoms/models/json_serializable/story_item_model.dart';
-import 'package:flutter_atoms/providers/cached_stories_provider.dart';
-import 'package:flutter_atoms/widgets/interactive_story_view.dart';
-
+import 'package:flutter_atoms/stories/model/stories_entity.dart';
+import 'package:flutter_atoms/stories/model/story_item_model.dart';
+import 'package:flutter_atoms/stories/providers/cached_stories_provider.dart';
+import 'package:flutter_atoms/stories/widgets/interactive_story_view.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:story_view/story_view.dart';
-import 'package:collection/collection.dart';
 
 abstract class StoryItemBuilder {
   final StoryItemModel model;
@@ -21,7 +18,8 @@ abstract class StoryItemBuilder {
 class InteractiveStoryItem extends StoryItem {
   final WidgetBuilder interactiveLayer;
 
-  InteractiveStoryItem(Widget view,  this.interactiveLayer, {Duration duration: const Duration(seconds: 3)})
+  InteractiveStoryItem(Widget view, this.interactiveLayer,
+      {Duration duration: const Duration(seconds: 3)})
       : super(view, duration: duration);
 }
 
@@ -43,14 +41,16 @@ class StoryPage extends StatefulWidget {
       this.interactiveBuilder})
       : super(key: key);
 
+
   @override
-  _StoryPageState createState() => _StoryPageState();
+  StoryPageState createState() => StoryPageState();
 }
 
-class _StoryPageState extends State<StoryPage> {
+class StoryPageState extends State<StoryPage> {
   final StoryController controller = StoryController();
   List<StoryItem> _storyItems = [];
 
+  static StoryPageState? of(BuildContext context) => context.findAncestorStateOfType<StoryPageState>();
 
   @override
   void initState() {
@@ -68,17 +68,19 @@ class _StoryPageState extends State<StoryPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            key: widget.key ?? Key("story_page"),
-            body: _storyItems.length > 0
-                ? InteractiveStoryView(
-                    storyItems: _storyItems,
-                    progressPosition: ProgressPosition.top,
-                    repeat: false,
-                    controller: controller)
-                : Container(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-            floatingActionButton: _makeFloatingCloseButton(context)));
+      child: Scaffold(
+          key: widget.key ?? Key("story_page"),
+          body: _storyItems.length > 0
+              ? InteractiveStoryView(
+                  storyItems: _storyItems,
+                  progressPosition: ProgressPosition.top,
+                  repeat: false,
+                  canControl: !widget.story.details.turnOffStoryControl,
+                  controller: controller)
+              : Container(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButton: _makeFloatingCloseButton(context)),
+    );
   }
 
   StoryItem _makeStoryItemFromUrl(StoryItemModel item, BuildContext context) {
@@ -90,7 +92,8 @@ class _StoryPageState extends State<StoryPage> {
               children: <Widget>[
                 Center(
                   child: Image(
-                    image: CachedNetworkImageProvider(item.imageUrl, cacheManager: StoriesCacheManager()),
+                    image: CachedNetworkImageProvider(item.imageUrl,
+                        cacheManager: StoriesCacheManager()),
                     height: double.infinity,
                     width: double.infinity,
                     fit: BoxFit.fitWidth,
@@ -100,8 +103,7 @@ class _StoryPageState extends State<StoryPage> {
             ),
           ),
           (context) => widget.interactiveBuilder!(item.widget, context),
-          duration: Duration(hours: 24)
-      );
+          duration: Duration(hours: 24));
     } else {
       return StoryItem.pageProviderImage(
           CachedNetworkImageProvider(item.imageUrl,

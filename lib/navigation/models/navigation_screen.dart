@@ -8,5 +8,9 @@ class NavigationScreen {
   final ScreenGroup group;
   final int index;
 
-  NavigationScreen({required  this.path, required this.builder, required this.group, required this.index});
+  NavigationScreen(
+      {required this.path,
+      required this.builder,
+      required this.group,
+      required this.index});
 }

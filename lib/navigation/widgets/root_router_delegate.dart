@@ -8,7 +8,7 @@ import 'package:flutter_atoms/navigation/models/root_navigator_route_creator.dar
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../navigation.dart';
+import '../../navigation.dart';
 import 'root_navigator_observer.dart';
 
 @injectable
@@ -57,7 +57,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       pages: pages,
       onPopPage: (route, result) {
         log("Pop route ${route.settings.name}", name: _loggerName);
-        if (route.didPop(result)){
+        if (route.didPop(result)) {
           state.pop();
           state.lastPopResult = result;
           state.update();

@@ -28,9 +28,10 @@ class UniversalPhotoWidget extends StatelessWidget {
     this.borderWidth,
   }) : super(key: key);
 
-  ImageProvider selectProvider(String url){
+  ImageProvider selectProvider(String url) {
     if (url.startsWith("assets")) return AssetImage(url);
-    if (url.startsWith("/") || url.startsWith("file:")) return FileImage(File(url));
+    if (url.startsWith("/") || url.startsWith("file:"))
+      return FileImage(File(url));
     return CachedNetworkImageProvider(url);
   }
 

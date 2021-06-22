@@ -20,16 +20,16 @@ class InnerNavigatorRouteCreator extends Page {
         builder: (context) => storageBucket == null
             ? screen.builder!(context)
             : PageStorage(
-            bucket: storageBucket!, child: screen.builder!(context)));
+                bucket: storageBucket!, child: screen.builder!(context)));
   }
 
   InnerNavigatorRouteCreator(
-      this.route,
-      this.screen, {
-        LocalKey? key,
-        this.storageBucket,
-        String? name,
-        Object? arguments,
-        restorationId,
-      }) : super(key: key, name: name, arguments: arguments, restorationId: route);
+    this.route,
+    this.screen, {
+    LocalKey? key,
+    this.storageBucket,
+    String? name,
+    Object? arguments,
+    restorationId,
+  }) : super(key: key, name: name, arguments: arguments, restorationId: route);
 }

@@ -16,6 +16,9 @@ dependencies:
   persist_theme: ^1.7.0
   get_version:
     git: https://github.com/Creky/get_version.git
+  flutter_draft:
+    git:
+      url: https://gitlab.jetrabbits.com/jetrabbits_product/flutter_draft.git
   equatable: ^2.0.0
   cached_network_image: ^3.0.0
   flutter_secure_storage: ^4.2.0

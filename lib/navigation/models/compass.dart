@@ -1,8 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/widgets.dart';
-import 'package:get_it/get_it.dart';
-import 'package:get_it/get_it.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -23,8 +20,6 @@ class Compass {
 
   bool _clear = false;
   bool _switchOn = false;
-
-
 
   Compass(@factoryParam String? path, this.navigatorsRegistry,
       this.appNavigationState) {
@@ -51,7 +46,7 @@ class Compass {
     return this;
   }
 
-  void back(){
+  void back() {
     appNavigationState.pop();
     appNavigationState.update();
   }
@@ -80,18 +75,14 @@ class Compass {
     if (_switchOn) {
       appNavigationState.remove(path);
       appNavigationState.push(path);
-    } else
-    if (_replace) {
+    } else if (_replace) {
       appNavigationState.pop();
       appNavigationState.push(path);
-    }
-    else {
+    } else {
       appNavigationState.push(path);
     }
 
     appNavigationState.update();
     return Future<T?>.value();
-
   }
-
 }

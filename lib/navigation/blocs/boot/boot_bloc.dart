@@ -18,11 +18,12 @@ class BootBloc extends Cubit<BootBlocState> {
   @override
   // ignore: must_call_super
   void onError(Object error, StackTrace stackTrace) {
-    Logger(loggerName).severe("Error during application loading", error, stackTrace);
+    Logger(loggerName)
+        .severe("Error during application loading", error, stackTrace);
     emit(BootBlocState.ERROR);
   }
 
-  void reset(){
+  void reset() {
     emit(BootBlocState.INIT);
   }
 

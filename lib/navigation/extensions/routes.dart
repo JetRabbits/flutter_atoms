@@ -8,6 +8,6 @@ extension JetCompassExt on String {
   }
 
   Future<T?> go<T>({Map<String, String>? params}) async {
-      return this.compass().switchOn().go<T>();
+    return this.compass().switchOn().go<T>();
   }
 }

@@ -34,12 +34,16 @@ class BigCompositeMessageLookup implements MessageLookup {
         ? _lastLookupLibs!
         : _lookupMessageCatalog(knownLocale)!;
 
-    var messages = messagesLibs.firstWhereOrNull((lib) => lib.messages.containsKey(name));
+    var messages =
+        messagesLibs.firstWhereOrNull((lib) => lib.messages.containsKey(name));
 
     if (messages == null) {
-      return ifAbsent == null ? messageText : ifAbsent(messageText, args as List<Object>?);
+      return ifAbsent == null
+          ? messageText
+          : ifAbsent(messageText, args as List<Object>?);
     }
-    return messages.lookupMessage(messageText, locale, name, args as List<Object>?, meaning,
+    return messages.lookupMessage(
+        messageText, locale, name, args as List<Object>?, meaning,
         ifAbsent: ifAbsent);
   }
 
@@ -50,6 +54,7 @@ class BigCompositeMessageLookup implements MessageLookup {
     _lastLookupLibs = availableMessages[verifiedLocale!];
     return _lastLookupLibs;
   }
+
   /// Register message library function [findLocale] by [localeName]
   /// When external l10n message source call this then [findLocale] is added to corresponed locale list
   /// So this creates the chain of message libraries function which can be lookup until appropriated lib will be found
@@ -71,5 +76,5 @@ class BigCompositeMessageLookup implements MessageLookup {
 /// Activates big composite message lookup mechanism
 ///
 void initializeBigIntlMessageLookup() {
-    messageLookup = BigCompositeMessageLookup();
+  messageLookup = BigCompositeMessageLookup();
 }

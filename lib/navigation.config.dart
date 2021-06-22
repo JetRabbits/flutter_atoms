@@ -12,11 +12,11 @@ import 'navigation/models/app_navigation_state.dart' as _i9;
 import 'navigation/models/compass.dart' as _i8;
 import 'navigation/models/navigation_model.dart' as _i4;
 import 'navigation/models/navigators_register.dart' as _i7;
-import 'navigation/navigation.dart' as _i6;
 import 'navigation/widgets/inner_router_delegate.dart' as _i10;
 import 'navigation/widgets/root_navigator_observer.dart' as _i3;
 import 'navigation/widgets/root_router_delegate.dart'
     as _i5; // ignore_for_file: unnecessary_lambdas
+import 'navigation.dart' as _i6;
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]

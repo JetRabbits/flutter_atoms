@@ -5,7 +5,7 @@ import 'package:flutter_atoms/navigation/models/inner_navigator_route_creator.da
 import 'package:flutter_atoms/navigation/models/navigators_register.dart';
 import 'package:injectable/injectable.dart';
 
-import '../navigation.dart';
+import '../../navigation.dart';
 
 @injectable
 class InnerRouterDelegate extends RouterDelegate<String>
@@ -13,7 +13,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
   final AppNavigationState state;
 
   final String? initialRoute;
-
 
   final NavBarCubit? navBarCubit;
 
