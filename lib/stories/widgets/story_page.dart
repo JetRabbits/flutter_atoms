@@ -32,7 +32,7 @@ class StoryPage extends StatefulWidget {
 
   final StoriesEntity story;
 
-  final Function(StoryItem item)? onStoryShow;
+  final Function(int index)? onStoryItemShow;
 
   final Function(StoriesEntity story)? onStoryClose;
 
@@ -42,7 +42,7 @@ class StoryPage extends StatefulWidget {
       this.closeButtonColor = Colors.black,
       this.closeButtonBackgroundColor = Colors.transparent,
       this.closeButtonElevation = 0.1,
-      this.onStoryShow,
+      this.onStoryItemShow,
       this.onStoryClose,
       this.interactiveBuilder})
       : super(key: key);
@@ -81,7 +81,7 @@ class StoryPageState extends State<StoryPage> {
                   storyItems: _storyItems,
                   progressPosition: ProgressPosition.top,
                   repeat: false,
-                  onStoryShow: widget.onStoryShow,
+                  onStoryShow: widget.onStoryItemShow != null ? (storyItem) => widget.onStoryItemShow!(_storyItems.indexOf(storyItem)): null,
                   canControl: !widget.story.details.turnOffStoryControl,
                   controller: controller)
               : Container(),
