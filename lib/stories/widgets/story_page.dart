@@ -32,12 +32,18 @@ class StoryPage extends StatefulWidget {
 
   final StoriesEntity story;
 
+  final Function(StoryItem item)? onStoryShow;
+
+  final Function(StoriesEntity story)? onStoryClose;
+
   StoryPage(
       {Key? key,
       required this.story,
       this.closeButtonColor = Colors.black,
       this.closeButtonBackgroundColor = Colors.transparent,
       this.closeButtonElevation = 0.1,
+      this.onStoryShow,
+      this.onStoryClose,
       this.interactiveBuilder})
       : super(key: key);
 
@@ -75,6 +81,7 @@ class StoryPageState extends State<StoryPage> {
                   storyItems: _storyItems,
                   progressPosition: ProgressPosition.top,
                   repeat: false,
+                  onStoryShow: widget.onStoryShow,
                   canControl: !widget.story.details.turnOffStoryControl,
                   controller: controller)
               : Container(),
@@ -119,7 +126,10 @@ class StoryPageState extends State<StoryPage> {
         elevation: this.widget.closeButtonElevation,
         mini: true,
         child: Icon(Icons.close, color: this.widget.closeButtonColor),
-        onPressed: () => Navigator.of(context).pop());
+        onPressed: () {
+          if (widget.onStoryClose != null) widget.onStoryClose!(widget.story);
+          Navigator.of(context).pop();
+        });
   }
 }
 
