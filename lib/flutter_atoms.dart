@@ -25,7 +25,5 @@ void setupLogging({void Function(LogRecord) onRecord, Level forceLevel}) {
       (record) {
         print(
             '${record.time} [${record.level}] [${record.loggerName}] ${record.message}\n${record.stackTrace ?? ""}');
-        debugPrint(
-            '${record.time} [${record.level}] [${record.loggerName}] ${record.message}\n${record.stackTrace ?? ""}');
       });
 }
