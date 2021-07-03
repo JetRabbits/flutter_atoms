@@ -136,7 +136,7 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   NavigationScreen getScreenByRoute(String route) {
-    log("getScreenByRoute ${route}", name: "NavigationModel");
+    log("getScreenByRoute $route", name: "NavigationModel");
     var screenGroup = getScreenGroupByRoute(route);
     var split = parseAndCheckFormat(route).pathSegments;
     var path =
@@ -150,7 +150,7 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   ScreenGroup getScreenGroupByRoute(String route) {
-    log("getScreenGroupByRoute ${route}", name: "NavigationModel");
+    log("getScreenGroupByRoute $route", name: "NavigationModel");
     var split = parseAndCheckFormat(route).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[route];
     if (page == null)
