@@ -126,12 +126,14 @@ class _JetPageState extends State<JetPage> {
         ? IconThemeData(color: selectedColor)
         : IconThemeData(color: unselectedColor);
 
-    var label = item.title ??
-        Text(
-          item.label!,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        );
+    Widget? label;
+    if (item.label != null || item.title != null)
+      label = item.title ??
+          Text(
+            item.label!,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          );
 
     return Expanded(
       child: SizedBox(
@@ -152,7 +154,7 @@ class _JetPageState extends State<JetPage> {
                 isActive
                     ? IconTheme(data: _iconThemeData, child: item.activeIcon)
                     : IconTheme(data: _iconThemeData, child: item.icon),
-                DefaultTextStyle.merge(style: _textStyle, child: label),
+                if (label != null) DefaultTextStyle.merge(style: _textStyle, child: label),
               ],
             ),
           ),
