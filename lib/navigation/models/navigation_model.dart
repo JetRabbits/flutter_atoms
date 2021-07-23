@@ -140,7 +140,7 @@ class NavigationModel extends RouteInformationParser<String> {
     var screenGroup = getScreenGroupByRoute(route);
     var split = parseAndCheckFormat(route).pathSegments;
     var path =
-        split.length > 1 ? "/${split[0]}/${split[1]}/${split[2]}" : route;
+        split.length > 2 ? "/${split[0]}/${split[1]}/${split[2]}" : route;
     var result = screenGroup.screenMaps[path];
     result = result ?? screenGroup.screenMaps.values.first;
 
