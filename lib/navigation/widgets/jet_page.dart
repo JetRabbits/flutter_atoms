@@ -64,10 +64,10 @@ class _JetPageState extends State<JetPage> {
 
     log("with inner navigator", name: _loggerName);
 
-    // try {
-    //   _backButtonDispatcher!.takePriority();
-    // } catch (ignore) {}
-    // _page.backButtonDispatcher = _backButtonDispatcher;
+    try {
+      _backButtonDispatcher!.takePriority();
+    } catch (ignore) {}
+    _page.backButtonDispatcher = _backButtonDispatcher;
 
     return Scaffold(
         extendBody: true,
@@ -111,11 +111,11 @@ class _JetPageState extends State<JetPage> {
 
   Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
     var navigationModel = widget.navigationState.navigationModel;
+    var navigationState = widget.navigationState;
     Color selectedColor = Theme.of(context).accentColor;
     Color unselectedColor = Theme.of(context).hintColor;
 
-    var isActive =
-        navigationModel.getScreenGroupByRoute(_navBarCubit.state.path) == group;
+    var isActive = navigationState.currentScreenGroup == group;
 
     var _textStyle = Theme.of(context)
         .textTheme
