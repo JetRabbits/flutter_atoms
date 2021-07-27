@@ -110,7 +110,6 @@ class _JetPageState extends State<JetPage> {
   }
 
   Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
-    var navigationModel = widget.navigationState.navigationModel;
     var navigationState = widget.navigationState;
     Color selectedColor = Theme.of(context).accentColor;
     Color unselectedColor = Theme.of(context).hintColor;

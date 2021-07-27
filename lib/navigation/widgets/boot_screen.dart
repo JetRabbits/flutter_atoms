@@ -31,7 +31,7 @@ class BootScreen extends StatelessWidget {
               child: BlocConsumer<BootBloc, BootBlocState>(
                   bloc: bootBloc,
                   listener: (prev, current) {
-                    log("${current}");
+                    log("$current");
                     if (current == BootBlocState.READY) {
                       log("Application is ready");
                       nextRoute!().compass().replace().go();

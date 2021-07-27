@@ -16,7 +16,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   final NavBarCubit? navBarCubit;
 
-  final PageStorageBucket _bucket = PageStorageBucket();
+  // final PageStorageBucket _bucket = PageStorageBucket();
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 

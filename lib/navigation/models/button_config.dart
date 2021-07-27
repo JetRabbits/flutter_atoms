@@ -9,8 +9,7 @@ class ButtonConfig {
     this.backgroundColor,
     this.tooltip,
   })  : activeIcon = activeIcon ?? icon,
-        assert(label == null || title == null),
-        assert(icon != null);
+        assert(label == null || title == null);
   final Widget icon;
   final Widget activeIcon;
   final Widget? title;
