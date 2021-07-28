@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
 import 'navigation_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -11,11 +13,13 @@ import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
 
-final tracker = GetIt.I<AppNavigationState>();
+get compass => GetIt.I<CompassNavigationState>();
 
 @singleton
-class AppNavigationState extends ChangeNotifier {
-  static final _loggerName = 'AppNavigationState';
+class CompassNavigationState extends ChangeNotifier {
+  static final _logger = Logger('AppNavigationState');
+
+  CompassOperator to(String path) => GetIt.I<CompassOperator>(param1: path);
 
   Map<String, dynamic> get data => historyData[currentRoute]!;
 
@@ -30,7 +34,7 @@ class AppNavigationState extends ChangeNotifier {
 
   dynamic lastPopResult;
 
-  AppNavigationState(this.navigationModel);
+  CompassNavigationState(this.navigationModel);
 
   NavigationScreen get currentScreen {
     return navigationModel.getScreenByRoute(currentRoute);
@@ -86,8 +90,8 @@ class AppNavigationState extends ChangeNotifier {
   }
 
   void update() {
-    log("update", name: _loggerName);
-    log("hasListeners $hasListeners", name: _loggerName);
+    _logger.info("update");
+    _logger.info("hasListeners $hasListeners");
     notifyListeners();
   }
 }

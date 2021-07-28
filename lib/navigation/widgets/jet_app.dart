@@ -114,7 +114,7 @@ class _JetAppState extends State<JetApp> {
           routerDelegate: GetIt.I<RootRouterDelegate>(),
           routeInformationParser: widget.navigationModel,
           routeInformationProvider:
-              GetIt.I<AppNavigationState>().routeInformationProvider,
+              GetIt.I<CompassNavigationState>().routeInformationProvider,
         );
       },
     );

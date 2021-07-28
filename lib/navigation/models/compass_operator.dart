@@ -2,58 +2,57 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logging/logging.dart';
 
-import 'app_navigation_state.dart';
+import 'compass_navigation_state.dart';
 import 'navigators_register.dart';
 
-get compass => GetIt.I<Compass>();
-
 @injectable
-class Compass {
-  static final loggerName = "Compass";
+class CompassOperator {
+  static final _logger = Logger('CompassOperator');
   final NavigatorsRegister navigatorsRegistry;
-  final AppNavigationState appNavigationState;
+  final CompassNavigationState state;
+  late String path;
 
   bool _root = false;
   bool _replace = false;
-  late String path;
 
   bool _clear = false;
   bool _switchOn = false;
 
-  Compass(@factoryParam String? path, this.navigatorsRegistry,
-      this.appNavigationState) {
-    this.path = path ?? appNavigationState.currentRoute;
+
+  CompassOperator(@factoryParam String? path, this.navigatorsRegistry,
+      this.state) {
+    this.path = path ?? state.currentRoute;
   }
 
-  Compass root() {
+  CompassOperator root() {
     _root = true;
     return this;
   }
 
-  Compass replace() {
+  CompassOperator replace() {
     _replace = true;
     return this;
   }
 
-  Compass switchOn() {
+  CompassOperator switchOn() {
     _switchOn = true;
     return this;
   }
 
-  Compass clear() {
+  CompassOperator clear() {
     _clear = true;
     return this;
   }
 
   void back() {
-    appNavigationState.pop();
-    appNavigationState.update();
+    state.pop();
+    state.update();
   }
 
-  Future<T?> go<T>([Map<String, String>? params]) async {
-    log("go to path $path, replace = $_replace, use root = $_root",
-        name: loggerName);
+  Future<T?> go<T>([Map<String, dynamic>? params]) async {
+    _logger.info("go to path $path, replace = $_replace, use root = $_root");
     // var rootNavigator = navigatorsRegistry.getRoot().currentState;
     // if (rootNavigator == null) return Future.value(null);
     // var _currentPagePath = appNavigationState.currentPage.path;
@@ -70,19 +69,19 @@ class Compass {
     //   log("using root navigator", name: loggerName);
     //   _operationNavigator = rootNavigator;
     // }
-    if (_clear) appNavigationState.history.clear();
+    if (_clear) state.history.clear();
 
     if (_switchOn) {
-      appNavigationState.remove(path);
-      appNavigationState.push(path);
+      state.remove(path);
+      state.push(path);
     } else if (_replace) {
-      appNavigationState.pop();
-      appNavigationState.push(path);
+      state.pop();
+      state.push(path);
     } else {
-      appNavigationState.push(path);
+      state.push(path);
     }
-
-    appNavigationState.update();
+    if (params != null) state.historyData[path] = params;
+    state.update();
     return Future<T?>.value();
   }
 }

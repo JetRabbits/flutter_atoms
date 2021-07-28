@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/navigation/models/compass_navigation_state.dart';
 import 'package:flutter_atoms/navigation/models/inner_navigator_route_creator.dart';
 import 'package:flutter_atoms/navigation/models/navigators_register.dart';
 import 'package:injectable/injectable.dart';
@@ -10,7 +11,7 @@ import '../../navigation.dart';
 @injectable
 class InnerRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final AppNavigationState state;
+  final CompassNavigationState state;
 
   final String? initialRoute;
 

@@ -8,13 +8,13 @@ import '../../navigation.dart';
 import 'inner_router_delegate.dart';
 
 typedef NavigationStateBuilderType = Future<void> Function(
-    BuildContext context, AppNavigationState state);
+    BuildContext context, CompassNavigationState state);
 
 class JetPage extends StatefulWidget {
   final String initialPageRoute;
   final double bottomNavigationHeight;
 
-  final AppNavigationState navigationState;
+  final CompassNavigationState navigationState;
 
   final double iconSize;
 
@@ -284,7 +284,7 @@ class _JetPageState extends State<JetPage> {
 class InnerNavigatorObserver extends NavigatorObserver {
   final NavBarCubit navBarCubit;
 
-  final AppNavigationState state;
+  final CompassNavigationState state;
 
   InnerNavigatorObserver(this.navBarCubit, this.state);
 

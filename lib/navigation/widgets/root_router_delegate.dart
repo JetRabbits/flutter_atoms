@@ -14,7 +14,7 @@ import 'root_navigator_observer.dart';
 @injectable
 class RootRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final AppNavigationState state;
+  final CompassNavigationState state;
   final Map<String, Widget> pageWidgets = {};
   final RootNavigatorObserver rootObserver;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();

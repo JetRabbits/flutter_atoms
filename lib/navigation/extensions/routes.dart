@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 
-import '../models/compass.dart';
+import '../../navigation.dart';
 
 extension JetCompassExt on String {
-  Compass compass() {
-    return GetIt.I<Compass>(param1: this);
+  CompassOperator compass() {
+    return GetIt.I<CompassOperator>(param1: this);
   }
 
-  Future<T?> go<T>({Map<String, String>? params}) async {
-    return this.compass().switchOn().go<T>();
+  Future<T?> go<T>([Map<String, dynamic>? params]) async {
+    return this.compass().switchOn().go<T>(params);
   }
 }
