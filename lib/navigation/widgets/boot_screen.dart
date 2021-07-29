@@ -14,20 +14,23 @@ class BootScreen extends StatelessWidget {
 
   final BootBloc bootBloc;
 
-  const BootScreen(this.bootBloc,
-      {Key? key, this.logo, this.repeatLabelText, required this.nextRoute})
+  EdgeInsets repeatButtonPadding;
+
+  BootScreen(this.bootBloc,
+      {Key? key, this.logo, this.repeatLabelText, required this.nextRoute, this.repeatButtonPadding = EdgeInsets.zero})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     log("build", name: "BootScreen");
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
         children: <Widget>[
           logo ?? const FlutterLogo(size: 100),
           Padding(
-              padding: const EdgeInsets.all(24.0),
+            padding: repeatButtonPadding,
+            child: Align(
+              alignment: Alignment.bottomCenter,
               child: BlocConsumer<BootBloc, BootBlocState>(
                   bloc: bootBloc,
                   listener: (prev, current) {
@@ -42,7 +45,9 @@ class BootScreen extends StatelessWidget {
                     if (state == BootBlocState.ERROR)
                       return buildRepeatButton();
                     return buildLoading();
-                  })),
+                  }),
+            ),
+          ),
         ],
       ),
     );
