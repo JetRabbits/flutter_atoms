@@ -16,6 +16,7 @@ export 'navigation.dart';
 void setupAtoms() {
   ActionRegister.addAction(
       'stories', StoriesAction.toJson, StoriesAction.fromJson);
+
 }
 
 void setupLogging({void Function(LogRecord) onRecord, Level forceLevel}) {

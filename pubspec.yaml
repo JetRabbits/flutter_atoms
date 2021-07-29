@@ -41,7 +41,7 @@ dependency_overrides:
   shared_preferences: ^2.0.6
   provider: ^5.0.0
   plugin_platform_interface: ^2.0.0
-  flutter_markdown: ^0.6.2
+  flutter_markdown: ^0.6.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
