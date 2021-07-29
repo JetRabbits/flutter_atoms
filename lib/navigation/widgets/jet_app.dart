@@ -45,6 +45,8 @@ class JetApp extends StatefulWidget {
 
   late final BootBloc bootBloc;
 
+  EdgeInsets? repeatButtonPadding;
+
   JetApp({
     Key? key,
     required this.navigationModel,
@@ -52,6 +54,7 @@ class JetApp extends StatefulWidget {
     this.onAppStart,
     this.nextRoute,
     this.logo,
+    this.repeatButtonPadding,
     this.bootPageThemeData,
     this.repeatLoadLabel,
     this.bootWidgetBuilder,
@@ -78,6 +81,7 @@ class JetApp extends StatefulWidget {
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootScreen(bootBloc,
                 logo: logo,
+                repeatButtonPadding: repeatButtonPadding,
                 repeatLabelText: repeatLoadLabel == null
                     ? AtomsStrings.of(context).repeatLoad
                     : repeatLoadLabel!(context),
