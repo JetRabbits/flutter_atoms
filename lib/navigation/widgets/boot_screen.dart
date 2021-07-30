@@ -14,7 +14,7 @@ class BootScreen extends StatelessWidget {
 
   final BootBloc bootBloc;
 
-  EdgeInsets repeatButtonPadding;
+  EdgeInsets? repeatButtonPadding;
 
   BootScreen(this.bootBloc,
       {Key? key, this.logo, this.repeatLabelText, required this.nextRoute, this.repeatButtonPadding = EdgeInsets.zero})
@@ -28,7 +28,7 @@ class BootScreen extends StatelessWidget {
         children: <Widget>[
           logo ?? const FlutterLogo(size: 100),
           Padding(
-            padding: repeatButtonPadding,
+            padding: repeatButtonPadding ?? EdgeInsets.zero,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: BlocConsumer<BootBloc, BootBlocState>(
