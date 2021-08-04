@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -17,7 +16,7 @@ get compass => GetIt.I<CompassNavigationState>();
 
 @singleton
 class CompassNavigationState extends ChangeNotifier {
-  static final _logger = Logger('AppNavigationState');
+  static final _logger = Logger('CompassNavigationState');
 
   CompassOperator to(String path) => GetIt.I<CompassOperator>(param1: path);
 
