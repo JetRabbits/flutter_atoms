@@ -24,7 +24,7 @@ dependencies:
   flutter_secure_storage:
   shared_preferences:
   flutter_cache_manager:
-  story_view:
+  story_view: ^0.13.0
   json_serializable:
   auto_size_text:
   url_launcher:
