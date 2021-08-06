@@ -12,8 +12,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc:
-  persist_theme:
+  flutter_bloc: ^7.1.0
+  persist_theme: ^1.7.0
   get_version:
     git: https://github.com/Creky/get_version.git
   flutter_draft:
@@ -24,7 +24,7 @@ dependencies:
   flutter_secure_storage:
   shared_preferences:
   flutter_cache_manager:
-  story_view: ^0.13.0
+  story_view: ^0.13.1
   json_serializable:
   auto_size_text:
   url_launcher:
@@ -35,6 +35,8 @@ dependencies:
   logging:
   get_it:
   injectable:
+dependency_overrides:
+  provider: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

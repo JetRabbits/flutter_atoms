@@ -7,6 +7,7 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
+import 'flutter_atoms.dart' as _i12;
 import 'navigation/blocs/boot/boot_bloc.dart' as _i11;
 import 'navigation/models/compass_navigation_state.dart' as _i9;
 import 'navigation/models/compass_operator.dart' as _i8;
@@ -29,17 +30,18 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       get<_i6.CompassNavigationState>(),
       get<_i3.RootNavigatorObserver>(),
       get<_i7.NavigatorsRegister>()));
-  gh.factoryParam<_i8.CompassOperator, String?, dynamic>((path, _) => _i8.CompassOperator(
-      path, get<_i7.NavigatorsRegister>(), get<_i9.CompassNavigationState>()));
+  gh.factoryParam<_i8.CompassOperator, String?, dynamic>((path, _) =>
+      _i8.CompassOperator(path, get<_i7.NavigatorsRegister>(),
+          get<_i9.CompassNavigationState>()));
   gh.factoryParam<_i10.InnerRouterDelegate, String?, _i6.NavBarCubit?>(
       (initialRoute, navBarCubit) => _i10.InnerRouterDelegate(
           initialRoute,
           navBarCubit,
           get<_i6.CompassNavigationState>(),
           get<_i7.NavigatorsRegister>()));
-  gh.singleton<_i9.CompassNavigationState>(
-      _i9.CompassNavigationState(get<_i4.NavigationModel>()));
   gh.singleton<_i11.BootBloc>(_i11.BootBloc());
+  gh.singleton<_i9.CompassNavigationState>(
+      _i9.CompassNavigationState(get<_i12.NavigationModel>()));
   gh.singleton<_i7.NavigatorsRegister>(_i7.NavigatorsRegister());
   return get;
 }

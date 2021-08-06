@@ -5,11 +5,10 @@ import 'package:flutter_atoms/navigation.config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-export 'navigation/blocs/blocs.dart';
 export 'navigation/blocs/navigator/nav_bar_cubit.dart';
 export 'navigation/extensions/routes.dart';
-export 'navigation/models/compass_navigation_state.dart';
 export 'navigation/models/button_config.dart';
+export 'navigation/models/compass_navigation_state.dart';
 export 'navigation/models/compass_operator.dart';
 export 'navigation/models/float_action_button_config.dart';
 export 'navigation/models/navigation_model.dart';
