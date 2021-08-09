@@ -65,6 +65,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         if (route.didPop(result)) {
           state.pop();
           state.lastPopResult = result;
+          navBarCubit?.updatePath(state.currentRoute);
           return true;
         }
         return false;
