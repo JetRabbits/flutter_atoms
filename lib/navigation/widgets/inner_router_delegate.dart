@@ -65,7 +65,6 @@ class InnerRouterDelegate extends RouterDelegate<String>
         if (route.didPop(result)) {
           state.pop();
           state.lastPopResult = result;
-          state.update();
           return true;
         }
         return false;

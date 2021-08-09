@@ -10,7 +10,7 @@ class StoriesEntity {
   final String id;
   final String title;
   final String titleImage;
-  final StoriesEntityDetails details;
+  StoriesEntityDetails? details;
 
   @JsonKey(defaultValue: [])
   final List<StoryItemModel> storyItems;
@@ -20,7 +20,7 @@ class StoriesEntity {
       required this.title,
       required this.titleImage,
       required this.storyItems,
-      required this.details});
+      this.details});
 
   factory StoriesEntity.fromJson(Map<String, dynamic> json) =>
       _$StoriesEntityFromJson(json);

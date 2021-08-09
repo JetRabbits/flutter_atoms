@@ -4,15 +4,18 @@ import 'package:collection/collection.dart';
 import 'package:flutter_atoms/stories/model/stories_entity.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 class CachedStoriesProvider {
   Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
+
+  static final _logger = Logger('CachedStoriesProvider');
 
   Map<String, StoriesEntity> get stories => _stories;
 
   StoriesEntity? get onBoardingStory {
     return _stories.values
-        .firstWhereOrNull((element) => element.details.onBoarding);
+        .firstWhereOrNull((element) => element.details?.onBoarding ?? false);
   }
 
   late String configUrl;
@@ -79,7 +82,7 @@ class CachedStoriesProvider {
       await cacheManager.downloadFile(s.titleImage);
       s.storyItems
           .forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
-      print("!!!!on_boarding = ${s.details.onBoarding}");
+      _logger.info("!!!!on_boarding = ${s.details?.onBoarding}");
       s.storyItems.forEach((element) {
         print(s.storyItems.length);
       });

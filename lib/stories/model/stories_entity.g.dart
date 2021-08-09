@@ -15,16 +15,27 @@ StoriesEntity _$StoriesEntityFromJson(Map<String, dynamic> json) {
             ?.map((e) => StoryItemModel.fromJson(e as Map<String, dynamic>))
             .toList() ??
         [],
-    details:
-        StoriesEntityDetails.fromJson(json['details'] as Map<String, dynamic>),
+    details: json['details'] == null
+        ? null
+        : StoriesEntityDetails.fromJson(
+            json['details'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$StoriesEntityToJson(StoriesEntity instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'title': instance.title,
-      'title_image': instance.titleImage,
-      'details': instance.details.toJson(),
-      'story_items': instance.storyItems.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$StoriesEntityToJson(StoriesEntity instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'title': instance.title,
+    'title_image': instance.titleImage,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('details', instance.details?.toJson());
+  val['story_items'] = instance.storyItems.map((e) => e.toJson()).toList();
+  return val;
+}

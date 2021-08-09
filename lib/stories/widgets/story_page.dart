@@ -82,7 +82,7 @@ class StoryPageState extends State<StoryPage> {
                   progressPosition: ProgressPosition.top,
                   repeat: false,
                   onStoryShow: widget.onStoryItemShow != null ? (storyItem) => widget.onStoryItemShow!(_storyItems.indexOf(storyItem)): null,
-                  canControl: !widget.story.details.turnOffStoryControl,
+                  canControl: !(widget.story.details?.turnOffStoryControl ?? false),
                   controller: controller)
               : Container(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endTop,

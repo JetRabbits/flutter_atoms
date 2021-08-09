@@ -8,8 +8,8 @@ part of 'stories_entity_details.dart';
 
 StoriesEntityDetails _$StoriesEntityDetailsFromJson(Map<String, dynamic> json) {
   return StoriesEntityDetails(
-    turnOffStoryControl: json['turn_off_story_control'] as bool,
-    onBoarding: json['on_boarding'] as bool,
+    turnOffStoryControl: json['turn_off_story_control'] as bool? ?? false,
+    onBoarding: json['on_boarding'] as bool? ?? false,
   );
 }
 

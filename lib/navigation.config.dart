@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import 'flutter_atoms.dart' as _i12;
+import 'navigation.dart' as _i6;
 import 'navigation/blocs/boot/boot_bloc.dart' as _i11;
 import 'navigation/models/compass_navigation_state.dart' as _i9;
 import 'navigation/models/compass_operator.dart' as _i8;
@@ -17,7 +18,6 @@ import 'navigation/widgets/inner_router_delegate.dart' as _i10;
 import 'navigation/widgets/root_navigator_observer.dart' as _i3;
 import 'navigation/widgets/root_router_delegate.dart'
     as _i5; // ignore_for_file: unnecessary_lambdas
-import 'navigation.dart' as _i6;
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]

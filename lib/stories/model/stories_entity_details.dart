@@ -4,7 +4,9 @@ part 'stories_entity_details.g.dart';
 
 @JsonSerializable()
 class StoriesEntityDetails {
+  @JsonKey(defaultValue: false)
   final bool onBoarding;
+  @JsonKey(defaultValue: false)
   final bool turnOffStoryControl;
 
 
