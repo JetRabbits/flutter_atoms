@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_atoms/logging/file_log_appender.dart';
 import 'package:logging/logging.dart';
 export 'logging/file_log_appender.dart';
+export 'logging/send_bug_report.dart';
 
 void setupLogging({void Function(LogRecord)? onRecord, Level? forceLevel}) {
   Logger.root.level = forceLevel ?? (kDebugMode ? Level.ALL : Level.WARNING);
