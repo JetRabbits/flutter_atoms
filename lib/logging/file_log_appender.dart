@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 
 class FileLogAppender {
   final String logFile;
   List<String> _recordsCache = [];
-  late Timer _timer;
+  Timer? _timer;
   bool _fileValidated = false;
   bool _fileValidationResult = false;
 
@@ -27,7 +28,7 @@ class FileLogAppender {
     _recordsCache.add(record);
 
     if (_timer != null) {
-      _timer.cancel();
+      _timer?.cancel();
     }
     _timer = Timer(retentionCachePeriod, () => _processCache());
 
