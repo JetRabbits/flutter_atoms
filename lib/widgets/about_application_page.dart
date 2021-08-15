@@ -2,6 +2,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/generated/l10n.dart';
+import 'package:flutter_atoms/models/models.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
 
