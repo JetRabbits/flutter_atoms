@@ -63,8 +63,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         log("Pop route ${route.settings.name}", name: _loggerName);
 
         if (route.didPop(result)) {
-          state.pop();
-          state.lastPopResult = result;
+          compass.back(result);
           navBarCubit?.updatePath(state.currentRoute);
           return true;
         }

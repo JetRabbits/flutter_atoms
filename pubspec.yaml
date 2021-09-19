@@ -1,7 +1,8 @@
 name: flutter_atoms
 description: Some best practice and ready to go solutions for flutter projects
 version: 1.0.6
-author: JetRabbits
+authors:
+  - JetRabbits
 homepage: https://github.com/JetRabbits/flutter_atoms
 publish_to: none
 

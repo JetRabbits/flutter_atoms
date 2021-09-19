@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_atoms/flutter_atoms.dart';
@@ -12,26 +14,28 @@ import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
 
-get compass => GetIt.I<CompassNavigationState>();
+CompassOperator get compass => GetIt.I<CompassOperator>();
+
+class HistoryData<T> {
+  final Completer<T> routeCompleter = Completer();
+  final String path;
+  T? result;
+  final Map<String, dynamic> params;
+  HistoryData({required this.path, this.params = const {}});
+}
 
 @singleton
 class CompassNavigationState extends ChangeNotifier {
   static final _logger = Logger('CompassNavigationState');
 
-  CompassOperator to(String path) => GetIt.I<CompassOperator>(param1: path);
-
-  Map<String, dynamic> get data => historyData[currentRoute]!;
-
-  final List<String> history = ["/"];
-  final Map<String, Map<String, dynamic>> historyData = {"/": {}};
+  List<String> get history => historyData.map((e) => e.path).toList();
+  final List<HistoryData> historyData = [HistoryData(path: "/")];
 
   final NavigationModel navigationModel;
 
   final RouteInformationProvider routeInformationProvider =
       PlatformRouteInformationProvider(
           initialRouteInformation: RouteInformation(location: "/"));
-
-  dynamic lastPopResult;
 
   CompassNavigationState(this.navigationModel);
 
@@ -55,32 +59,9 @@ class CompassNavigationState extends ChangeNotifier {
     return currentScreen.index;
   }
 
-  String get currentRoute => history.last;
+  String get currentRoute => historyData.last.path;
+  HistoryData get currentRouteData => historyData.last;
 
-  void push(String route) {
-    try {
-      var validatedRoute = navigationModel.routesValidator.validate(route);
-      navigationModel.getScreenByRoute(validatedRoute);
-      history.add(validatedRoute);
-      historyData[validatedRoute] =
-          navigationModel.getParametersFromRoute(route).cast();
-    } catch (e) {
-      history.add('/404');
-    }
-  }
-
-  void pop() {
-    history.removeLast();
-  }
-
-  void remove(String path) {
-    history.remove(path);
-  }
-
-  void clear() {
-    history.clear();
-    push("/");
-  }
 
   void _notifyListeners() {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {

@@ -58,8 +58,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       onPopPage: (route, result) {
         log("Pop route ${route.settings.name}", name: _loggerName);
         if (route.didPop(result)) {
-          state.pop();
-          state.lastPopResult = result;
+          compass.back(result);
           return true;
         }
         return false;
@@ -105,10 +104,9 @@ class RootRouterDelegate extends RouterDelegate<String>
     log("setNewRoutePath $path", name: _loggerName);
 
     if (GetIt.I<BootBloc>().state == BootBlocState.READY) {
-      path.compass().go();
+      path.go();
     } else {
-      state.pop();
-      state.push(path);
+      path.compass().replace().go();
     }
     return SynchronousFuture<void>(null);
   }

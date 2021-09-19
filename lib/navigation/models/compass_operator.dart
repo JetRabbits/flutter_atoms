@@ -7,12 +7,19 @@ import 'package:logging/logging.dart';
 import 'compass_navigation_state.dart';
 import 'navigators_register.dart';
 
+
+///
+/// Manipulates navigator history
+///
 @injectable
 class CompassOperator {
   static final _logger = Logger('CompassOperator');
   final NavigatorsRegister navigatorsRegistry;
   final CompassNavigationState state;
   late String path;
+  HistoryData get _historyData => state.historyData.lastWhere((element) => element.path == path);
+
+  Map<String, dynamic> get data => _historyData.params;
 
   bool _root = false;
   bool _replace = false;
@@ -20,9 +27,8 @@ class CompassOperator {
   bool _clear = false;
   bool _switchOn = false;
 
-
-  CompassOperator(@factoryParam String? path, this.navigatorsRegistry,
-      this.state) {
+  CompassOperator(
+      @factoryParam String? path, this.navigatorsRegistry, this.state) {
     this.path = path ?? state.currentRoute;
   }
 
@@ -46,8 +52,8 @@ class CompassOperator {
     return this;
   }
 
-  void back() {
-    state.pop();
+  void back([dynamic data]) {
+    _pop(data);
     state.update();
   }
 
@@ -69,19 +75,46 @@ class CompassOperator {
     //   log("using root navigator", name: loggerName);
     //   _operationNavigator = rootNavigator;
     // }
-    if (_clear) state.history.clear();
+    if (_clear) state.historyData.clear();
+
+    HistoryData<T?> result;
 
     if (_switchOn) {
-      state.remove(path);
-      state.push(path);
+      state.historyData.remove(path);
+      result = _push(path, params ?? {});
     } else if (_replace) {
-      state.pop();
-      state.push(path);
+      _pop(state.historyData.last);
+      result = _push(path, params ?? {});
     } else {
-      state.push(path);
+      result = _push(path, params ?? {});
     }
-    if (params != null) state.historyData[path] = params;
     state.update();
-    return Future<T?>.value();
+    return result.routeCompleter.future;
+  }
+
+  HistoryData<T?> _push<T>(String route, Map<String, dynamic> params) {
+    HistoryData<T?> historyData;
+    try {
+      var validatedRoute =
+          state.navigationModel.routesValidator.validate(route);
+      state.navigationModel.getScreenByRoute(validatedRoute);
+      historyData = HistoryData<T?>(
+          path: validatedRoute,
+          params: state.navigationModel
+              .getParametersFromRoute(route)
+              .cast<String, dynamic>()
+            ..addAll(params));
+      state.historyData.add(historyData);
+    } catch (e) {
+      historyData = HistoryData(path: '/404');
+      state.historyData.add(historyData);
+    }
+    return historyData;
+  }
+
+  void _pop([dynamic data]) {
+    _historyData.result = data;
+    _historyData.routeCompleter.complete(data);
+    state.historyData.remove(_historyData);
   }
 }
