@@ -24,7 +24,7 @@ void setupLoggingWithLogfile({String logfile: 'error.log', bool printToConsole: 
   Logger.root.onRecord.listen(
           (record) {
         fileLogAppender.append('${record.time} [${record.level}] [${record.loggerName}] ${record.message}\n${record.stackTrace ?? ""}');
-        if (printToConsole) print(
-            '${record.time} [${record.level}] [${record.loggerName}] ${record.message}\n${record.stackTrace ?? ""}');
+        if (printToConsole) debugPrint(
+            '${record.time} [${record.level}] [${record.loggerName}] ${record.message}\n${record.stackTrace ?? ""}', wrapWidth: 100);
       });
 }

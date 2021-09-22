@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'compass_navigation_state.dart';
 import 'navigators_register.dart';
 
+CompassOperator get compass => GetIt.I<CompassOperator>();
 
 ///
 /// Manipulates navigator history
@@ -53,7 +54,7 @@ class CompassOperator {
   }
 
   void back([dynamic data]) {
-    _pop(data);
+    _pop(_historyData, data);
     state.update();
   }
 
@@ -112,9 +113,9 @@ class CompassOperator {
     return historyData;
   }
 
-  void _pop([dynamic data]) {
-    _historyData.result = data;
-    _historyData.routeCompleter.complete(data);
-    state.historyData.remove(_historyData);
+  void _pop(HistoryData target, [dynamic data]) {
+    target.result = data;
+    target.routeCompleter.complete(data);
+    state.historyData.remove(target);
   }
 }

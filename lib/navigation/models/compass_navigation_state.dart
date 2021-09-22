@@ -14,7 +14,6 @@ import 'navigation_page.dart';
 import 'navigation_screen.dart';
 import 'screen_group.dart';
 
-CompassOperator get compass => GetIt.I<CompassOperator>();
 
 class HistoryData<T> {
   final Completer<T> routeCompleter = Completer();
