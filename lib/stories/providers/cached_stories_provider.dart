@@ -37,7 +37,7 @@ class CachedStoriesProvider {
 
       await _cacheStories();
     } catch (e, stacktrace) {
-      print("$e $stacktrace");
+      _logger.severe("Error during load stories", e, stacktrace);
     }
   }
 
@@ -50,7 +50,7 @@ class CachedStoriesProvider {
 
       await _cacheStories();
     } catch (e, stacktrace) {
-      print("$e $stacktrace");
+      _logger.severe("Error during load stories from json", e, stacktrace);
     }
   }
 
@@ -64,13 +64,13 @@ class CachedStoriesProvider {
           await http.get(Uri.parse(storiesConfigUrl));
       if (response.statusCode == 200) {
         var responseBody = utf8.decode(response.bodyBytes);
-        print("Response: ${response.statusCode}: $responseBody");
+        _logger.info("Response: ${response.statusCode}: $responseBody");
         return responseBody;
       } else {
         throw Exception('Failed to load $storiesConfigUrl');
       }
     } catch (e) {
-      print("Could not load $storiesConfigUrl: $e");
+      _logger.severe("Could not load $storiesConfigUrl", e);
       return "[]";
     }
   }
@@ -81,11 +81,7 @@ class CachedStoriesProvider {
     stories.values.forEach((s) async {
       await cacheManager.downloadFile(s.titleImage);
       s.storyItems
-          .forEach((i) async => await cacheManager.downloadFile(i.imageUrl));
-      _logger.info("!!!!on_boarding = ${s.details?.onBoarding}");
-      s.storyItems.forEach((element) {
-        print(s.storyItems.length);
-      });
+          .forEach((item) async => await cacheManager.downloadFile(item.imageUrl));
     });
   }
 
