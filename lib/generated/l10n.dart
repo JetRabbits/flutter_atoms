@@ -279,6 +279,26 @@ class AtomsStrings {
       args: [],
     );
   }
+
+  /// `Page is not found`
+  String get page_not_found {
+    return Intl.message(
+      'Page is not found',
+      name: 'page_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error occurred during navigation to page`
+  String get error_during_navigation {
+    return Intl.message(
+      'Error occurred during navigation to page',
+      name: 'error_during_navigation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AtomsStrings> {

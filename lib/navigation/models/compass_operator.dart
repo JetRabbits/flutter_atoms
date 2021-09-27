@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import '../exceptions/no_route_found.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
@@ -18,7 +17,9 @@ class CompassOperator {
   final NavigatorsRegister navigatorsRegistry;
   final CompassNavigationState state;
   late String path;
-  HistoryData get _historyData => state.historyData.lastWhere((element) => element.path == path);
+
+  HistoryData get _historyData =>
+      state.historyData.lastWhere((element) => element.path == path);
 
   Map<String, dynamic> get data => _historyData.params;
 
@@ -99,16 +100,24 @@ class CompassOperator {
       var validatedRoute =
           state.navigationModel.routesValidator.validate(route);
       state.navigationModel.getScreenByRoute(validatedRoute);
+      var _paramsInPath = state.navigationModel
+          .getParametersFromRoute(route)
+          .cast<String, dynamic>();
       historyData = HistoryData<T?>(
           path: validatedRoute,
-          params: state.navigationModel
-              .getParametersFromRoute(route)
-              .cast<String, dynamic>()
+          params: Map<String, dynamic>()
+            ..addAll(_paramsInPath)
             ..addAll(params));
       state.historyData.add(historyData);
-    } catch (e) {
-      historyData = HistoryData(path: '/404');
-      state.historyData.add(historyData);
+    } catch (e, stacktrace) {
+      _logger.severe("Error during navigation", e, stacktrace);
+      if (e is NoRouteFoundException) {
+        historyData = HistoryData(path: '/404');
+        state.historyData.add(historyData);
+      } else {
+        historyData = HistoryData(path: '/error');
+        state.historyData.add(historyData);
+      }
     }
     return historyData;
   }

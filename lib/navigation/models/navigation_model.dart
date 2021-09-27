@@ -2,6 +2,8 @@ import 'dart:core';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import '../exceptions/no_route_found.dart';
+
 
 import 'button_config.dart';
 import 'float_action_button_config.dart';
@@ -17,19 +19,11 @@ typedef NavigationRailDestinationBuilder = NavigationRailDestination Function(
 typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 
 ///
-/// Navigation model take routes as pattern /Flutter_Navigator_Route/Internal_of_Route_Screen_Name
+/// Navigation model take routes as pattern /page/group/screen
 /// For example if you have main route with 3 bottom navigation buttons then your routes should be:
-/// /main/first_screen
-/// /main/second_screen
-/// /main/third_screen
-/// After that you can ask NavigatorCubit.navigateTo('/main/second_screen')
-/// For example if you have main route with 3 bottom navigation buttons and on the second screen (second button) there are 2 screens then your routes should be:
-/// /main/first_screen
-/// /main/second_screen
-/// /main/second_screen/sub_screen_1
-/// /main/second_screen/sub_screen_2
-/// /main/third_screen
-/// After that you can ask NavigatorCubit.navigateTo('/main/second_screen/sub_screen_1')
+/// /main/group1/first_screen
+/// /main/group1/second_screen
+/// /main/group1/third_screen
 ///
 class NavigationModel extends RouteInformationParser<String> {
   Widget? sideBarLogo;
@@ -130,7 +124,8 @@ class NavigationModel extends RouteInformationParser<String> {
   NavigationPage getPageByRoute(String route) {
     var segs = parseAndCheckFormat(route).pathSegments;
     var result = segs.length > 0 ? pagesMap["/${segs[0]}"] : pagesMap[route];
-    if (result == null) throw "No page group found for $route";
+    if (result == null)
+      throw NoRouteFoundException(route);
     return result;
   }
 
@@ -144,7 +139,7 @@ class NavigationModel extends RouteInformationParser<String> {
     result = result ?? screenGroup.screenMaps.values.first;
 
     if (result == null)
-      throw "No screen found for $route. Check your navigation model";
+      throw NoRouteFoundException(route);
     return result;
   }
 
@@ -153,14 +148,14 @@ class NavigationModel extends RouteInformationParser<String> {
     var split = parseAndCheckFormat(route).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[route];
     if (page == null)
-      throw "No page found for $route. Check your navigation model";
+      throw NoRouteFoundException(route);
     var result = split.length > 1
         ? page.screenGroupsMap["/${split[0]}/${split[1]}"]
         : page.screenGroupsMap[route];
     result = result ?? page.screenGroupsMap.values.first;
 
     if (result == null)
-      throw "No screen group found for $route. Check your navigation model";
+      throw NoRouteFoundException(route);
     return result;
   }
 

@@ -21,5 +21,7 @@
   "changesHistory": "История изменений",
   "today": "Today",
   "tomorrow": "Tomorrow",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "page_not_found": "Page is not found",
+  "error_during_navigation": "Error occurred during navigation to page"
 }

@@ -48,7 +48,7 @@ class _JetPageState extends State<JetPage> {
 
   late NavigationScreen _screen;
 
-  static final _loggerName = 'JetPage';
+  String get _loggerName => 'JetPage: $_screenPath';
 
   @override
   Widget build(BuildContext context) {

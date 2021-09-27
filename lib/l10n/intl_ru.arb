@@ -21,5 +21,7 @@
   "changesHistory": "История изменений",
   "today": "Сегодня",
   "tomorrow": "Завтра",
-  "yesterday": "Вчера"
+  "yesterday": "Вчера",
+  "page_not_found": "Страница не найдена",
+  "error_during_navigation": "Ошибка во время навигации"
 }

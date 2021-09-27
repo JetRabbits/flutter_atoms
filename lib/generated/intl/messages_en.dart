@@ -35,9 +35,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "contact_email": MessageLookupByLibrary.simpleMessage("Contact e-mail"),
         "copiedToClipboard":
             MessageLookupByLibrary.simpleMessage("Copied to clipboard"),
+        "error_during_navigation": MessageLookupByLibrary.simpleMessage(
+            "Error occurred during navigation to page"),
         "license_agreement":
             MessageLookupByLibrary.simpleMessage("License agreement"),
         "more_page": MessageLookupByLibrary.simpleMessage("More"),
+        "page_not_found":
+            MessageLookupByLibrary.simpleMessage("Page is not found"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "platform": MessageLookupByLibrary.simpleMessage("Platform"),
         "privacy_policy":

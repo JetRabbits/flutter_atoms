@@ -36,9 +36,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("e-mail для связи"),
         "copiedToClipboard":
             MessageLookupByLibrary.simpleMessage("Скопировано в буфер обмена"),
+        "error_during_navigation":
+            MessageLookupByLibrary.simpleMessage("Ошибка во время навигации"),
         "license_agreement":
             MessageLookupByLibrary.simpleMessage("Лицензионное соглашение"),
         "more_page": MessageLookupByLibrary.simpleMessage("Ещё"),
+        "page_not_found":
+            MessageLookupByLibrary.simpleMessage("Страница не найдена"),
         "phone": MessageLookupByLibrary.simpleMessage("Телефон"),
         "platform": MessageLookupByLibrary.simpleMessage("Платформа"),
         "privacy_policy":
