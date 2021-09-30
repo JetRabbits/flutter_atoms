@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/navigation/models/compass_navigation_state.dart';
-import 'package:flutter_atoms/navigation/models/inner_navigator_route_creator.dart';
-import 'package:flutter_atoms/navigation/models/navigators_register.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../navigation.dart';
+import '../models/compass_navigation_state.dart';
+import '../models/inner_navigator_route_page.dart';
+import '../models/navigators_register.dart';
 
 @injectable
 class InnerRouterDelegate extends RouterDelegate<String>
@@ -23,7 +23,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   final NavigatorsRegister navigatorsRegister;
 
-  static final _loggerName = 'InnerRouterDelegate';
+  static const _loggerName = 'InnerRouterDelegate';
 
   InnerRouterDelegate(@factoryParam this.initialRoute,
       @factoryParam this.navBarCubit, this.state, this.navigatorsRegister) {
@@ -41,7 +41,8 @@ class InnerRouterDelegate extends RouterDelegate<String>
     log("${state.history}", name: _loggerName);
     log("current route = ${state.currentRoute}", name: _loggerName);
     log("current screen = ${state.currentScreen.path}", name: _loggerName);
-    Map<String, InnerNavigatorRouteCreator> result = {};
+    Map<String, InnerNavigatorRoutePage> result = {};
+
     state.history.forEach((route) {
       var routePage = state.navigationModel.getPageByRoute(route);
       var initialPage = state.navigationModel.getPageByRoute(initialRoute!);
@@ -50,7 +51,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         log("mapping route $route", name: _loggerName);
         var screen = state.navigationModel.getScreenByRoute(route);
         result.remove(route);
-        result[route] = InnerNavigatorRouteCreator(route, screen,
+        result[route] = InnerNavigatorRoutePage(route, screen,
             name: route, restorationId: route, key: ValueKey(route));
       }
     });
@@ -63,7 +64,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         log("Pop route ${route.settings.name}", name: _loggerName);
 
         if (route.didPop(result)) {
-          route.settings.name?.compass().back(result);
+          route.settings.name?.compass().back(result, true);
           navBarCubit?.updatePath(state.currentRoute);
           return true;
         }

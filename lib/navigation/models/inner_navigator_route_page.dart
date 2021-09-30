@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 import 'navigation_screen.dart';
 
-class InnerNavigatorRouteCreator extends Page {
+class InnerNavigatorRoutePage extends Page {
   final NavigationScreen screen;
   final PageStorageBucket? storageBucket;
   static final _loggerName = 'InnerNavigatorRouteCreator';
@@ -23,7 +23,7 @@ class InnerNavigatorRouteCreator extends Page {
                 bucket: storageBucket!, child: screen.builder!(context)));
   }
 
-  InnerNavigatorRouteCreator(
+  InnerNavigatorRoutePage(
     this.route,
     this.screen, {
     LocalKey? key,

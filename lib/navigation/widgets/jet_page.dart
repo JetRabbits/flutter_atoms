@@ -112,7 +112,7 @@ class _JetPageState extends State<JetPage> {
 
   Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
     var navigationState = widget.navigationState;
-    Color selectedColor = Theme.of(context).accentColor;
+    Color selectedColor = Theme.of(context).colorScheme.secondary;
     Color unselectedColor = Theme.of(context).hintColor;
 
     var isActive = navigationState.currentScreenGroup == group;
@@ -251,7 +251,7 @@ class _JetPageState extends State<JetPage> {
     _page = widget.navigationState.navigationModel
         .getPageByRoute(widget.initialPageRoute);
     _screenPath = widget.initialPageRoute;
-    _screen = widget.navigationState.currentScreen;
+    _screen = widget.navigationState.navigationModel.getScreenByRoute(_screenPath);
 
     if (_screen.path != _page.path) {
       _navBarCubit = NavBarCubit(widget.initialPageRoute);

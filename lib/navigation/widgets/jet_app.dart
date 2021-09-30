@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
-import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
+// import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
 import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/widgets/navigation_error_screen.dart';
 import 'package:flutter_atoms/navigation/widgets/not_found_screen.dart';

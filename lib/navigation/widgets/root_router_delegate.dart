@@ -2,12 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
-import 'package:flutter_atoms/navigation/models/navigators_register.dart';
-import 'package:flutter_atoms/navigation/models/root_navigator_route_creator.dart';
+import '../blocs/boot/boot_bloc.dart';
+import '../models/navigators_register.dart';
+import '../models/root_navigator_route_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-
 import '../../navigation.dart';
 import 'root_navigator_observer.dart';
 
@@ -48,7 +47,7 @@ class RootRouterDelegate extends RouterDelegate<String>
 
     var pages = filteredHistory.values.map((route) {
       log("map page $route", name: _loggerName);
-      return RootNavigatorRouteCreator(route, state,
+      return RootNavigatorRoutePage(route, state,
           restorationId: route, key: ValueKey(route));
     }).toList();
 

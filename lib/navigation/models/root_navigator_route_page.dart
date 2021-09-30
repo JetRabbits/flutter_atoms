@@ -5,7 +5,7 @@ import 'package:flutter_atoms/navigation/widgets/jet_page.dart';
 import 'compass_navigation_state.dart';
 
 
-class RootNavigatorRouteCreator extends Page {
+class RootNavigatorRoutePage extends Page {
   final PageStorageBucket? storageBucket;
 
   final String route;
@@ -25,7 +25,7 @@ class RootNavigatorRouteCreator extends Page {
         });
   }
 
-  RootNavigatorRouteCreator(
+  RootNavigatorRoutePage(
     this.route,
     this.state, {
     LocalKey? key,

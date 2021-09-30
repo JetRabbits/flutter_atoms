@@ -54,9 +54,9 @@ class CompassOperator {
     return this;
   }
 
-  void back([dynamic data]) {
+  void back([dynamic data, skipUpdate = false]) {
     _pop(_historyData, data);
-    state.update();
+    if (!skipUpdate) state.update();
   }
 
   Future<T?> go<T>([Map<String, dynamic>? params]) async {

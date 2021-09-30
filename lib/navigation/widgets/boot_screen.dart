@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/navigation.dart';
-import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../navigation.dart';
+import '../blocs/boot/boot_bloc.dart';
 
 class BootScreen extends StatelessWidget {
   final Widget? logo;
@@ -17,7 +18,11 @@ class BootScreen extends StatelessWidget {
   EdgeInsets? repeatButtonPadding;
 
   BootScreen(this.bootBloc,
-      {Key? key, this.logo, this.repeatLabelText, required this.nextRoute, this.repeatButtonPadding = EdgeInsets.zero})
+      {Key? key,
+      this.logo,
+      this.repeatLabelText,
+      required this.nextRoute,
+      this.repeatButtonPadding = EdgeInsets.zero})
       : super(key: key);
 
   @override
