@@ -13,9 +13,16 @@ class RootNavigatorRoutePage extends Page {
   final CompassNavigationState state;
 
   @override
+  bool canUpdate(Page<dynamic> other) {
+    return super.canUpdate(other);
+  }
+
+  @override
   Route createRoute(BuildContext context) {
+
     return MaterialPageRoute(
         settings: this,
+        // maintainState: false,
         builder: (context) {
           var widget = JetPage(route, state);
 
