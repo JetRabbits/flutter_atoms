@@ -274,6 +274,9 @@ class _JetPageState extends State<JetPage> {
   @override
   void dispose() {
     super.dispose();
+    log("dispose ${widget.initialPageRoute}", name: "JetPage");
+    _innerRouterDelegate?.dispose();
+
 
     try {
       _rootBackDispatcher!

@@ -25,14 +25,24 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   static const _loggerName = 'InnerRouterDelegate';
 
+  late void Function() _listener;
+
   InnerRouterDelegate(@factoryParam this.initialRoute,
       @factoryParam this.navBarCubit, this.state, this.navigatorsRegister) {
     log("Creating with pageRoute = $initialRoute", name: _loggerName);
     navigatorsRegister.register(this.initialRoute!, _navigatorKey);
-    state.addListener(() {
+    _listener =  () {
       log("Notify AppNavigationState is called", name: _loggerName);
       notifyListeners();
-    });
+    };
+    state.addListener(_listener);
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    state.removeListener(_listener);
   }
 
   @override

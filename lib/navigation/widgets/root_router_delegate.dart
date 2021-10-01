@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 import '../../navigation.dart';
 import 'root_navigator_observer.dart';
 
-@injectable
+@singleton
 class RootRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
   final CompassNavigationState state;
@@ -24,7 +24,10 @@ class RootRouterDelegate extends RouterDelegate<String>
 
   RootRouterDelegate(this.state, this.rootObserver, this.navigatorsRegister) {
     navigatorsRegister.register("/", _navigatorKey);
+    log("Creating root delegate", name: _loggerName);
+
     state.addListener(() {
+
       log("Notify AppNavigationState is called", name: _loggerName);
       notifyListeners();
     });
@@ -57,7 +60,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       onPopPage: (route, result) {
         log("Pop route ${route.settings.name}", name: _loggerName);
         if (route.didPop(result)) {
-          route.settings.name?.compass().back(result);
+          route.settings.name?.compass().back(result, true);
           return true;
         }
         return false;
