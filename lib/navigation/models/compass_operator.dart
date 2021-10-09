@@ -82,7 +82,7 @@ class CompassOperator {
     HistoryData<T?> result;
 
     if (_switchOn) {
-      state.historyData.remove(path);
+      state.historyData.removeWhere((element) => element.path == path);
       result = _push(path, params ?? {});
     } else if (_replace) {
       _pop(state.historyData.last);
