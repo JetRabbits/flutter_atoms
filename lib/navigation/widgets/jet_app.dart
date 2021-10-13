@@ -77,7 +77,6 @@ class JetApp extends StatefulWidget {
         assert(nextRoute != null, "Next route should be defined");
         assert(onAppStart != null, "onAppStart should be defined");
         bootWidgetBuilder = (context) {
-          bootBloc.start();
           return Theme(
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootScreen(bootBloc,
@@ -140,6 +139,9 @@ class _JetAppState extends State<JetApp> {
       log("Reset boot");
       widget.bootBloc.reset();
     }
+
+    widget.bootBloc.start();
+
 
     _themeModel = widget.themeModelBuilder != null
         ? widget.themeModelBuilder!(context)

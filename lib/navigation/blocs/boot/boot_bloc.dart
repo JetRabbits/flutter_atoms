@@ -6,7 +6,7 @@ part 'boot_bloc_state.dart';
 
 @singleton
 class BootBloc extends Cubit<BootBlocState> {
-  static final loggerName = 'BootBloc';
+  static final _logger = Logger('BootBloc');
   late Future<bool> Function() _onStart;
 
   set onStart(Future<bool> Function() value) {
@@ -18,8 +18,7 @@ class BootBloc extends Cubit<BootBlocState> {
   @override
   // ignore: must_call_super
   void onError(Object error, StackTrace stackTrace) {
-    Logger(loggerName)
-        .severe("Error during application loading", error, stackTrace);
+    _logger.severe("Error during application loading", error, stackTrace);
     emit(BootBlocState.ERROR);
   }
 
@@ -28,6 +27,8 @@ class BootBloc extends Cubit<BootBlocState> {
   }
 
   Future<void> start() async {
+    _logger.info("Start application loading");
+
     emit(BootBlocState.LOADING);
     bool result = true;
     try {
