@@ -9,27 +9,32 @@ class InnerNavigatorRoutePage extends Page {
   final NavigationScreen screen;
   final PageStorageBucket? storageBucket;
   static final _loggerName = 'InnerNavigatorRouteCreator';
-
-  final String route;
+  Widget? _widget;
 
   @override
   Route createRoute(BuildContext context) {
-    log("createRoute $route", name: _loggerName);
+    log("createRoute $name", name: _loggerName);
+    print("@@@@@${_widget}");
+    // if (_widget == null)
     return MaterialPageRoute(
         settings: this,
-        builder: (context) => storageBucket == null
-            ? screen.builder!(context)
-            : PageStorage(
-                bucket: storageBucket!, child: screen.builder!(context)));
+        builder: (context) {
+          if (_widget == null)
+            _widget = storageBucket == null
+                ? screen.builder!(context)
+                : PageStorage(
+                bucket: storageBucket!, child: screen.builder!(context));
+
+          return _widget!;
+        });
   }
 
   InnerNavigatorRoutePage(
-    this.route,
     this.screen, {
     LocalKey? key,
     this.storageBucket,
     String? name,
     Object? arguments,
     restorationId,
-  }) : super(key: key, name: name, arguments: arguments, restorationId: route);
+  }) : super(key: key, name: name, arguments: arguments, restorationId: name);
 }

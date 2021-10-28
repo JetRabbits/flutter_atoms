@@ -18,10 +18,10 @@ class CompassOperator {
   final CompassNavigationState state;
   late String path;
 
-  HistoryData get _historyData =>
+  HistoryData? get _historyData =>
       state.historyData.lastWhere((element) => element.path == path);
 
-  Map<String, dynamic> get data => _historyData.params;
+  Map<String, dynamic> get data => _historyData?.params ?? {};
 
   bool _root = false;
   bool _replace = false;
@@ -55,8 +55,10 @@ class CompassOperator {
   }
 
   void back([dynamic data, skipUpdate = false]) {
-    _pop(_historyData, data);
-    if (!skipUpdate) state.update();
+    if (_historyData != null) {
+      _pop(_historyData!, data);
+      if (!skipUpdate) state.update();
+    }
   }
 
   Future<T?> go<T>([Map<String, dynamic>? params]) async {

@@ -60,7 +60,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       onPopPage: (route, result) {
         log("Pop route ${route.settings.name}", name: _loggerName);
         if (route.didPop(result)) {
-          route.settings.name?.compass().back(result, true);
+          route.settings.name?.compass().back(result);
           return true;
         }
         return false;

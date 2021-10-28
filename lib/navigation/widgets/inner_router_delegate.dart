@@ -34,6 +34,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
     _listener =  () {
       log("Notify AppNavigationState is called", name: _loggerName);
       notifyListeners();
+      navBarCubit?.updatePath(state.currentRoute);
     };
     state.addListener(_listener);
   }
@@ -61,7 +62,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         log("mapping route $route", name: _loggerName);
         var screen = state.navigationModel.getScreenByRoute(route);
         result.remove(route);
-        result[route] = InnerNavigatorRoutePage(route, screen,
+        result[route] = InnerNavigatorRoutePage(screen,
             name: route, restorationId: route, key: ValueKey(route));
       }
     });
@@ -74,12 +75,12 @@ class InnerRouterDelegate extends RouterDelegate<String>
         log("Pop route ${route.settings.name}", name: _loggerName);
 
         if (route.didPop(result)) {
-          route.settings.name?.compass().back(result, true);
-          navBarCubit?.updatePath(state.currentRoute);
+          route.settings.name?.compass().back(result);
           return true;
         }
         return false;
       },
+      observers: [InnerNavigatorObserver(navBarCubit!)],
       // onGenerateInitialRoutes: (navigatorState, initialRoute) {
       //   log('onGenerateInitialRoutes $initialRoute', name: _loggerName);
       //   return [
@@ -106,4 +107,34 @@ class InnerRouterDelegate extends RouterDelegate<String>
 
   @override
   GlobalKey<NavigatorState>? get navigatorKey => _navigatorKey;
+}
+
+
+class InnerNavigatorObserver extends NavigatorObserver {
+  NavBarCubit navbarCubit;
+
+  InnerNavigatorObserver(this.navbarCubit);
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print("!!!!didPush");
+    _update(route);
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    print("!!!!didReplace");
+    _update(newRoute);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    print("!!!!didPop");
+    _update(previousRoute);
+  }
+
+  void _update(Route<dynamic>? route) {
+    if (route != null)
+      navbarCubit.updatePath(route.settings.name);
+  }
 }

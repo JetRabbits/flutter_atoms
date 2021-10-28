@@ -56,25 +56,25 @@ class _JetPageState extends State<JetPage> {
   Widget build(BuildContext context) {
     log("build", name: _loggerName);
 
-    if (_innerRouterDelegate == null) {
-      log("no inner navigator", name: _loggerName);
-      Widget screenWidget;
-
-      var _stillInHistory = _navigationState.history
-          .where((element) => element == _screenPath)
-          .isNotEmpty;
-      if (!_stillInHistory) {
-        log("Not in the history", name: _loggerName);
-        screenWidget = Container();
-      }
-      else {
-        screenWidget = _screen.builder!(context);
-      }
-      if (screenWidget is Scaffold) {
-        return screenWidget;
-      }
-      return Scaffold(body: screenWidget);
-    }
+    // if (_innerRouterDelegate == null) {
+    //   log("no inner navigator", name: _loggerName);
+    //   Widget screenWidget;
+    //
+    //   var _stillInHistory = _navigationState.history
+    //       .where((element) => element == _screenPath)
+    //       .isNotEmpty;
+    //   if (!_stillInHistory) {
+    //     log("Not in the history", name: _loggerName);
+    //     screenWidget = Container();
+    //   }
+    //   else {
+    //     screenWidget = _screen.builder!(context);
+    //   }
+    //   if (screenWidget is Scaffold) {
+    //     return screenWidget;
+    //   }
+    //   return Scaffold(body: screenWidget);
+    // }
 
     log("with inner navigator", name: _loggerName);
 

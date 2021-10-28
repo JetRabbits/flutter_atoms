@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_atoms/navigation/exceptions/no_route_found.dart';
 import 'package:flutter_atoms/navigation/widgets/jet_page.dart';
 
 import 'compass_navigation_state.dart';
+import 'navigation_screen.dart';
 
 
 class RootNavigatorRoutePage extends Page {
   final PageStorageBucket? storageBucket;
 
   final String route;
+
+  Widget? _widget;
 
   final CompassNavigationState state;
 
@@ -24,11 +28,23 @@ class RootNavigatorRoutePage extends Page {
         settings: this,
         // maintainState: false,
         builder: (context) {
-          var widget = JetPage(route, state);
+          NavigationScreen screen = state.navigationModel.getScreenByRoute(route);
+
+
+          if (_widget == null) {
+            if (screen.group.page.path == screen.path) {
+              _widget = screen.builder!(context);
+              Router.of(context).backButtonDispatcher?.takePriority();
+            }
+            else {
+              _widget = JetPage(route, state);
+            }
+          }
+
 
           return storageBucket == null
-              ? widget
-              : PageStorage(bucket: storageBucket!, child: widget);
+              ? _widget!
+              : PageStorage(bucket: storageBucket!, child: _widget!);
         });
   }
 
