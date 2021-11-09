@@ -89,13 +89,12 @@ class InnerRouterDelegate extends RouterDelegate<String>
       //   ];
       // },
       // initialRoute: initialRoute,
-      // onGenerateRoute: (settings) {
-      //   log('onGenerateRoute ${settings.name}', name: _loggerName);
-      //   Router.of(context).backButtonDispatcher!.takePriority();
-      //   var screen = state.navigationModel.getScreenByRoute(settings.name!);
-      //   return buildRoute(context, screen.path, screen.builder,
-      //       settings: settings);
-      // }
+      onGenerateRoute: (settings) {
+        log('onGenerateRoute ${settings.name}', name: _loggerName);
+        Router.of(context).backButtonDispatcher!.takePriority();
+        var screen = state.navigationModel.getScreenByRoute(settings.name!);
+        return MaterialPageRoute(builder: (context) => screen.builder!(context), settings: settings);
+      }
     );
   }
 

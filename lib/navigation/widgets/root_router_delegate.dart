@@ -2,12 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../navigation.dart';
 import '../blocs/boot/boot_bloc.dart';
 import '../models/navigators_register.dart';
 import '../models/root_navigator_route_page.dart';
-import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
-import '../../navigation.dart';
 import 'root_navigator_observer.dart';
 
 @singleton
@@ -33,6 +34,9 @@ class RootRouterDelegate extends RouterDelegate<String>
     });
   }
 
+  /// Build root [Navigator] widget using [CompassNavigationState] as history data.
+  /// Instances of [Page] created with their names and route data.
+  /// Also old fashion push approach is limited supported. Only push and pop operations.
   @override
   Widget build(BuildContext context) {
     log("build", name: _loggerName);
@@ -67,17 +71,18 @@ class RootRouterDelegate extends RouterDelegate<String>
       },
 
       observers: [rootObserver],
-//       onGenerateRoute: (settings) {
-//         log("onGenerateRoute ${settings.name}", name: _loggerName);
-// //        Router.of(context).backButtonDispatcher!.takePriority();
-//         var screen = state.navigationModel.getScreenByRoute(settings.name!);
-//         var isJetPage = screen.path == screen.group.page.path;
-//         var _builder = isJetPage
-//             ? screen.builder!
-//             : (dynamic context) => JetPage(settings.name!, state);
-//         notifyListeners();
-//         return MaterialPageRoute(settings: settings, builder: _builder);
-//       },
+      onGenerateRoute: (settings) {
+        log("onGenerateRoute ${settings.name}", name: _loggerName);
+       Router.of(context).backButtonDispatcher!.takePriority();
+        // if (settings.name != null) settings.name!.go(settings.arguments as Map<String, dynamic>?);
+
+        var screen = state.navigationModel.getScreenByRoute(settings.name!);
+        var isJetPage = screen.path != screen.group.page.path;
+        var _builder = isJetPage
+            ? (dynamic context) => JetPage(settings.name!, state)
+            : screen.builder!;
+        return MaterialPageRoute(settings: settings, builder: _builder);
+      },
 //       onGenerateInitialRoutes: (NavigatorState navigator, String initialRoute) {
 //         log("onGenerateInitialRoutes $initialRoute",
 //             name: _loggerName);

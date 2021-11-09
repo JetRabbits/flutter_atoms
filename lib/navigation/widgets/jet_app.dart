@@ -46,7 +46,7 @@ class JetApp extends StatefulWidget {
 
   late final BootBloc bootBloc;
 
-  EdgeInsets? repeatButtonPadding;
+  EdgeInsets Function(BuildContext context)? repeatButtonPadding;
 
   JetApp({
     Key? key,
