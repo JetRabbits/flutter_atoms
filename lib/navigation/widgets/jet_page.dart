@@ -225,33 +225,38 @@ class _JetPageState extends State<JetPage> {
   }
 
   Widget buildSideBar(BuildContext context) {
-    var navigationModel = widget.navigationState.navigationModel;
-    var buttons = _page.screenGroupsMap.values
-        .where((group) =>
-    group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
-        .map<NavigationRailDestination>(
-            (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
-        .toList();
-    var _group = navigationModel
-        .getScreenGroupByRoute(widget.navigationState.currentRoute);
-    if (buttons.length >= 2 && _group.sideBarIndex >= 0)
-      return NavigationRail(
-          leading: navigationModel.sideBarLogo,
-          onDestinationSelected: (value) {
-            var _screenGroup = _page.screenGroupsMap.values
-                .firstWhereOrNull((g) => g.sideBarIndex == value);
-            if (_screenGroup != null) {
-              var _path = _screenGroup.screenMaps.values.first.path;
-              _path.compass().go();
-            }
-          },
-          extended: MediaQuery
-              .of(context)
-              .size
-              .width > 1024,
-          destinations: buttons,
-          selectedIndex: _group.sideBarIndex);
-    return Container();
+    return BlocBuilder(
+      bloc: _navBarCubit,
+    builder: (context, state)
+    {
+      var navigationModel = widget.navigationState.navigationModel;
+      var buttons = _page.screenGroupsMap.values
+          .where((group) =>
+      group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
+          .map<NavigationRailDestination>(
+              (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
+          .toList();
+      var _group = navigationModel
+          .getScreenGroupByRoute(widget.navigationState.currentRoute);
+      if (buttons.length >= 2 && _group.sideBarIndex >= 0)
+        return NavigationRail(
+            leading: navigationModel.sideBarLogo,
+            onDestinationSelected: (value) {
+              var _screenGroup = _page.screenGroupsMap.values
+                  .firstWhereOrNull((g) => g.sideBarIndex == value);
+              if (_screenGroup != null) {
+                var _path = _screenGroup.screenMaps.values.first.path;
+                _path.compass().go();
+              }
+            },
+            extended: MediaQuery
+                .of(context)
+                .size
+                .width > 1024,
+            destinations: buttons,
+            selectedIndex: _group.sideBarIndex);
+      return Container();
+    });
   }
 
   Widget? buildFloatActionButton(BuildContext context) {

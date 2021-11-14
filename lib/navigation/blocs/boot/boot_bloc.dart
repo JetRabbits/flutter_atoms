@@ -13,6 +13,12 @@ class BootBloc extends Cubit<BootBlocState> {
     _onStart = value;
   }
 
+  String Function()? _nextRoute;
+
+  set nextRoute(String Function()? value) {
+    _nextRoute = value;
+  }
+
   BootBloc() : super(BootBlocState.INIT);
 
   @override
@@ -33,10 +39,15 @@ class BootBloc extends Cubit<BootBlocState> {
     bool result = true;
     try {
       result = await _onStart();
-      if (result)
+      _logger.info("onAppStart result ${result}");
+      if (result) {
+        _logger.info("Emit BootBlocState.READY");
         emit(BootBlocState.READY);
-      else
+        if (_nextRoute != null) _nextRoute!().compass().replace().go();
+      } else {
+        _logger.info("Emit BootBlocState.ERROR");
         emit(BootBlocState.ERROR);
+      }
     } catch (e, stacktrace) {
       addError(e, stacktrace);
     }

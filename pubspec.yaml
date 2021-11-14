@@ -1,6 +1,6 @@
 name: flutter_atoms
 description: Some best practice and ready to go solutions for flutter projects
-version: 1.0.6
+version: 1.0.7
 authors:
   - JetRabbits
 homepage: https://github.com/JetRabbits/flutter_atoms
@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^7.3.3
   persist_theme: ^1.7.0
   get_version:
     git: https://github.com/Creky/get_version.git

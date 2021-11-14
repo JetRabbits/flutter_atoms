@@ -11,8 +11,6 @@ class BootScreen extends StatelessWidget {
 
   final String? repeatLabelText;
 
-  final String Function()? nextRoute;
-
   final BootBloc bootBloc;
 
   EdgeInsets Function(BuildContext context)? repeatButtonPadding;
@@ -21,7 +19,6 @@ class BootScreen extends StatelessWidget {
       {Key? key,
       this.logo,
       this.repeatLabelText,
-      required this.nextRoute,
       this.repeatButtonPadding})
       : super(key: key);
 
@@ -38,14 +35,20 @@ class BootScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: BlocConsumer<BootBloc, BootBlocState>(
                   bloc: bootBloc,
-                  listener: (prev, current) {
-                    log("$current");
-                    if (current == BootBlocState.READY) {
-                      log("Application is ready");
-                      nextRoute!().compass().replace().go();
-                    }
+                  listener: (context, state) {
+                    // print("!!!!!!");
+                    // log("$state", name: "BootScreen");
+                    // if (state == BootBlocState.READY) {
+                    //   log("Application is ready", name: "BootScreen");
+                    //   nextRoute!().compass().replace().go();
+                    // } else
+                    // {
+                    //   log("Application boot is failed", name: "BootScreen");
+                    // }
                   },
                   builder: (context, state) {
+                    log("$state", name: "BootScreen");
+
                     // if (state == BootBlocState.INIT) bootBloc.start();
                     if (state == BootBlocState.ERROR)
                       return buildRepeatButton();

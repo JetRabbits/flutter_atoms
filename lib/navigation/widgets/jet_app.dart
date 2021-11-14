@@ -71,11 +71,11 @@ class JetApp extends StatefulWidget {
       initializeBigIntlMessageLookup();
       localizationsDelegates!.add(AtomsStrings.delegate);
     }
-    bootBloc = GetIt.I<BootBloc>()..onStart = onAppStart!;
+    bootBloc = GetIt.I<BootBloc>()
+      ..nextRoute = nextRoute
+      ..onStart = onAppStart!;
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidgetBuilder == null) {
-        assert(nextRoute != null, "Next route should be defined");
-        assert(onAppStart != null, "onAppStart should be defined");
         bootWidgetBuilder = (context) {
           return Theme(
             data: bootPageThemeData ?? ThemeData.light(),
@@ -84,8 +84,7 @@ class JetApp extends StatefulWidget {
                 repeatButtonPadding: repeatButtonPadding,
                 repeatLabelText: repeatLoadLabel == null
                     ? AtomsStrings.of(context).repeatLoad
-                    : repeatLoadLabel!(context),
-                nextRoute: nextRoute),
+                    : repeatLoadLabel!(context)),
           );
         };
       }
@@ -141,7 +140,6 @@ class _JetAppState extends State<JetApp> {
     }
 
     widget.bootBloc.start();
-
 
     _themeModel = widget.themeModelBuilder != null
         ? widget.themeModelBuilder!(context)
