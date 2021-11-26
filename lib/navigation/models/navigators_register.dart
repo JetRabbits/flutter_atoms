@@ -1,12 +1,9 @@
-import 'dart:developer' as developer;
-import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:injectable/injectable.dart';
 
 @singleton
-class NavigatorsRegister {
-  static final _loggerName = "NavigatorsRegister";
+class NavigatorsRegister with Loggable{
   final Map<String, GlobalKey<NavigatorState>> _navigatorsMap = {};
 
   String _unify(String path) {
@@ -17,17 +14,17 @@ class NavigatorsRegister {
 
   GlobalKey<NavigatorState> register(
       String path, GlobalKey<NavigatorState> key) {
-    log("registering navigator key for path $path", name: _loggerName);
-    log("registered navigators in the map: $_navigatorsMap", name: _loggerName);
+    logger.finest("registering navigator key for path $path");
+    logger.finest("registered navigators in the map: $_navigatorsMap");
     if (_navigatorsMap[_unify(path)] != null) {
-      log("navigator already registered. Rewriting map", name: _loggerName);
+      logger.finest("navigator already registered. Rewriting map");
     }
     _navigatorsMap[_unify(path)] = key;
     return key;
   }
 
   GlobalKey<NavigatorState> get(String path) {
-    developer.log("get navigator for path $path", name: _loggerName);
+    logger.finest("get navigator for path $path");
     var navigator = _navigatorsMap[_unify(path)];
     assert(navigator != null,
         "Navigator should be registered for $path. Please check navigation model in JetApp. Action to do is to set for $path some screen widget");
@@ -35,7 +32,7 @@ class NavigatorsRegister {
   }
 
   GlobalKey<NavigatorState> getRoot() {
-    developer.log("get root navigator", name: _loggerName);
+    logger.finest("get root navigator");
     var navigator = _navigatorsMap[_unify("/")];
     assert(navigator != null,
         "Root Navigator should be registered. Please check navigation model in JetApp.");

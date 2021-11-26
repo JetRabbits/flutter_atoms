@@ -23,14 +23,16 @@ class _CarouselIndicatorState extends State<CarouselIndicator> {
   void initState() {
     super.initState();
     widget.scrollController.addListener(() {
-      var _newIndex = (widget.scrollController.position.pixels / widget.scrollSize).round();
-      if ( _newIndex != currentIndex && _newIndex < widget.itemsCount){
+      var _newIndex =
+          (widget.scrollController.position.pixels / widget.scrollSize).round();
+      if (_newIndex != currentIndex && _newIndex < widget.itemsCount) {
         setState(() {
           currentIndex = _newIndex;
         });
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(

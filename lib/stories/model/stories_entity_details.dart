@@ -9,8 +9,8 @@ class StoriesEntityDetails {
   @JsonKey(defaultValue: false)
   final bool turnOffStoryControl;
 
-
-  StoriesEntityDetails( {this.turnOffStoryControl = false, this.onBoarding = false});
+  StoriesEntityDetails(
+      {this.turnOffStoryControl = false, this.onBoarding = false});
 
   factory StoriesEntityDetails.fromJson(Map<String, dynamic> json) =>
       _$StoriesEntityDetailsFromJson(json);

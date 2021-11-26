@@ -47,7 +47,6 @@ class StoryPage extends StatefulWidget {
       this.interactiveBuilder})
       : super(key: key);
 
-
   @override
   StoryPageState createState() => StoryPageState();
 }
@@ -56,7 +55,8 @@ class StoryPageState extends State<StoryPage> {
   final StoryController controller = StoryController();
   List<StoryItem> _storyItems = [];
 
-  static StoryPageState? of(BuildContext context) => context.findAncestorStateOfType<StoryPageState>();
+  static StoryPageState? of(BuildContext context) =>
+      context.findAncestorStateOfType<StoryPageState>();
 
   @override
   void initState() {
@@ -81,8 +81,12 @@ class StoryPageState extends State<StoryPage> {
                   storyItems: _storyItems,
                   progressPosition: ProgressPosition.top,
                   repeat: false,
-                  onStoryShow: widget.onStoryItemShow != null ? (storyItem) => widget.onStoryItemShow!(_storyItems.indexOf(storyItem)): null,
-                  canControl: !(widget.story.details?.turnOffStoryControl ?? false),
+                  onStoryShow: widget.onStoryItemShow != null
+                      ? (storyItem) => widget
+                          .onStoryItemShow!(_storyItems.indexOf(storyItem))
+                      : null,
+                  canControl:
+                      !(widget.story.details?.turnOffStoryControl ?? false),
                   controller: controller)
               : Container(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endTop,

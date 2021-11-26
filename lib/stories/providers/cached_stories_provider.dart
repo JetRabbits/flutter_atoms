@@ -1,15 +1,14 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_atoms/stories/model/stories_entity.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
-class CachedStoriesProvider {
+class CachedStoriesProvider with Loggable{
   Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
-
-  static final _logger = Logger('CachedStoriesProvider');
 
   Map<String, StoriesEntity> get stories => _stories;
 
@@ -37,7 +36,7 @@ class CachedStoriesProvider {
 
       await _cacheStories();
     } catch (e, stacktrace) {
-      _logger.severe("Error during load stories", e, stacktrace);
+      logger.severe("Error during load stories", e, stacktrace);
     }
   }
 
@@ -50,27 +49,27 @@ class CachedStoriesProvider {
 
       await _cacheStories();
     } catch (e, stacktrace) {
-      _logger.severe("Error during load stories from json", e, stacktrace);
+      logger.severe("Error during load stories from json", e, stacktrace);
     }
   }
 
   Future<String> _loadStoriesConfigJson(String configUrl) async {
     final String storiesConfigUrl =
         configUrl + "?" + DateTime.now().millisecondsSinceEpoch.toString();
-    print("Request: $storiesConfigUrl");
+    logger.fine("Request: $storiesConfigUrl");
 
     try {
       final http.Response response =
           await http.get(Uri.parse(storiesConfigUrl));
       if (response.statusCode == 200) {
         var responseBody = utf8.decode(response.bodyBytes);
-        _logger.info("Response: ${response.statusCode}: $responseBody");
+        logger.fine("Response: ${response.statusCode}: $responseBody");
         return responseBody;
       } else {
         throw Exception('Failed to load $storiesConfigUrl');
       }
     } catch (e) {
-      _logger.severe("Could not load $storiesConfigUrl", e);
+      logger.severe("Could not load $storiesConfigUrl", e);
       return "[]";
     }
   }
@@ -80,8 +79,8 @@ class CachedStoriesProvider {
 
     stories.values.forEach((s) async {
       await cacheManager.downloadFile(s.titleImage);
-      s.storyItems
-          .forEach((item) async => await cacheManager.downloadFile(item.imageUrl));
+      s.storyItems.forEach(
+          (item) async => await cacheManager.downloadFile(item.imageUrl));
     });
   }
 

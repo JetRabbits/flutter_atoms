@@ -1,12 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../navigation.dart';
 import '../blocs/boot/boot_bloc.dart';
 
-class BootScreen extends StatelessWidget {
+class BootScreen extends StatelessWidget with Loggable{
   final Widget? logo;
 
   final String? repeatLabelText;
@@ -24,7 +25,7 @@ class BootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("build", name: "BootScreen");
+    logger.finest("build");
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -47,7 +48,7 @@ class BootScreen extends StatelessWidget {
                     // }
                   },
                   builder: (context, state) {
-                    log("$state", name: "BootScreen");
+                    logger.finest("$state");
 
                     // if (state == BootBlocState.INIT) bootBloc.start();
                     if (state == BootBlocState.ERROR)

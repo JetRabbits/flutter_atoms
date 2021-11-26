@@ -2,20 +2,19 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_atoms/logging.dart';
+import 'package:logging/logging.dart';
 
 import 'navigation_screen.dart';
 
-class InnerNavigatorRoutePage extends Page {
+class InnerNavigatorRoutePage extends Page with Loggable {
   final NavigationScreen screen;
   final PageStorageBucket? storageBucket;
-  static final _loggerName = 'InnerNavigatorRouteCreator';
   Widget? _widget;
 
   @override
   Route createRoute(BuildContext context) {
-    log("createRoute $name", name: _loggerName);
-    print("@@@@@${_widget}");
-    // if (_widget == null)
+    logger.finest("createRoute $name");
     return MaterialPageRoute(
         settings: this,
         builder: (context) {

@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-class FileLogAppender {
+import 'loggable.dart';
+
+class FileLogAppender with Loggable{
   final String logFile;
   List<String> _recordsCache = [];
   Timer? _timer;
@@ -19,7 +21,10 @@ class FileLogAppender {
 
   final int logFileSizeBytes;
 
-  FileLogAppender(this.logFile,  {this.retentionCachePeriod: const Duration(milliseconds: 500), this.logFileSizeBytes: 50000000, this.printLogs: false}) {
+  FileLogAppender(this.logFile,
+      {this.retentionCachePeriod: const Duration(milliseconds: 500),
+      this.logFileSizeBytes: 50000000,
+      this.printLogs: false}) {
     assert(logFile.isNotEmpty, "logFile should not be empty");
     _createLogFile();
   }
@@ -45,7 +50,7 @@ class FileLogAppender {
       _list.forEach((r) async => await _processRecord(r));
       _recordsCache.removeRange(0, _list.length);
     } catch (exc, stackTrace) {
-      _printLog("Exception occurred: $exc stack: $stackTrace");
+      logger.severe("Exception occurred", exc, stackTrace);
     }
   }
 
@@ -55,8 +60,8 @@ class FileLogAppender {
 
       try {
         _writeReportToFile(record, sink);
-      } catch (e) {
-        _printLog(e.toString());
+      } catch (e, stackTrace) {
+        logger.severe("Error in processRecord", e, stackTrace);
       } finally {
         await _closeFile(sink);
       }
@@ -84,8 +89,8 @@ class FileLogAppender {
       await sink.flush();
       await sink.close();
       return true;
-    } catch (exc, stackTrace) {
-      _printLog("Exception occurred during check log file: $exc stacktrace: $stackTrace");
+    } catch (e, stackTrace) {
+      logger.severe("Exception occurred during check log file", e, stackTrace);
       return false;
     }
   }
@@ -105,17 +110,12 @@ class FileLogAppender {
       sink.flush();
       sink.close();
     } catch (e) {}
-    _printLog("Error during close file $_file");
+    logger.severe("Error during close file $_file");
   }
 
   Future<void> _writeReportToFile(String report, IOSink sink) async {
-    _printLog("Writing report to file");
+    logger.finest("Writing report to file");
     _writeLineToFile(report, sink);
   }
 
-  void _printLog(String log) {
-    if (printLogs) {
-      print(log);
-    }
-  }
 }

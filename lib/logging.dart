@@ -6,6 +6,8 @@ import 'package:logging/logging.dart';
 
 export 'logging/file_log_appender.dart';
 export 'logging/send_bug_report.dart';
+export 'logging/loggable.dart';
+export 'package:logging/logging.dart';
 
 void setupLogging({void Function(LogRecord)? onRecord, Level? forceLevel}) {
   Logger.root.level = forceLevel ?? (kDebugMode ? Level.ALL : Level.WARNING);
@@ -19,14 +21,10 @@ void setupLogging({void Function(LogRecord)? onRecord, Level? forceLevel}) {
       });
 }
 
-var fileLogAppender;
-
-void setupLoggingWithLogfile(
-    {String logfile: 'error.log',
-    bool printToConsole: true,
+void setupLoggingWithLogfile(FileLogAppender fileLogAppender,
+    {bool printToConsole: true,
     Level? forceLevel}) {
   Logger.root.level = forceLevel ?? (kDebugMode ? Level.ALL : Level.WARNING);
-  fileLogAppender = FileLogAppender(logfile);
   Logger.root.onRecord.listen((record) {
     var tail = "";
     if (record.error != null) tail+= ": ${record.error}";

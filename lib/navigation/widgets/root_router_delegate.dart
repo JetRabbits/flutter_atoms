@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -13,7 +14,7 @@ import 'root_navigator_observer.dart';
 
 @singleton
 class RootRouterDelegate extends RouterDelegate<String>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<String>, Loggable {
   final CompassNavigationState state;
   final Map<String, Widget> pageWidgets = {};
   final RootNavigatorObserver rootObserver;
@@ -21,15 +22,13 @@ class RootRouterDelegate extends RouterDelegate<String>
 
   final NavigatorsRegister navigatorsRegister;
 
-  static final _loggerName = "RootRouterDelegate";
-
   RootRouterDelegate(this.state, this.rootObserver, this.navigatorsRegister) {
     navigatorsRegister.register("/", _navigatorKey);
-    log("Creating root delegate", name: _loggerName);
+    logger.finest("Creating root delegate");
 
     state.addListener(() {
 
-      log("Notify AppNavigationState is called", name: _loggerName);
+      logger.finest("Notify AppNavigationState is called");
       notifyListeners();
     });
   }
@@ -39,8 +38,8 @@ class RootRouterDelegate extends RouterDelegate<String>
   /// Also old fashion push approach is limited supported. Only push and pop operations.
   @override
   Widget build(BuildContext context) {
-    log("build", name: _loggerName);
-    log("${state.history}", name: _loggerName);
+    logger.finest("build");
+    logger.finest("${state.history}");
 
     Map<String, String> filteredHistory = <String, String>{};
 
@@ -50,10 +49,10 @@ class RootRouterDelegate extends RouterDelegate<String>
       filteredHistory.putIfAbsent(firstSegment, () => route);
     });
 
-    log("filteredHistory $filteredHistory", name: _loggerName);
+    logger.finest("filteredHistory $filteredHistory");
 
     var pages = filteredHistory.values.map((route) {
-      log("map page $route", name: _loggerName);
+      logger.finest("map page $route");
       return RootNavigatorRoutePage(route, state,
           restorationId: route, key: ValueKey(route));
     }).toList();
@@ -62,7 +61,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       key: navigatorKey,
       pages: pages,
       onPopPage: (route, result) {
-        log("Pop route ${route.settings.name}", name: _loggerName);
+        logger.finest("Pop route ${route.settings.name}");
         if (route.didPop(result)) {
           route.settings.name?.compass().back(result);
           return true;
@@ -72,7 +71,7 @@ class RootRouterDelegate extends RouterDelegate<String>
 
       observers: [rootObserver],
       onGenerateRoute: (settings) {
-        log("onGenerateRoute ${settings.name}", name: _loggerName);
+        logger.finest("onGenerateRoute ${settings.name}");
        Router.of(context).backButtonDispatcher!.takePriority();
         // if (settings.name != null) settings.name!.go(settings.arguments as Map<String, dynamic>?);
 
@@ -108,7 +107,7 @@ class RootRouterDelegate extends RouterDelegate<String>
 
   @override
   Future<void> setNewRoutePath(String path) async {
-    log("setNewRoutePath $path", name: _loggerName);
+    logger.finest("setNewRoutePath $path");
 
     if (GetIt.I<BootBloc>().state == BootBlocState.READY) {
       path.go();
@@ -120,8 +119,7 @@ class RootRouterDelegate extends RouterDelegate<String>
 
   @override
   String get currentConfiguration {
-    log("currentConfiguration call ${state.currentScreen.path}",
-        name: _loggerName);
+    logger.finest("currentConfiguration call ${state.currentScreen.path}");
     return state.currentRoute;
   }
 }

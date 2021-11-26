@@ -1,10 +1,11 @@
+import 'package:flutter_atoms/logging.dart';
+
 import '../exceptions/no_route_found.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 
 import 'compass_navigation_state.dart';
-import 'navigators_register.dart';
 
 CompassOperator get compass => GetIt.I<CompassOperator>();
 
@@ -12,9 +13,7 @@ CompassOperator get compass => GetIt.I<CompassOperator>();
 /// Manipulates navigator history
 ///
 @injectable
-class CompassOperator {
-  static final _logger = Logger('CompassOperator');
-  final NavigatorsRegister navigatorsRegistry;
+class CompassOperator with Loggable{
   final CompassNavigationState state;
   late String path;
 
@@ -30,7 +29,7 @@ class CompassOperator {
   bool _switchOn = false;
 
   CompassOperator(
-      @factoryParam String? path, this.navigatorsRegistry, this.state) {
+      @factoryParam String? path, this.state) {
     this.path = path ?? state.currentRoute;
   }
 
@@ -62,23 +61,8 @@ class CompassOperator {
   }
 
   Future<T?> go<T>([Map<String, dynamic>? params]) async {
-    _logger.info("go to path $path, replace = $_replace, use root = $_root");
-    // var rootNavigator = navigatorsRegistry.getRoot().currentState;
-    // if (rootNavigator == null) return Future.value(null);
-    // var _currentPagePath = appNavigationState.currentPage.path;
-    // log("currentPagePath $_currentPagePath", name: loggerName);
-    // var _nextPagePath =
-    //     appNavigationState.navigationModel.getPageByRoute(path!).path;
-    // log("nextPagePath $_nextPagePath", name: loggerName);
-    // NavigatorState? _operationNavigator;
-    // if (_currentPagePath == _nextPagePath) {
-    //   log("_currentPagePath == _nextPagePath", name: loggerName);
-    //   _operationNavigator =
-    //       navigatorsRegistry.get(_currentPagePath!).currentState;
-    // } else {
-    //   log("using root navigator", name: loggerName);
-    //   _operationNavigator = rootNavigator;
-    // }
+    logger.finest("Going to path $path, replace = $_replace, use root = $_root");
+
     if (_clear) state.historyData.clear();
 
     HistoryData<T?> result;
@@ -112,7 +96,7 @@ class CompassOperator {
             ..addAll(params));
       state.historyData.add(historyData);
     } catch (e, stacktrace) {
-      _logger.severe("Error during navigation", e, stacktrace);
+      logger.severe("Error during navigation", e, stacktrace);
       if (e is NoRouteFoundException) {
         historyData = HistoryData(path: '/404');
         state.historyData.add(historyData);

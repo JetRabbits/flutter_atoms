@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -32,7 +33,7 @@ class JetPage extends StatefulWidget {
   _JetPageState createState() => _JetPageState();
 }
 
-class _JetPageState extends State<JetPage> {
+class _JetPageState extends State<JetPage> with Loggable {
   late NavigationPage _page;
 
   InnerRouterDelegate? _innerRouterDelegate;
@@ -50,33 +51,9 @@ class _JetPageState extends State<JetPage> {
 
   late CompassNavigationState _navigationState;
 
-  String get _loggerName => 'JetPage: $_screenPath';
-
   @override
   Widget build(BuildContext context) {
-    log("build", name: _loggerName);
-
-    // if (_innerRouterDelegate == null) {
-    //   log("no inner navigator", name: _loggerName);
-    //   Widget screenWidget;
-    //
-    //   var _stillInHistory = _navigationState.history
-    //       .where((element) => element == _screenPath)
-    //       .isNotEmpty;
-    //   if (!_stillInHistory) {
-    //     log("Not in the history", name: _loggerName);
-    //     screenWidget = Container();
-    //   }
-    //   else {
-    //     screenWidget = _screen.builder!(context);
-    //   }
-    //   if (screenWidget is Scaffold) {
-    //     return screenWidget;
-    //   }
-    //   return Scaffold(body: screenWidget);
-    // }
-
-    log("with inner navigator", name: _loggerName);
+    logger.finest("build");
 
     try {
       _backButtonDispatcher!.takePriority();
@@ -208,24 +185,37 @@ class _JetPageState extends State<JetPage> {
           buttons.insert(buttons.length >> 1, _buildMiddleTabItem());
         }
         var _group = navigationModel.getScreenGroupByRoute(state.path);
-        if (buttons.length >= 2 && _group.navBarIndex >= 0)
-          return BottomAppBar(
-              elevation: 0,
-              key: bottomNavigationBarKey,
-              clipBehavior: Clip.antiAlias,
-              shape: CircularNotchedRectangle(),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: buttons,
-              ));
+        if (buttons.length >= 2 && _group.navBarIndex >= 0) {
+          var titleText = '';
+          if (navigationModel.onTitleText != null) {
+            titleText = navigationModel.onTitleText!(context, state.path);
+          }
+          var titleColor = Colors.white;
+          if (navigationModel.onTitleColor != null) {
+            titleColor = navigationModel.onTitleColor!(context, state.path);
+          }
+          return Title(
+            title: titleText,
+            color: titleColor,
+            child: BottomAppBar(
+                elevation: 0,
+                key: bottomNavigationBarKey,
+                clipBehavior: Clip.antiAlias,
+                shape: CircularNotchedRectangle(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: buttons,
+                )),
+          );
+        }
         return Container();
       },
     );
   }
 
   Widget buildSideBar(BuildContext context) {
-    return BlocBuilder(
+    return BlocBuilder<NavBarCubit, NavBarState>(
       bloc: _navBarCubit,
     builder: (context, state)
     {
@@ -238,23 +228,36 @@ class _JetPageState extends State<JetPage> {
           .toList();
       var _group = navigationModel
           .getScreenGroupByRoute(widget.navigationState.currentRoute);
-      if (buttons.length >= 2 && _group.sideBarIndex >= 0)
-        return NavigationRail(
-            leading: navigationModel.sideBarLogo,
-            onDestinationSelected: (value) {
-              var _screenGroup = _page.screenGroupsMap.values
-                  .firstWhereOrNull((g) => g.sideBarIndex == value);
-              if (_screenGroup != null) {
-                var _path = _screenGroup.screenMaps.values.first.path;
-                _path.compass().go();
-              }
-            },
-            extended: MediaQuery
-                .of(context)
-                .size
-                .width > 1024,
-            destinations: buttons,
-            selectedIndex: _group.sideBarIndex);
+      if (buttons.length >= 2 && _group.sideBarIndex >= 0) {
+        var titleText = '';
+        if (navigationModel.onTitleText != null) {
+          titleText = navigationModel.onTitleText!(context, state.path);
+        }
+        var titleColor = Colors.white;
+        if (navigationModel.onTitleColor != null) {
+          titleColor = navigationModel.onTitleColor!(context, state.path);
+        }
+        return Title(
+          title: titleText,
+          color: titleColor,
+          child: NavigationRail(
+              leading: navigationModel.sideBarLogo,
+              onDestinationSelected: (value) {
+                var _screenGroup = _page.screenGroupsMap.values
+                    .firstWhereOrNull((g) => g.sideBarIndex == value);
+                if (_screenGroup != null) {
+                  var _path = _screenGroup.screenMaps.values.first.path;
+                  _path.compass().go();
+                }
+              },
+              extended: MediaQuery
+                  .of(context)
+                  .size
+                  .width > 1024,
+              destinations: buttons,
+              selectedIndex: _group.sideBarIndex),
+        );
+      }
       return Container();
     });
   }
@@ -274,7 +277,7 @@ class _JetPageState extends State<JetPage> {
   @override
   void initState() {
     super.initState();
-    log("initialPageRoute", name: _loggerName);
+    logger.finest("initialPageRoute ${widget.initialPageRoute}");
 
     _page = widget.navigationState.navigationModel
         .getPageByRoute(widget.initialPageRoute);
@@ -291,7 +294,7 @@ class _JetPageState extends State<JetPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    log("didChangeDependencies", name: _loggerName);
+    logger.finest("didChangeDependencies");
 
     // Defer back button dispatching to the child router
     if (_rootBackDispatcher == null) {
@@ -306,7 +309,7 @@ class _JetPageState extends State<JetPage> {
   @override
   void dispose() {
     super.dispose();
-    log("dispose", name: _loggerName);
+    logger.finest("dispose");
     _innerRouterDelegate?.dispose();
 
 
@@ -317,7 +320,7 @@ class _JetPageState extends State<JetPage> {
   }
 }
 
-class InnerNavigatorObserver extends NavigatorObserver {
+class InnerNavigatorObserver extends NavigatorObserver with Loggable{
   final NavBarCubit navBarCubit;
 
   final CompassNavigationState state;
@@ -325,7 +328,6 @@ class InnerNavigatorObserver extends NavigatorObserver {
   InnerNavigatorObserver(this.navBarCubit, this.state);
 
   void _update(Route<dynamic> route) {
-    print("InnerNavigatorObserver._update");
     var routePath = route.settings.name;
     if (routePath != null) {
       // state.currentRoute = routePath;
@@ -335,16 +337,19 @@ class InnerNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    logger.finest("didPush");
     _update(route);
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    logger.finest("didReplace");
     _update(newRoute!);
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    logger.finest("didPop");
     _update(route);
   }
 }

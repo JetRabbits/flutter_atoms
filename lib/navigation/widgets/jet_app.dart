@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
+import 'package:flutter_atoms/logging.dart';
 // import 'package:flutter_atoms/i18n/big_composite_message_lookup.dart';
 import 'package:flutter_atoms/navigation/blocs/boot/boot_bloc.dart';
 import 'package:flutter_atoms/navigation/widgets/navigation_error_screen.dart';
@@ -104,7 +105,7 @@ class JetApp extends StatefulWidget {
   _JetAppState createState() => _JetAppState();
 }
 
-class _JetAppState extends State<JetApp> {
+class _JetAppState extends State<JetApp> with Loggable{
   late ThemeModel _themeModel;
 
   @override
@@ -131,11 +132,11 @@ class _JetAppState extends State<JetApp> {
   void initState() {
     super.initState();
 
-    log("JetApp initState");
-    log("widget.bootBloc.state = ${widget.bootBloc.state}");
+    logger.finest("JetApp initState");
+    logger.finest("widget.bootBloc.state = ${widget.bootBloc.state}");
 
     if (widget.bootBloc.state == BootBlocState.READY) {
-      log("Reset boot");
+      logger.finest("Reset boot");
       widget.bootBloc.reset();
     }
 

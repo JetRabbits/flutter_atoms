@@ -2,6 +2,8 @@ import 'dart:core';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_atoms/logging.dart';
+import 'package:logging/logging.dart';
 import '../exceptions/no_route_found.dart';
 
 
@@ -25,8 +27,10 @@ typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 /// /main/group1/second_screen
 /// /main/group1/third_screen
 ///
-class NavigationModel extends RouteInformationParser<String> {
+class NavigationModel extends RouteInformationParser<String> with Loggable {
   Widget? sideBarLogo;
+  String Function(BuildContext, String)? onTitleText;
+  Color Function(BuildContext, String)? onTitleColor;
 
   RoutesValidator routesValidator;
 
@@ -35,6 +39,8 @@ class NavigationModel extends RouteInformationParser<String> {
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
     Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
     this.sideBarLogo,
+    this.onTitleColor,
+    this.onTitleText,
     Map<String, FloatActionButtonConfig>? floatButtons,
     required this.routesValidator,
   }) {
@@ -53,7 +59,7 @@ class NavigationModel extends RouteInformationParser<String> {
         screenByRoute.path.replaceAllMapped(RegExp(r':(\w+)'), (match) {
       return '(?<${match.group(1)!}>\\w+)?';
     });
-    log('getParametersFromRoute pattern: $pattern', name: 'NavigationModel');
+    logger.finest('getParametersFromRoute pattern: $pattern');
 
     RegExp(pattern)
         .allMatches(route)
@@ -62,13 +68,13 @@ class NavigationModel extends RouteInformationParser<String> {
                 result.putIfAbsent(value, () => match.namedGroup(value)!);
               }
             }));
-    log('getParametersFromRoute: $result', name: 'NavigationModel');
+    logger.finest('getParametersFromRoute: $result');
     return result;
   }
 
   int _getKeyIndex(Map<String, dynamic> map, String key) {
     var indexOf = map.keys.toList().indexOf(key);
-    log("$key = $indexOf", name: "NavigationModel");
+    logger.finest("$key = $indexOf");
     return indexOf;
   }
 
@@ -130,7 +136,7 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   NavigationScreen getScreenByRoute(String route) {
-    log("getScreenByRoute $route", name: "NavigationModel");
+    logger.finest("getScreenByRoute $route");
     var screenGroup = getScreenGroupByRoute(route);
     var split = parseAndCheckFormat(route).pathSegments;
     var path =
@@ -144,7 +150,7 @@ class NavigationModel extends RouteInformationParser<String> {
   }
 
   ScreenGroup getScreenGroupByRoute(String route) {
-    log("getScreenGroupByRoute $route", name: "NavigationModel");
+    logger.finest("getScreenGroupByRoute $route");
     var split = parseAndCheckFormat(route).pathSegments;
     var page = split.length > 0 ? pagesMap["/${split[0]}"] : pagesMap[route];
     if (page == null)
@@ -165,6 +171,7 @@ class NavigationModel extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
+    logger.finest("parseRouteInformation $routeInformation");
     return Future<String>.value(Uri.parse(routeInformation.location!).path);
   }
 

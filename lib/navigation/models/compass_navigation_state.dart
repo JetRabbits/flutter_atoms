@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_atoms/flutter_atoms.dart';
+import 'package:flutter_atoms/logging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
@@ -24,8 +25,7 @@ class HistoryData<T> {
 }
 
 @singleton
-class CompassNavigationState extends ChangeNotifier {
-  static final _logger = Logger('CompassNavigationState');
+class CompassNavigationState extends ChangeNotifier with Loggable{
 
   List<String> get history => historyData.map((e) => e.path).toList();
   final List<HistoryData> historyData = [HistoryData(path: "/")];
@@ -58,19 +58,12 @@ class CompassNavigationState extends ChangeNotifier {
     return currentScreen.index;
   }
 
-  String get currentRoute => historyData.last.path;
-  HistoryData get currentRouteData => historyData.last;
-
-
-  void _notifyListeners() {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      notifyListeners();
-    });
-  }
+  String get currentRoute => historyData.isNotEmpty ? historyData.last.path : "/";
+  HistoryData get currentRouteData => historyData.isNotEmpty ? historyData.last: HistoryData(path: "/");
 
   void update() {
-    _logger.info("update");
-    _logger.info("hasListeners $hasListeners");
+    logger.finest("update");
+    logger.finest("hasListeners $hasListeners");
     notifyListeners();
   }
 }

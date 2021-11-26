@@ -19,6 +19,7 @@ Future<void> sendLog({String errorLog: 'error.log'}) async {
   encoder.addFile(_file);
   encoder.close();
   if (zipFile.existsSync()) {
-    await Share.shareFiles([zipPath], text: 'Error log', mimeTypes: ['application/zip']);
+    await Share.shareFiles([zipPath],
+        text: 'Error log', mimeTypes: ['application/zip']);
   }
 }
