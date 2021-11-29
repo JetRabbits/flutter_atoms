@@ -16,7 +16,6 @@ extension JetCompassExt on String {
 extension BuildContextExt on BuildContext {
   Map<String, dynamic> get data {
     var namedRoute = ModalRoute.of(this)?.settings.name;
-    print("####${ModalRoute.of(this)}");
     return GetIt.I<CompassOperator>(param1: namedRoute).data;
   }
 }
