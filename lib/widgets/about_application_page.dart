@@ -1,12 +1,9 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/generated/l10n.dart';
 import 'package:flutter_atoms/models/models.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
 
-// ignore: import_of_legacy_library_into_null_safe
 import '../flutter_atoms.dart';
 
 class AboutApplicationPage extends StatefulWidget {
@@ -51,12 +48,12 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
           ),
           ListTile(
             leading: const Icon(Icons.devices),
-            subtitle: AutoSizeText(widget.version.platformVersion),
+            subtitle: AutoSizeText(widget.version.platform),
             title: AutoSizeText(AtomsStrings.of(context).platform),
           ),
           ListTile(
             leading: const Icon(Icons.shop),
-            subtitle: AutoSizeText(widget.version.projectAppID),
+            subtitle: AutoSizeText(widget.version.packageName),
             title: const AutoSizeText('App ID'),
           ),
           ListTile(
@@ -66,7 +63,7 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
           ),
           ListTile(
             leading: const Icon(Icons.filter_9_plus),
-            subtitle: AutoSizeText(widget.version.projectCode),
+            subtitle: AutoSizeText(widget.version.buildNumber),
             title: AutoSizeText(AtomsStrings.of(context).build),
           ),
           if (widget.servers != null)

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -241,7 +240,8 @@ class _JetPageState extends State<JetPage> with Loggable {
           title: titleText,
           color: titleColor,
           child: NavigationRail(
-              leading: navigationModel.sideBarLogo,
+              trailing: navigationModel.sideBarFooter != null ? navigationModel.sideBarFooter!(context): null,
+              leading: navigationModel.sideBarLogo != null ? navigationModel.sideBarLogo!(context): null,
               onDestinationSelected: (value) {
                 var _screenGroup = _page.screenGroupsMap.values
                     .firstWhereOrNull((g) => g.sideBarIndex == value);

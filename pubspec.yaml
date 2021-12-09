@@ -15,8 +15,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^7.3.3
   persist_theme: ^1.7.0
-  get_version:
-    git: https://github.com/Creky/get_version.git
+  package_info_plus:
+  device_info_plus:
   flutter_draft:
     git:
       url: https://gitlab.jetrabbits.com/jetrabbits_product/flutter_draft.git

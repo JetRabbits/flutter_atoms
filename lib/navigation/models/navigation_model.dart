@@ -1,12 +1,9 @@
 import 'dart:core';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
-import 'package:logging/logging.dart';
+
 import '../exceptions/no_route_found.dart';
-
-
 import 'button_config.dart';
 import 'float_action_button_config.dart';
 import 'navigation_page.dart';
@@ -28,7 +25,8 @@ typedef ButtonBuilder = ButtonConfig Function(BuildContext context);
 /// /main/group1/third_screen
 ///
 class NavigationModel extends RouteInformationParser<String> with Loggable {
-  Widget? sideBarLogo;
+  WidgetBuilder? sideBarLogo;
+  WidgetBuilder? sideBarFooter;
   String Function(BuildContext, String)? onTitleText;
   Color Function(BuildContext, String)? onTitleColor;
 
@@ -39,6 +37,7 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
     Map<String, NavigationRailDestinationBuilder>? sideBarButtons,
     this.sideBarLogo,
+    this.sideBarFooter,
     this.onTitleColor,
     this.onTitleText,
     Map<String, FloatActionButtonConfig>? floatButtons,
