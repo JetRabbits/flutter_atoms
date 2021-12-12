@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart' show Navigator;
 import 'package:flutter_atoms/logging.dart';
-import 'package:flutter_atoms/stories/widgets/story_page.dart';
+import 'package:flutter_atoms/stories/widgets/v2/story_page.dart';
 import 'package:flutter_draft/flutter_draft.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:logging/logging.dart';
 
 part 'stories_action.g.dart';
 

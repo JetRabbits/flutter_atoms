@@ -42,7 +42,7 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
         children: <Widget>[
           ListTile(
             leading: const Icon(Icons.apps),
-            subtitle: AutoSizeText(widget.version.projectName),
+            subtitle: AutoSizeText(widget.version.appName),
             title:
                 AutoSizeText(AtomsStrings.of(context).application_title_text),
           ),

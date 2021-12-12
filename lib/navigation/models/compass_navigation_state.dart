@@ -2,12 +2,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/logging.dart';
-import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import 'navigation_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -24,7 +21,7 @@ class HistoryData<T> {
   HistoryData({required this.path, this.params = const {}});
 }
 
-@singleton
+@lazySingleton
 class CompassNavigationState extends ChangeNotifier with Loggable{
 
   List<String> get history => historyData.map((e) => e.path).toList();

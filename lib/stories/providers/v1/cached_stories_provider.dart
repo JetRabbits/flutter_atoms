@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_atoms/logging.dart';
-import 'package:flutter_atoms/stories/model/stories_entity.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_atoms/stories/model/v1/stories_entity.dart';
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
+
+import '../stories_cache_manager.dart';
 
 class CachedStoriesProvider with Loggable{
   Map<String, StoriesEntity> _stories = <String, StoriesEntity>{};
@@ -27,9 +27,7 @@ class CachedStoriesProvider with Loggable{
 
     try {
       final String storiesConfigJson = await _loadStoriesConfigJson(configUrl);
-
-      List<dynamic> storiesConfig = json.decode(storiesConfigJson)["stories"];
-
+      List<dynamic> storiesConfig = json.decode(storiesConfigJson);
       storiesConfig
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
           .forEach((story) => stories.putIfAbsent(story.id, () => story));
@@ -43,7 +41,7 @@ class CachedStoriesProvider with Loggable{
   Future<void> fromJson(dynamic storiesConfig) async {
     await _cleanCache();
     try {
-      (storiesConfig["stories"] as List)
+      (storiesConfig as List)
           .map<StoriesEntity>((storyJson) => StoriesEntity.fromJson(storyJson))
           .forEach((story) => stories.putIfAbsent(story.id, () => story));
 
@@ -79,8 +77,8 @@ class CachedStoriesProvider with Loggable{
 
     stories.values.forEach((s) async {
       await cacheManager.downloadFile(s.titleImage);
-      s.storyItems.forEach(
-          (item) async => await cacheManager.downloadFile(item.imageUrl));
+      s.images.forEach(
+          (item) async => await cacheManager.downloadFile(item));
     });
   }
 
@@ -93,16 +91,4 @@ class CachedStoriesProvider with Loggable{
   }
 }
 
-class StoriesCacheManager extends CacheManager {
-  static StoriesCacheManager? _instance;
-  static const key = "StoriesCacheManager";
 
-  factory StoriesCacheManager() {
-    if (_instance == null) {
-      _instance = StoriesCacheManager._();
-    }
-    return _instance!;
-  }
-
-  StoriesCacheManager._() : super(Config(key, stalePeriod: Duration(hours: 1)));
-}

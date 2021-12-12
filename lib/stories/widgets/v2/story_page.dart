@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_atoms/stories/model/stories_entity.dart';
-import 'package:flutter_atoms/stories/model/story_item_model.dart';
-import 'package:flutter_atoms/stories/providers/cached_stories_provider.dart';
-import 'package:flutter_atoms/stories/widgets/interactive_story_view.dart';
+import 'package:flutter_atoms/stories/model/v2/stories_entity.dart';
+import 'package:flutter_atoms/stories/model/v2/story_item_model.dart';
+import 'package:flutter_atoms/stories/providers/stories_cache_manager.dart';
+import 'package:flutter_atoms/stories/widgets/v2/interactive_story_view.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:story_view/story_view.dart';
 

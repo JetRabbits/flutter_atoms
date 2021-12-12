@@ -41,6 +41,7 @@ dependencies:
   injectable:
   share:
   archive:
+  flutter_keyboard_visibility:
 dependency_overrides:
   provider: ^5.0.0
 dev_dependencies:

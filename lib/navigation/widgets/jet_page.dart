@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../navigation.dart';
@@ -59,26 +60,28 @@ class _JetPageState extends State<JetPage> with Loggable {
     } catch (ignore) {}
     _page.backButtonDispatcher = _backButtonDispatcher;
 
-    return Scaffold(
-        extendBody: true,
-        floatingActionButton: buildFloatActionButton(context),
-        floatingActionButtonLocation: buildFloatActionButtonLocation(),
-        bottomNavigationBar: buildBottomNavigationBar(context),
-        body: Row(
-          children: [
-            buildSideBar(context),
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) => Scaffold(
+          extendBody: true,
+          floatingActionButton: isKeyboardVisible? null : buildFloatActionButton(context),
+          floatingActionButtonLocation: buildFloatActionButtonLocation(),
+          bottomNavigationBar: buildBottomNavigationBar(context),
+          body: Row(
+            children: [
+              buildSideBar(context),
 //            VerticalDivider(),
-            Expanded(
-              child: Router(
-                routerDelegate: _innerRouterDelegate!,
-                backButtonDispatcher: _backButtonDispatcher,
-                routeInformationParser: widget.navigationState.navigationModel,
-                routeInformationProvider:
-                    widget.navigationState.routeInformationProvider,
+              Expanded(
+                child: Router(
+                  routerDelegate: _innerRouterDelegate!,
+                  backButtonDispatcher: _backButtonDispatcher,
+                  routeInformationParser: widget.navigationState.navigationModel,
+                  routeInformationProvider:
+                      widget.navigationState.routeInformationProvider,
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 
   Widget _buildMiddleTabItem() {

@@ -1,30 +1,22 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_atoms/logging/constants.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'loggable.dart';
-
-@lazySingleton
-class FileLogAppender with Loggable {
-  String logFile;
+@singleton
+class FileLogAppender {
+  final String logFile;
   List<String> _recordsCache = [];
   Timer? _timer;
   File? _file;
 
   bool printLogs = false;
-  Duration retentionCachePeriod;
-  int logFileSizeBytes;
+  Duration retentionCachePeriod = const Duration(milliseconds: 500);
+  int logFileSizeBytes = 50000000;
 
-  FileLogAppender(
-      {@Named('logFile')
-          this.logFile: logFileNameConst,
-      @Named('retentionCachePeriod')
-          this.retentionCachePeriod: retentionCachePeriodConst,
-      @Named('logFileSizeBytes')
-          this.logFileSizeBytes: logFileSizeBytesConst}){
+  FileLogAppender(@Named('logFile') this.logFile) {
+    assert(logFile.isNotEmpty, "logFile should not be empty");
     _ensureLogFile();
   }
 
