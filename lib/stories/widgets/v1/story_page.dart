@@ -29,7 +29,7 @@ class StoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<StoryItem> storyItems =
-    story.images!
+    story.images
         .map((url) => _makeStoryItemFromUrl(url))
         .toList();
 
