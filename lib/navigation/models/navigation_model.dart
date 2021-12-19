@@ -32,6 +32,8 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
 
   RoutesValidator routesValidator;
 
+  List<NavigatorObserver>? observers;
+
   NavigationModel({
     required Map<String, WidgetBuilder> routes,
     Map<String, BottomNavigationBarItemBuilder>? navBarButtons,
@@ -40,6 +42,7 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
     this.sideBarFooter,
     this.onTitleColor,
     this.onTitleText,
+    this.observers,
     Map<String, FloatActionButtonConfig>? floatButtons,
     required this.routesValidator,
   }) {
@@ -52,23 +55,8 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
   }
 
   Map<String, String> getParametersFromRoute(String route) {
-    var screenByRoute = getScreenByRoute(route);
-    Map<String, String> result = {};
-    var pattern =
-        screenByRoute.path.replaceAllMapped(RegExp(r':(\w+)'), (match) {
-      return '(?<${match.group(1)!}>\\w+)?';
-    });
-    logger.finest('getParametersFromRoute pattern: $pattern');
-
-    RegExp(pattern)
-        .allMatches(route)
-        .forEach((match) => match.groupNames.forEach((value) {
-              if (match.namedGroup(value) != null) {
-                result.putIfAbsent(value, () => match.namedGroup(value)!);
-              }
-            }));
-    logger.finest('getParametersFromRoute: $result');
-    return result;
+    var parse = Uri.parse(route);
+    return parse.queryParameters;
   }
 
   int _getKeyIndex(Map<String, dynamic> map, String key) {
@@ -171,7 +159,7 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
     logger.finest("parseRouteInformation $routeInformation");
-    return Future<String>.value(Uri.parse(routeInformation.location!).path);
+    return Future<String>.value(routeInformation.location);
   }
 
   @override

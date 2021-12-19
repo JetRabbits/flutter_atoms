@@ -1,10 +1,8 @@
 import 'package:flutter_atoms/logging.dart';
-
-import '../exceptions/no_route_found.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
+import '../exceptions/no_route_found.dart';
 import 'compass_navigation_state.dart';
 
 CompassOperator get compass => GetIt.I<CompassOperator>();
@@ -63,19 +61,27 @@ class CompassOperator with Loggable{
   Future<T?> go<T>([Map<String, dynamic>? params]) async {
     logger.finest("Going to path $path, replace = $_replace, use root = $_root");
 
-    if (_clear) state.historyData.clear();
+    if (_clear) {
+      state.historyData.clear();
+    }
 
-    HistoryData<T?> result;
+    HistoryData<T?>? result;
 
-    if (_switchOn) {
-      state.historyData.removeWhere((element) => element.path == path);
-      result = _push(path, params ?? {});
-    } else if (_replace) {
+    if (_replace && result == null) {
       _pop(state.historyData.last);
       result = _push(path, params ?? {});
-    } else {
+    }
+
+    if (_switchOn && result == null) {
+      logger.finest("go with switchOn $path params: $params");
+      state.historyData.removeWhere((element) => element.path == path);
       result = _push(path, params ?? {});
     }
+
+    if (result == null) {
+      result = _push(path, params ?? {});
+    }
+
     state.update();
     return result.routeCompleter.future;
   }

@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 
 import '../../navigation.dart';
 import '../models/compass_navigation_state.dart';
@@ -68,6 +66,11 @@ class InnerRouterDelegate extends RouterDelegate<String>
     });
 
     var _pages = result.values.toList();
+    List<NavigatorObserver> observers = [InnerNavigatorObserver(navBarCubit!)];
+    if (state.navigationModel.observers != null){
+      observers.addAll(state.navigationModel.observers!);
+    }
+
     return Navigator(
       key: navigatorKey,
       pages: _pages,
@@ -80,7 +83,7 @@ class InnerRouterDelegate extends RouterDelegate<String>
         }
         return false;
       },
-      observers: [InnerNavigatorObserver(navBarCubit!)],
+      observers: observers,
       // onGenerateInitialRoutes: (navigatorState, initialRoute) {
       //   log('onGenerateInitialRoutes $initialRoute', name: _loggerName);
       //   return [

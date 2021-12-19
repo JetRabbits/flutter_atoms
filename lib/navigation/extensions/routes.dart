@@ -8,6 +8,10 @@ extension JetCompassExt on String {
     return GetIt.I<CompassOperator>(param1: this);
   }
 
+  String query(String name, String value){
+    return "$this?$name=$value";
+  }
+
   Future<T?> go<T>([Map<String, dynamic>? params]) async {
     return this.compass().switchOn().go<T>(params);
   }

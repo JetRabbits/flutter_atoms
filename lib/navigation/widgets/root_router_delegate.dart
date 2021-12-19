@@ -1,13 +1,10 @@
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
-import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../navigation.dart';
-import '../blocs/boot/boot_bloc.dart';
 import '../models/navigators_register.dart';
 import '../models/root_navigator_route_page.dart';
 import 'root_navigator_observer.dart';
@@ -57,6 +54,10 @@ class RootRouterDelegate extends RouterDelegate<String>
           restorationId: route, key: ValueKey(route));
     }).toList();
 
+    List<NavigatorObserver> observers = [rootObserver];
+    if (state.navigationModel.observers != null){
+      observers.addAll(state.navigationModel.observers!);
+    }
     var navigator = Navigator(
       key: navigatorKey,
       pages: pages,
@@ -69,7 +70,7 @@ class RootRouterDelegate extends RouterDelegate<String>
         return false;
       },
 
-      observers: [rootObserver],
+      observers: observers,
       onGenerateRoute: (settings) {
         logger.finest("onGenerateRoute ${settings.name}");
        Router.of(context).backButtonDispatcher!.takePriority();
@@ -109,11 +110,11 @@ class RootRouterDelegate extends RouterDelegate<String>
   Future<void> setNewRoutePath(String path) async {
     logger.finest("setNewRoutePath $path");
 
-    if (GetIt.I<BootBloc>().state == BootBlocState.READY) {
-      path.go();
-    } else {
-      path.compass().replace().go();
-    }
+    path.compass().replace().go();
+    // if (GetIt.I<BootBloc>().state == BootBlocState.READY) {
+    //   path.go();
+    // } else {
+    // }
     return SynchronousFuture<void>(null);
   }
 
