@@ -32,7 +32,11 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
 
   RoutesValidator routesValidator;
 
-  List<NavigatorObserver>? observers;
+  List<NavigatorObserver> Function()? observersBuilder;
+
+  final RouteInformationProvider routeInformationProvider =
+  PlatformRouteInformationProvider(
+      initialRouteInformation: RouteInformation(location: "/"));
 
   NavigationModel({
     required Map<String, WidgetBuilder> routes,
@@ -42,7 +46,7 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
     this.sideBarFooter,
     this.onTitleColor,
     this.onTitleText,
-    this.observers,
+    this.observersBuilder,
     Map<String, FloatActionButtonConfig>? floatButtons,
     required this.routesValidator,
   }) {

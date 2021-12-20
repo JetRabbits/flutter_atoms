@@ -6,12 +6,11 @@ part of 'story_item_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StoryItemModel _$StoryItemModelFromJson(Map<String, dynamic> json) {
-  return StoryItemModel(
-    widget: json['widget'] as Map<String, dynamic>?,
-    imageUrl: json['image_url'] as String,
-  );
-}
+StoryItemModel _$StoryItemModelFromJson(Map<String, dynamic> json) =>
+    StoryItemModel(
+      widget: json['widget'] as Map<String, dynamic>?,
+      imageUrl: json['image_url'] as String,
+    );
 
 Map<String, dynamic> _$StoryItemModelToJson(StoryItemModel instance) {
   final val = <String, dynamic>{};

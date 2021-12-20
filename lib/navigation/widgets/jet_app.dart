@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
@@ -13,8 +11,6 @@ import 'package:get_it/get_it.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:persist_theme/persist_theme.dart';
 
-import '../../navigation.dart';
-import 'boot_screen.dart';
 import 'root_router_delegate.dart';
 
 // ignore: must_be_immutable
@@ -105,7 +101,7 @@ class JetApp extends StatefulWidget {
   _JetAppState createState() => _JetAppState();
 }
 
-class _JetAppState extends State<JetApp> with Loggable{
+class _JetAppState extends State<JetApp> with Loggable {
   late ThemeModel _themeModel;
 
   @override
@@ -114,16 +110,15 @@ class _JetAppState extends State<JetApp> with Loggable{
       model: _themeModel,
       builder: (context, themeModel, child) {
         return MaterialApp.router(
-          localizationsDelegates: widget.localizationsDelegates,
-          supportedLocales: widget.supportedLocales!,
-          debugShowCheckedModeBanner: false,
-          theme: themeModel.theme,
-          onGenerateTitle: widget.onGenerateTitle,
-          routerDelegate: GetIt.I<RootRouterDelegate>(),
-          routeInformationParser: widget.navigationModel,
-          routeInformationProvider:
-              GetIt.I<CompassNavigationState>().routeInformationProvider,
-        );
+            localizationsDelegates: widget.localizationsDelegates,
+            supportedLocales: widget.supportedLocales!,
+            debugShowCheckedModeBanner: false,
+            theme: themeModel.theme,
+            onGenerateTitle: widget.onGenerateTitle,
+            routerDelegate: GetIt.I<RootRouterDelegate>(),
+            routeInformationParser: widget.navigationModel,
+            routeInformationProvider:
+                widget.navigationModel.routeInformationProvider);
       },
     );
   }

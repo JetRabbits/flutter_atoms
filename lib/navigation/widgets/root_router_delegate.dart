@@ -5,22 +5,18 @@ import 'package:flutter_atoms/logging.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../navigation.dart';
-import '../models/navigators_register.dart';
 import '../models/root_navigator_route_page.dart';
-import 'root_navigator_observer.dart';
+import '../observers/root_navigator_observer.dart';
 
-@singleton
+@injectable
 class RootRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String>, Loggable {
   final CompassNavigationState state;
-  final Map<String, Widget> pageWidgets = {};
   final RootNavigatorObserver rootObserver;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  final NavigatorsRegister navigatorsRegister;
 
-  RootRouterDelegate(this.state, this.rootObserver, this.navigatorsRegister) {
-    navigatorsRegister.register("/", _navigatorKey);
+  RootRouterDelegate(this.state, this.rootObserver) {
     logger.finest("Creating root delegate");
 
     state.addListener(() {
@@ -29,6 +25,7 @@ class RootRouterDelegate extends RouterDelegate<String>
       notifyListeners();
     });
   }
+
 
   /// Build root [Navigator] widget using [CompassNavigationState] as history data.
   /// Instances of [Page] created with their names and route data.
@@ -55,8 +52,8 @@ class RootRouterDelegate extends RouterDelegate<String>
     }).toList();
 
     List<NavigatorObserver> observers = [rootObserver];
-    if (state.navigationModel.observers != null){
-      observers.addAll(state.navigationModel.observers!);
+    if (state.navigationModel.observersBuilder != null){
+      observers.addAll(state.navigationModel.observersBuilder!());
     }
     var navigator = Navigator(
       key: navigatorKey,

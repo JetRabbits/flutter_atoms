@@ -32,7 +32,7 @@ dependencies:
   json_serializable:
   auto_size_text:
   url_launcher:
-  flutter_whatsnew:
+  flutter_whatsnew: ^1.0.3
   collection:
   crypted_preferences:
   intl:

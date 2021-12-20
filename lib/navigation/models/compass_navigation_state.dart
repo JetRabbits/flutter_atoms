@@ -29,10 +29,6 @@ class CompassNavigationState extends ChangeNotifier with Loggable{
 
   final NavigationModel navigationModel;
 
-  final RouteInformationProvider routeInformationProvider =
-      PlatformRouteInformationProvider(
-          initialRouteInformation: RouteInformation(location: "/"));
-
   CompassNavigationState(this.navigationModel);
 
   NavigationScreen get currentScreen {

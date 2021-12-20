@@ -1,7 +1,7 @@
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
+import 'package:flutter_atoms/navigation/observers/inner_navigation_observer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get_it/get_it.dart';
@@ -24,9 +24,9 @@ class JetPage extends StatefulWidget {
 
   JetPage(this.initialPageRoute, this.navigationState,
       {Key? key,
-        this.bottomNavigationHeight = kBottomNavigationBarHeight,
-        this.iconSize = 24,
-        this.centerItemText = ''})
+      this.bottomNavigationHeight = kBottomNavigationBarHeight,
+      this.iconSize = 24,
+      this.centerItemText = ''})
       : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class _JetPageState extends State<JetPage> with Loggable {
 
   InnerRouterDelegate? _innerRouterDelegate;
 
-  final GlobalKey<State> bottomNavigationBarKey = GlobalKey<State>();
+  // final GlobalKey<State> bottomNavigationBarKey = GlobalKey<State>();
   BackButtonDispatcher? _backButtonDispatcher;
 
   String _screenPath = "";
@@ -63,7 +63,8 @@ class _JetPageState extends State<JetPage> with Loggable {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) => Scaffold(
           extendBody: true,
-          floatingActionButton: isKeyboardVisible? null : buildFloatActionButton(context),
+          floatingActionButton:
+              isKeyboardVisible ? null : buildFloatActionButton(context),
           floatingActionButtonLocation: buildFloatActionButtonLocation(),
           bottomNavigationBar: buildBottomNavigationBar(context),
           body: Row(
@@ -74,9 +75,10 @@ class _JetPageState extends State<JetPage> with Loggable {
                 child: Router(
                   routerDelegate: _innerRouterDelegate!,
                   backButtonDispatcher: _backButtonDispatcher,
-                  routeInformationParser: widget.navigationState.navigationModel,
+                  routeInformationParser:
+                      widget.navigationState.navigationModel,
                   routeInformationProvider:
-                      widget.navigationState.routeInformationProvider,
+                  widget.navigationState.navigationModel.routeInformationProvider,
                 ),
               ),
             ],
@@ -104,18 +106,12 @@ class _JetPageState extends State<JetPage> with Loggable {
 
   Widget _buildTabItem(BottomNavigationBarItem item, ScreenGroup group) {
     var navigationState = widget.navigationState;
-    Color selectedColor = Theme
-        .of(context)
-        .colorScheme
-        .secondary;
-    Color unselectedColor = Theme
-        .of(context)
-        .hintColor;
+    Color selectedColor = Theme.of(context).colorScheme.secondary;
+    Color unselectedColor = Theme.of(context).hintColor;
 
     var isActive = navigationState.currentScreenGroup == group;
 
-    var _textStyle = Theme
-        .of(context)
+    var _textStyle = Theme.of(context)
         .textTheme
         .bodyText1!
         .copyWith(color: isActive ? selectedColor : unselectedColor);
@@ -152,8 +148,8 @@ class _JetPageState extends State<JetPage> with Loggable {
                 isActive
                     ? IconTheme(data: _iconThemeData, child: item.activeIcon)
                     : IconTheme(data: _iconThemeData, child: item.icon),
-                if (label != null) DefaultTextStyle.merge(
-                    style: _textStyle, child: label),
+                if (label != null)
+                  DefaultTextStyle.merge(style: _textStyle, child: label),
               ],
             ),
           ),
@@ -174,7 +170,7 @@ class _JetPageState extends State<JetPage> with Loggable {
         var navigationModel = widget.navigationState.navigationModel;
         var buttons = _page.screenGroupsMap.values
             .where((group) =>
-        group.navBarIndex >= 0 && group.navBarButtonBuilder != null)
+                group.navBarIndex >= 0 && group.navBarButtonBuilder != null)
             .map<Widget>(
                 (g) => _buildTabItem(g.navBarButtonBuilder!(context), g))
             .toList();
@@ -201,7 +197,7 @@ class _JetPageState extends State<JetPage> with Loggable {
             color: titleColor,
             child: BottomAppBar(
                 elevation: 0,
-                key: bottomNavigationBarKey,
+                // key: bottomNavigationBarKey,
                 clipBehavior: Clip.antiAlias,
                 shape: CircularNotchedRectangle(),
                 child: Row(
@@ -218,51 +214,51 @@ class _JetPageState extends State<JetPage> with Loggable {
 
   Widget buildSideBar(BuildContext context) {
     return BlocBuilder<NavBarCubit, NavBarState>(
-      bloc: _navBarCubit,
-    builder: (context, state)
-    {
-      var navigationModel = widget.navigationState.navigationModel;
-      var buttons = _page.screenGroupsMap.values
-          .where((group) =>
-      group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
-          .map<NavigationRailDestination>(
-              (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
-          .toList();
-      var _group = navigationModel
-          .getScreenGroupByRoute(widget.navigationState.currentRoute);
-      if (buttons.length >= 2 && _group.sideBarIndex >= 0) {
-        var titleText = '';
-        if (navigationModel.onTitleText != null) {
-          titleText = navigationModel.onTitleText!(context, state.path);
-        }
-        var titleColor = Colors.white;
-        if (navigationModel.onTitleColor != null) {
-          titleColor = navigationModel.onTitleColor!(context, state.path);
-        }
-        return Title(
-          title: titleText,
-          color: titleColor,
-          child: NavigationRail(
-              trailing: navigationModel.sideBarFooter != null ? navigationModel.sideBarFooter!(context): null,
-              leading: navigationModel.sideBarLogo != null ? navigationModel.sideBarLogo!(context): null,
-              onDestinationSelected: (value) {
-                var _screenGroup = _page.screenGroupsMap.values
-                    .firstWhereOrNull((g) => g.sideBarIndex == value);
-                if (_screenGroup != null) {
-                  var _path = _screenGroup.screenMaps.values.first.path;
-                  _path.compass().go();
-                }
-              },
-              extended: MediaQuery
-                  .of(context)
-                  .size
-                  .width > 1024,
-              destinations: buttons,
-              selectedIndex: _group.sideBarIndex),
-        );
-      }
-      return Container();
-    });
+        bloc: _navBarCubit,
+        builder: (context, state) {
+          var navigationModel = widget.navigationState.navigationModel;
+          var buttons = _page.screenGroupsMap.values
+              .where((group) =>
+                  group.sideBarIndex >= 0 && group.sideBarButtonBuilder != null)
+              .map<NavigationRailDestination>(
+                  (g) => _buildSideBarButton(g.sideBarButtonBuilder!, g))
+              .toList();
+          var _group = navigationModel
+              .getScreenGroupByRoute(widget.navigationState.currentRoute);
+          if (buttons.length >= 2 && _group.sideBarIndex >= 0) {
+            var titleText = '';
+            if (navigationModel.onTitleText != null) {
+              titleText = navigationModel.onTitleText!(context, state.path);
+            }
+            var titleColor = Colors.white;
+            if (navigationModel.onTitleColor != null) {
+              titleColor = navigationModel.onTitleColor!(context, state.path);
+            }
+            return Title(
+              title: titleText,
+              color: titleColor,
+              child: NavigationRail(
+                  trailing: navigationModel.sideBarFooter != null
+                      ? navigationModel.sideBarFooter!(context)
+                      : null,
+                  leading: navigationModel.sideBarLogo != null
+                      ? navigationModel.sideBarLogo!(context)
+                      : null,
+                  onDestinationSelected: (value) {
+                    var _screenGroup = _page.screenGroupsMap.values
+                        .firstWhereOrNull((g) => g.sideBarIndex == value);
+                    if (_screenGroup != null) {
+                      var _path = _screenGroup.screenMaps.values.first.path;
+                      _path.compass().go();
+                    }
+                  },
+                  extended: MediaQuery.of(context).size.width > 1024,
+                  destinations: buttons,
+                  selectedIndex: _group.sideBarIndex),
+            );
+          }
+          return Container();
+        });
   }
 
   Widget? buildFloatActionButton(BuildContext context) {
@@ -288,9 +284,10 @@ class _JetPageState extends State<JetPage> with Loggable {
     _navigationState = widget.navigationState;
     _screen = _navigationState.navigationModel.getScreenByRoute(_screenPath);
     if (_screen.path != _page.path) {
-      _navBarCubit = NavBarCubit(widget.initialPageRoute);
-      _innerRouterDelegate = GetIt.I<InnerRouterDelegate>(
-          param1: widget.initialPageRoute, param2: _navBarCubit);
+      _navBarCubit = GetIt.I<NavBarCubit>(param1: widget.initialPageRoute);
+      _innerRouterDelegate = GetIt.I<InnerRouterDelegate>()
+        ..configure(
+            widget.navigationState, widget.initialPageRoute, _navBarCubit, GetIt.I<InnerNavigatorObserver>(param1: _navBarCubit));
     }
   }
 
@@ -301,9 +298,7 @@ class _JetPageState extends State<JetPage> with Loggable {
 
     // Defer back button dispatching to the child router
     if (_rootBackDispatcher == null) {
-      _rootBackDispatcher = Router
-          .of(context)
-          .backButtonDispatcher;
+      _rootBackDispatcher = Router.of(context).backButtonDispatcher;
       _backButtonDispatcher =
           _rootBackDispatcher!.createChildBackButtonDispatcher();
     }
@@ -315,44 +310,9 @@ class _JetPageState extends State<JetPage> with Loggable {
     logger.finest("dispose");
     _innerRouterDelegate?.dispose();
 
-
     try {
       _rootBackDispatcher!
           .forget(_backButtonDispatcher as ChildBackButtonDispatcher);
     } catch (e) {}
-  }
-}
-
-class InnerNavigatorObserver extends NavigatorObserver with Loggable{
-  final NavBarCubit navBarCubit;
-
-  final CompassNavigationState state;
-
-  InnerNavigatorObserver(this.navBarCubit, this.state);
-
-  void _update(Route<dynamic> route) {
-    var routePath = route.settings.name;
-    if (routePath != null) {
-      // state.currentRoute = routePath;
-      navBarCubit.updatePath(routePath);
-    }
-  }
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.finest("didPush");
-    _update(route);
-  }
-
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    logger.finest("didReplace");
-    _update(newRoute!);
-  }
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.finest("didPop");
-    _update(route);
   }
 }
