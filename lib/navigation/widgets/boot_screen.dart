@@ -33,16 +33,18 @@ class BootScreen extends StatelessWidget with Loggable {
   Widget build(BuildContext context) {
     logger.finest("build");
     return Scaffold(
-      body: BlocConsumer<BootBloc, BootBlocState>(
-        bloc: bootBloc,
-        listener: (context, state) {},
-        builder: (context, state) {
-          logger.finest("$state");
-          if (state == BootBlocState.ERROR) {
-            return buildErrorState(context);
-          }
-          return buildLoadingState(context);
-        },
+      body: SizedBox.expand(
+        child: BlocConsumer<BootBloc, BootBlocState>(
+          bloc: bootBloc,
+          listener: (context, state) {},
+          builder: (context, state) {
+            logger.finest("$state");
+            if (state == BootBlocState.ERROR) {
+              return buildErrorState(context);
+            }
+            return buildLoadingState(context);
+          },
+        ),
       ),
     );
   }
