@@ -45,6 +45,8 @@ class JetApp extends StatefulWidget {
 
   EdgeInsets Function(BuildContext context)? repeatButtonPadding;
 
+  final VoidCallback? onBugReport;
+
   JetApp({
     Key? key,
     required this.navigationModel,
@@ -61,6 +63,7 @@ class JetApp extends StatefulWidget {
     this.supportedLocales,
     this.localizationsDelegates,
     this.useAtomsIntl = true,
+    this.onBugReport,
   }) : super(key: key) {
     setupNavigation(navigationModel);
 
@@ -78,6 +81,7 @@ class JetApp extends StatefulWidget {
             data: bootPageThemeData ?? ThemeData.light(),
             child: BootScreen(bootBloc,
                 logo: logo,
+                onBugReport: onBugReport,
                 repeatButtonPadding: repeatButtonPadding,
                 repeatLabelText: repeatLoadLabel == null
                     ? AtomsStrings.of(context).repeatLoad

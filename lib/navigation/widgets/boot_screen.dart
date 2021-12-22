@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/boot/boot_bloc.dart';
 
-class BootScreen extends StatelessWidget with Loggable{
+class BootScreen extends StatelessWidget with Loggable {
   final Widget? logo;
 
   final String? repeatLabelText;
@@ -27,45 +26,47 @@ class BootScreen extends StatelessWidget with Loggable{
   Widget build(BuildContext context) {
     logger.finest("build");
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          if (onBugReport != null)
-            Align(alignment: Alignment.topRight, child: IconButton(icon: Icon(Icons.bug_report), onPressed: onBugReport)),
-          logo ?? const FlutterLogo(size: 100),
-          Padding(
-            padding: repeatButtonPadding != null ? repeatButtonPadding!(context) : EdgeInsets.zero,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: BlocConsumer<BootBloc, BootBlocState>(
-                  bloc: bootBloc,
-                  listener: (context, state) {
-                    // print("!!!!!!");
-                    // log("$state", name: "BootScreen");
-                    // if (state == BootBlocState.READY) {
-                    //   log("Application is ready", name: "BootScreen");
-                    //   nextRoute!().compass().replace().go();
-                    // } else
-                    // {
-                    //   log("Application boot is failed", name: "BootScreen");
-                    // }
-                  },
-                  builder: (context, state) {
-                    logger.finest("$state");
-
-                    // if (state == BootBlocState.INIT) bootBloc.start();
-                    if (state == BootBlocState.ERROR)
-                      return buildRepeatButton();
-                    return buildLoading();
-                  }),
-            ),
-          ),
-        ],
+      body: BlocConsumer<BootBloc, BootBlocState>(
+        bloc: bootBloc,
+        listener: (context, state) {
+        },
+        builder: (context, state) {
+          logger.finest("$state");
+          if (state == BootBlocState.ERROR) {
+            return buildErrorState(context);
+          }
+          return buildLoadingState(context);
+        },
       ),
     );
   }
 
-  Widget buildRepeatButton() {
-    return Center(
+  Widget buildLoadingState(BuildContext context) => Stack(children: <Widget>[
+        logo ?? const FlutterLogo(size: 100),
+        Padding(
+            padding: repeatButtonPadding != null
+                ? repeatButtonPadding!(context)
+                : EdgeInsets.zero,
+            child:
+                Align(alignment: Alignment.bottomCenter, child: buildLoading()))
+      ]);
+
+  Widget buildErrorState(BuildContext context) => Stack(children: <Widget>[
+        if (onBugReport != null)
+          Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                  icon: Icon(Icons.bug_report), onPressed: onBugReport)),
+        logo ?? const FlutterLogo(size: 100),
+        Padding(
+            padding: repeatButtonPadding != null
+                ? repeatButtonPadding!(context)
+                : EdgeInsets.zero,
+            child: Align(
+                alignment: Alignment.bottomCenter, child: buildRepeatButton()))
+      ]);
+
+  Widget buildRepeatButton() => Center(
       child: TextButton(
         onPressed: () => bootBloc.start(),
         child: SizedBox(
@@ -88,10 +89,7 @@ class BootScreen extends StatelessWidget with Loggable{
         ),
       ),
     );
-  }
 
-  Widget buildLoading() {
-    return SizedBox(
+  Widget buildLoading() => SizedBox(
         height: 100, child: Center(child: const CircularProgressIndicator()));
-  }
 }
