@@ -33,8 +33,7 @@ class BootScreen extends StatelessWidget with Loggable {
   Widget build(BuildContext context) {
     logger.finest("build");
     return Scaffold(
-      body: SizedBox.expand(
-        child: BlocConsumer<BootBloc, BootBlocState>(
+      body: BlocConsumer<BootBloc, BootBlocState>(
           bloc: bootBloc,
           listener: (context, state) {},
           builder: (context, state) {
@@ -45,30 +44,33 @@ class BootScreen extends StatelessWidget with Loggable {
             return buildLoadingState(context);
           },
         ),
-      ),
     );
   }
 
   Widget buildLoadingState(BuildContext context) => Stack(children: <Widget>[
-        logo ?? const FlutterLogo(size: 100),
+        Align(alignment: Alignment.topCenter, child: logo ?? const FlutterLogo(size: 100)),
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: loadingPadding != null
                 ? loadingPadding!(context)
                 : EdgeInsets.zero,
-            child: Column(
-              children: [
-                if (loadingLabelText != null) Text(loadingLabelText!(context)),
-                buildLoadingIndicator(),
-              ],
+            child: SizedBox(
+              height: 100,
+              child: Column(
+                children: [
+                  if (loadingLabelText != null) Text(loadingLabelText!(context)),
+                  SizedBox(height: 8),
+                  buildLoadingIndicator(),
+                ],
+              ),
             ),
           ),
         )
       ]);
 
   Widget buildErrorState(BuildContext context) => Stack(children: <Widget>[
-        logo ?? const FlutterLogo(size: 100),
+        Align(alignment: Alignment.topCenter, child: logo ?? const FlutterLogo(size: 100)),
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
@@ -88,30 +90,25 @@ class BootScreen extends StatelessWidget with Loggable {
               )),
       ]);
 
-  Widget buildRepeatButton() => Center(
-        child: TextButton(
-          onPressed: () => bootBloc.start(),
-          child: SizedBox(
-            width: 200,
-            height: 32,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.refresh,
-                  size: 24,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  repeatLabelText ?? "repeat load",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+  Widget buildRepeatButton() => TextButton(
+    onPressed: () => bootBloc.start(),
+    child: SizedBox(
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.refresh,
+            size: 24,
           ),
-        ),
-      );
+          SizedBox(width: 4),
+          Text(
+            repeatLabelText ?? "repeat load"
+          ),
+        ],
+      ),
+    ),
+  );
 
-  Widget buildLoadingIndicator() => SizedBox(
-      height: 100, child: Center(child: const CircularProgressIndicator()));
+  Widget buildLoadingIndicator() => Center(child: const CircularProgressIndicator());
 }
