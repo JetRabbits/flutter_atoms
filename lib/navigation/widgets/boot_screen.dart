@@ -1,16 +1,15 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_atoms/logging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../navigation.dart';
 import '../blocs/boot/boot_bloc.dart';
 
 class BootScreen extends StatelessWidget with Loggable{
   final Widget? logo;
 
   final String? repeatLabelText;
+  final VoidCallback? onBugReport;
 
   final BootBloc bootBloc;
 
@@ -20,7 +19,8 @@ class BootScreen extends StatelessWidget with Loggable{
       {Key? key,
       this.logo,
       this.repeatLabelText,
-      this.repeatButtonPadding})
+      this.repeatButtonPadding,
+      this.onBugReport})
       : super(key: key);
 
   @override
@@ -29,6 +29,8 @@ class BootScreen extends StatelessWidget with Loggable{
     return Scaffold(
       body: Stack(
         children: <Widget>[
+          if (onBugReport != null)
+            Align(alignment: Alignment.topRight, child: IconButton(icon: Icon(Icons.bug_report), onPressed: onBugReport)),
           logo ?? const FlutterLogo(size: 100),
           Padding(
             padding: repeatButtonPadding != null ? repeatButtonPadding!(context) : EdgeInsets.zero,
