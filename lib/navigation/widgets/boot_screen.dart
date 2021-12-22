@@ -62,8 +62,11 @@ class BootScreen extends StatelessWidget with Loggable {
     if (onBugReport != null)
       Align(
           alignment: Alignment.topRight,
-          child: IconButton(
-              icon: Icon(Icons.bug_report), onPressed: onBugReport)),
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: IconButton(
+                icon: Icon(Icons.bug_report), onPressed: onBugReport),
+          )),
       ]);
 
   Widget buildRepeatButton() => Center(
