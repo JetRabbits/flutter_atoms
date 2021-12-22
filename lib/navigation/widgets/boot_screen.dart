@@ -52,18 +52,18 @@ class BootScreen extends StatelessWidget with Loggable {
       ]);
 
   Widget buildErrorState(BuildContext context) => Stack(children: <Widget>[
-        if (onBugReport != null)
-          Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                  icon: Icon(Icons.bug_report), onPressed: onBugReport)),
         logo ?? const FlutterLogo(size: 100),
         Padding(
             padding: repeatButtonPadding != null
                 ? repeatButtonPadding!(context)
                 : EdgeInsets.zero,
             child: Align(
-                alignment: Alignment.bottomCenter, child: buildRepeatButton()))
+                alignment: Alignment.bottomCenter, child: buildRepeatButton())),
+    if (onBugReport != null)
+      Align(
+          alignment: Alignment.topRight,
+          child: IconButton(
+              icon: Icon(Icons.bug_report), onPressed: onBugReport)),
       ]);
 
   Widget buildRepeatButton() => Center(
