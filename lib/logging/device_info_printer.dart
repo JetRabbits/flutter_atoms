@@ -8,25 +8,29 @@ mixin DeviceInfoPrinter {
     late BaseDeviceInfo deviceInfo;
     if (Platform.isAndroid) {
       deviceInfo = await DeviceInfoPlugin().androidInfo;
-    } else
-    if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       deviceInfo = await DeviceInfoPlugin().iosInfo;
-    } else
-    if (Platform.isWindows) {
+    } else if (Platform.isWindows) {
       deviceInfo = await DeviceInfoPlugin().windowsInfo;
-    } else
-    if (Platform.isMacOS) {
+    } else if (Platform.isMacOS) {
       deviceInfo = await DeviceInfoPlugin().macOsInfo;
-    } else
-    if (Platform.isLinux) {
+    } else if (Platform.isLinux) {
       deviceInfo = await DeviceInfoPlugin().linuxInfo;
-    } else
-    if (Platform.isFuchsia) {
+    } else if (Platform.isFuchsia) {
       deviceInfo = await DeviceInfoPlugin().androidInfo;
     }
     if (kIsWeb) {
       deviceInfo = await DeviceInfoPlugin().webBrowserInfo;
     }
-    file.writeAsStringSync(deviceInfo.toMap().toString());
+    var deviceMap = deviceInfo.toMap();
+    var info = deviceMap.keys
+        .map<String>((key) => "$key:${deviceMap[key]}")
+        .toList()
+        .join("\n");
+    file.writeAsStringSync('''
+******************
+$info
+******************
+''');
   }
 }
