@@ -8,17 +8,24 @@ class BootScreen extends StatelessWidget with Loggable {
   final Widget? logo;
 
   final String? repeatLabelText;
+
   final VoidCallback? onBugReport;
 
   final BootBloc bootBloc;
 
   EdgeInsets Function(BuildContext context)? repeatButtonPadding;
 
+  final String Function(BuildContext)? loadingLabelText;
+
+  EdgeInsets Function(BuildContext context)? loadingPadding;
+
   BootScreen(this.bootBloc,
       {Key? key,
       this.logo,
       this.repeatLabelText,
       this.repeatButtonPadding,
+      this.loadingLabelText,
+      this.loadingPadding,
       this.onBugReport})
       : super(key: key);
 
@@ -44,11 +51,16 @@ class BootScreen extends StatelessWidget with Loggable {
   Widget buildLoadingState(BuildContext context) => Stack(children: <Widget>[
         logo ?? const FlutterLogo(size: 100),
         Padding(
-            padding: repeatButtonPadding != null
-                ? repeatButtonPadding!(context)
+            padding: loadingPadding != null
+                ? loadingPadding!(context)
                 : EdgeInsets.zero,
             child:
-                Align(alignment: Alignment.bottomCenter, child: buildLoading()))
+                Align(alignment: Alignment.bottomCenter, child: Column(
+                  children: [
+                    if (loadingLabelText != null) Text(loadingLabelText!(context)),
+                    buildLoadingIndicator(),
+                  ],
+                )))
       ]);
 
   Widget buildErrorState(BuildContext context) => Stack(children: <Widget>[
@@ -93,6 +105,6 @@ class BootScreen extends StatelessWidget with Loggable {
       ),
     );
 
-  Widget buildLoading() => SizedBox(
+  Widget buildLoadingIndicator() => SizedBox(
         height: 100, child: Center(child: const CircularProgressIndicator()));
 }

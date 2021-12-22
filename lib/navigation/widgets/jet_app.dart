@@ -23,10 +23,6 @@ class JetApp extends StatefulWidget {
 
   WidgetBuilder? bootWidgetBuilder;
 
-  final Widget? logo;
-
-  final String Function(BuildContext)? repeatLoadLabel;
-
   final Future<bool> Function()? onAppStart;
 
   final String Function()? nextRoute;
@@ -37,15 +33,10 @@ class JetApp extends StatefulWidget {
 
   final List<LocalizationsDelegate<dynamic>>? localizationsDelegates;
 
-  final ThemeData? bootPageThemeData;
-
   final bool useAtomsIntl;
 
   late final BootBloc bootBloc;
 
-  EdgeInsets Function(BuildContext context)? repeatButtonPadding;
-
-  final VoidCallback? onBugReport;
 
   JetApp({
     Key? key,
@@ -53,17 +44,19 @@ class JetApp extends StatefulWidget {
     required this.onGenerateTitle,
     this.onAppStart,
     this.nextRoute,
-    this.logo,
-    this.repeatButtonPadding,
-    this.bootPageThemeData,
-    this.repeatLoadLabel,
     this.bootWidgetBuilder,
     this.topLevelProviders,
     this.themeModelBuilder,
     this.supportedLocales,
     this.localizationsDelegates,
     this.useAtomsIntl = true,
-    this.onBugReport,
+    Widget? logo,
+    EdgeInsets Function(BuildContext)? repeatButtonPadding,
+    EdgeInsets Function(BuildContext)? loadingPadding,
+    ThemeData? bootPageThemeData,
+    String Function(BuildContext)? loadingLabelText,
+    String Function(BuildContext)? repeatLoadLabel,
+    VoidCallback? onBugReport,
   }) : super(key: key) {
     setupNavigation(navigationModel);
 
@@ -83,9 +76,11 @@ class JetApp extends StatefulWidget {
                 logo: logo,
                 onBugReport: onBugReport,
                 repeatButtonPadding: repeatButtonPadding,
+                loadingLabelText: loadingLabelText,
+                loadingPadding: loadingPadding,
                 repeatLabelText: repeatLoadLabel == null
                     ? AtomsStrings.of(context).repeatLoad
-                    : repeatLoadLabel!(context)),
+                    : repeatLoadLabel(context)),
           );
         };
       }
