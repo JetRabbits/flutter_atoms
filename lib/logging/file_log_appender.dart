@@ -5,10 +5,10 @@ import 'package:flutter_atoms/logging/constants.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'loggable.dart';
+import 'device_info_printer.dart';
 
 @lazySingleton
-class FileLogAppender with Loggable {
+class FileLogAppender with DeviceInfoPrinter {
   String logFile;
   List<String> _recordsCache = [];
   Timer? _timer;
@@ -24,7 +24,7 @@ class FileLogAppender with Loggable {
       @Named('retentionCachePeriod')
           this.retentionCachePeriod: retentionCachePeriodConst,
       @Named('logFileSizeBytes')
-          this.logFileSizeBytes: logFileSizeBytesConst}){
+          this.logFileSizeBytes: logFileSizeBytesConst}) {
     _ensureLogFile();
   }
 
@@ -70,9 +70,11 @@ class FileLogAppender with Loggable {
       bool exists = _file!.existsSync();
       if (!exists) {
         _file!.createSync();
+        await addDeviceInfo(_file!);
       } else if (_file!.lengthSync() > logFileSizeBytes) {
         _file!.deleteSync();
         _file!.createSync();
+        await addDeviceInfo(_file!);
       }
       return true;
     } catch (exc, stackTrace) {
@@ -96,5 +98,4 @@ class FileLogAppender with Loggable {
       print(log);
     }
   }
-
 }

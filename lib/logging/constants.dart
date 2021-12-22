@@ -1,8 +1,5 @@
 import 'package:injectable/injectable.dart';
 
-@Named('retentionCachePeriod')
-@Named('printLogs')
-
 const logFileNameConst = 'app.log';
 const retentionCachePeriodConst = const Duration(milliseconds: 500);
 const logFileSizeBytesConst = 50000000;
