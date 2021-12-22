@@ -35,8 +35,7 @@ class BootScreen extends StatelessWidget with Loggable {
     return Scaffold(
       body: BlocConsumer<BootBloc, BootBlocState>(
         bloc: bootBloc,
-        listener: (context, state) {
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           logger.finest("$state");
           if (state == BootBlocState.ERROR) {
@@ -50,61 +49,67 @@ class BootScreen extends StatelessWidget with Loggable {
 
   Widget buildLoadingState(BuildContext context) => Stack(children: <Widget>[
         logo ?? const FlutterLogo(size: 100),
-        Padding(
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
             padding: loadingPadding != null
                 ? loadingPadding!(context)
                 : EdgeInsets.zero,
-            child:
-                Align(alignment: Alignment.bottomCenter, child: Column(
-                  children: [
-                    if (loadingLabelText != null) Text(loadingLabelText!(context)),
-                    buildLoadingIndicator(),
-                  ],
-                )))
+            child: Column(
+              children: [
+                if (loadingLabelText != null) Text(loadingLabelText!(context)),
+                buildLoadingIndicator(),
+              ],
+            ),
+          ),
+        )
       ]);
 
   Widget buildErrorState(BuildContext context) => Stack(children: <Widget>[
         logo ?? const FlutterLogo(size: 100),
-        Padding(
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
             padding: repeatButtonPadding != null
                 ? repeatButtonPadding!(context)
                 : EdgeInsets.zero,
-            child: Align(
-                alignment: Alignment.bottomCenter, child: buildRepeatButton())),
-    if (onBugReport != null)
-      Align(
-          alignment: Alignment.topRight,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: IconButton(
-                icon: Icon(Icons.bug_report), onPressed: onBugReport),
-          )),
+            child: buildRepeatButton(),
+          ),
+        ),
+        if (onBugReport != null)
+          Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: IconButton(
+                    icon: Icon(Icons.bug_report), onPressed: onBugReport),
+              )),
       ]);
 
   Widget buildRepeatButton() => Center(
-      child: TextButton(
-        onPressed: () => bootBloc.start(),
-        child: SizedBox(
-          width: 200,
-          height: 32,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.refresh,
-                size: 24,
-              ),
-              SizedBox(width: 4),
-              Text(
-                repeatLabelText ?? "repeat load",
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+        child: TextButton(
+          onPressed: () => bootBloc.start(),
+          child: SizedBox(
+            width: 200,
+            height: 32,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.refresh,
+                  size: 24,
+                ),
+                SizedBox(width: 4),
+                Text(
+                  repeatLabelText ?? "repeat load",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
   Widget buildLoadingIndicator() => SizedBox(
-        height: 100, child: Center(child: const CircularProgressIndicator()));
+      height: 100, child: Center(child: const CircularProgressIndicator()));
 }
