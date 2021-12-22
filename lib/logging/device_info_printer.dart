@@ -24,7 +24,7 @@ mixin DeviceInfoPrinter {
     }
     var deviceMap = deviceInfo.toMap();
     var info = deviceMap.keys
-        .map<String>((key) => "$key:${deviceMap[key]}")
+        .map<String>((key) => "$key: ${deviceMap[key]}")
         .toList()
         .join("\n");
     file.writeAsStringSync('''
