@@ -120,14 +120,12 @@ class _JetPageState extends State<JetPage> with Loggable {
         ? IconThemeData(color: selectedColor)
         : IconThemeData(color: unselectedColor);
 
-    Widget? label;
-    if (item.label != null || item.title != null)
-      label = item.title ??
+    Widget? label = item.label != null ?
           Text(
             item.label!,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-          );
+          ) : null;
 
     return Expanded(
       child: SizedBox(

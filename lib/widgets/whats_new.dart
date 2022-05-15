@@ -1,7 +1,5 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_whatsnew/flutter_whatsnew.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +13,7 @@ class WhatNewScreen extends StatelessWidget {
           child: WhatsNewPage.changelog(
               path: Intl.getCurrentLocale() == 'ru'
                   ? 'CHANGELOG_ru.md'
-                  : 'CHANGELOG_en.md')),
+                  : 'CHANGELOG_en.md', title: Text("История изменений"),buttonText: Text("Далее"),)),
     );
   }
 }
