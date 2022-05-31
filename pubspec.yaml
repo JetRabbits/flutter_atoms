@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^7.3.3
   persist_theme: ^1.7.0
+  local_auth:
+  uuid:
   package_info_plus:
   device_info_plus:
   flutter_draft:
@@ -21,9 +23,6 @@ dependencies:
   equatable:
   cached_network_image:
   flutter_secure_storage:
-    git:
-      url: https://github.com/juliansteenbakker/flutter_secure_storage
-      ref: develop
   shared_preferences:
   flutter_cache_manager:
   story_view: ^0.13.2

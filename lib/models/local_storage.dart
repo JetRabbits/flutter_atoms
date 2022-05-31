@@ -59,6 +59,11 @@ class LocalStorage {
     }
   }
 
+  Future<void> delete(String key) async {
+    await _securePreferences.remove(key);
+    await _sharedPreferences.remove(key);
+  }
+
   Future<void> deleteAll() async {
     await _sharedPreferences.clear();
     if (kIsWeb) {

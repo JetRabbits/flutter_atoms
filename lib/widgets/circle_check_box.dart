@@ -51,11 +51,12 @@ class CircleCheckBox extends StatelessWidget {
     Color externalBgColor, internalBgColor;
 
     if (isEnabled) {
+      var colorScheme = Theme.of(context).colorScheme;
       externalBgColor = isChecked
-          ? selectedColor ?? Theme.of(context).accentColor
-          : color ?? Theme.of(context).accentColor;
+          ? selectedColor ?? colorScheme.secondary
+          : color ?? colorScheme.secondary;
       internalBgColor = isChecked
-          ? selectedColor ?? Theme.of(context).accentColor
+          ? selectedColor ?? colorScheme.secondary
           : Theme.of(context).cardColor;
     } else {
       externalBgColor = isChecked
