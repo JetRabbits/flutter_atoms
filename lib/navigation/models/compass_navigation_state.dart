@@ -6,11 +6,7 @@ import 'package:flutter_atoms/flutter_atoms.dart';
 import 'package:flutter_atoms/logging.dart';
 import 'package:injectable/injectable.dart';
 
-import 'navigation_model.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'navigation_page.dart';
-import 'navigation_screen.dart';
-import 'screen_group.dart';
 
 
 class HistoryData<T> {

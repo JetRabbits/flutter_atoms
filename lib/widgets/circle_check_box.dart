@@ -43,7 +43,7 @@ class CircleCheckBox extends StatelessWidget {
         height: _INTERNAL_RADIUS * 2,
         child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-                color ?? Theme.of(context).accentColor),
+                color ?? Theme.of(context).colorScheme.secondary),
             strokeWidth: _EXTERNAL_RADIUS - _INTERNAL_RADIUS));
   }
 

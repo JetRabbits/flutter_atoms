@@ -4,7 +4,6 @@ import 'package:flutter_atoms/navigation/observers/inner_navigation_observer.dar
 import 'package:injectable/injectable.dart';
 
 import '../../navigation.dart';
-import '../models/compass_navigation_state.dart';
 import '../models/inner_navigator_route_page.dart';
 
 @injectable

@@ -45,7 +45,7 @@ class _CarouselIndicatorState extends State<CarouselIndicator> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: currentIndex == index
-                ? Theme.of(context).accentColor
+                ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).disabledColor,
           ),
         );
