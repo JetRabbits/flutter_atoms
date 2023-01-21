@@ -19,7 +19,7 @@ dependencies:
   device_info_plus:
   flutter_draft:
     git:
-      url: https://gitlab.jetrabbits.com/jetrabbits_product/flutter_draft.git
+      url: https://github.com/JetRabbits/flutter_draft.git
   equatable:
   cached_network_image:
   flutter_secure_storage:
