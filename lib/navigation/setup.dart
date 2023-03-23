@@ -9,8 +9,9 @@ import 'setup.config.dart';
   initializerName: r'$initNavigation', // default
   preferRelativeImports: true, // default
   asExtension: false, // default
+
 )
 void setupNavigation(NavigationModel navigationModel){
-  GetIt.I.registerSingleton(navigationModel);
-  $initNavigation(GetIt.I);
+    GetIt.I.registerSingleton(navigationModel);
+    $initNavigation(GetIt.I);
 }

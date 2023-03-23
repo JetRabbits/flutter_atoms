@@ -30,12 +30,8 @@ class VersionModel {
         platform = (await deviceInfo.webBrowserInfo).platform ?? "Web";
       } else {
 
-        if (Platform.isAndroid){
-          platform = (await deviceInfo.androidInfo).version.release ?? "Android";
-        }
-
-        if (Platform.isFuchsia){
-          platform = (await deviceInfo.androidInfo).version.release ?? "Fuchsia";
+        if (Platform.isAndroid || Platform.isFuchsia){
+          platform = (await deviceInfo.androidInfo).version.release;
         }
 
         if (Platform.isIOS){
