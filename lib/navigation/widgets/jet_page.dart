@@ -113,7 +113,7 @@ class _JetPageState extends State<JetPage> with Loggable {
 
     var _textStyle = Theme.of(context)
         .textTheme
-        .bodyText1!
+        .bodyLarge!
         .copyWith(color: isActive ? selectedColor : unselectedColor);
 
     IconThemeData _iconThemeData = isActive

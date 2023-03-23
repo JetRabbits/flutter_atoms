@@ -20,11 +20,11 @@ class FileLogAppender with DeviceInfoPrinter {
 
   FileLogAppender(
       {@Named('logFile')
-          this.logFile: logFileNameConst,
+          this.logFile = logFileNameConst,
       @Named('retentionCachePeriod')
-          this.retentionCachePeriod: retentionCachePeriodConst,
+          this.retentionCachePeriod = retentionCachePeriodConst,
       @Named('logFileSizeBytes')
-          this.logFileSizeBytes: logFileSizeBytesConst}) {
+          this.logFileSizeBytes = logFileSizeBytesConst}) {
     _ensureLogFile();
   }
 

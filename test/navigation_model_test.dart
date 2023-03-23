@@ -7,6 +7,8 @@ import 'package:mocktail/mocktail.dart';
 class MockContext extends Mock implements BuildContext {}
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {});
 
   test('Navigation Model parsing tests', () async {

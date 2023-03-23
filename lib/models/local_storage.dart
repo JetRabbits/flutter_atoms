@@ -1,3 +1,8 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:android_id/android_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:encrypt_shared_preferences/enc_shared_pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,9 +23,34 @@ class LocalStorage {
     return _sharedPreferences.get(key) != null;
   }
 
-  Future<void> load() async {
+  Future<void> load({String? secureKey}) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _securePreferences = await EncryptedSharedPreferences.getInstance();
+    var _secureKey = secureKey;
+    if (_secureKey == null) {
+      if (Platform.isAndroid || Platform.isFuchsia){
+        _secureKey = await AndroidId().getId() ?? "Unknown ID";
+      }
+      else {
+        var deviceInfoPlugin = DeviceInfoPlugin();
+        if (Platform.isIOS) {
+          _secureKey = (await deviceInfoPlugin.iosInfo).identifierForVendor;
+        } else
+        if (Platform.isWindows) {
+          _secureKey = (await deviceInfoPlugin.windowsInfo).deviceId;
+        } else
+        if (Platform.isLinux) {
+          _secureKey = (await deviceInfoPlugin.linuxInfo).id;
+        } else
+        if (Platform.isMacOS) {
+          _secureKey = (await deviceInfoPlugin.macOsInfo).systemGUID;
+        } else
+        if (kIsWeb) {
+          _secureKey = (await deviceInfoPlugin.webBrowserInfo).appCodeName;
+        }
+      }
+    }
+    _securePreferences.setEncryptionKey(_secureKey ?? "Unknown ID");
   }
 
   Future<bool> setString(String key, String value) =>

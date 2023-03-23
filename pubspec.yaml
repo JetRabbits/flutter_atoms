@@ -1,6 +1,6 @@
 name: flutter_atoms
 description: Some best practice and ready to go solutions for flutter projects
-version: 1.2.0
+version: 1.3.0
 homepage: https://github.com/JetRabbits/flutter_atoms
 publish_to: none
 
@@ -19,6 +19,7 @@ dependencies:
   uuid:
   package_info_plus:
   device_info_plus:
+  android_id:
   flutter_draft:
     git:
       url: https://github.com/JetRabbits/flutter_draft.git
@@ -50,6 +51,7 @@ dev_dependencies:
   build_runner:
 flutter:
   uses-material-design: true
+  generate: true
 flutter_intl:
   enabled: true
   class_name: AtomsStrings

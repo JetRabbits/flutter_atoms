@@ -93,8 +93,8 @@ class _AboutApplicationPageState extends State<AboutApplicationPage> {
               leading: const Icon(Icons.email),
               subtitle: AutoSizeText(widget.supportEmail ?? ""),
               title: AutoSizeText(AtomsStrings.of(context).contact_email),
-              onTap: () => launch(
-                  "mailto:${widget.supportEmail}?subject=${widget.supportSubject}&body=${widget.supportEmailBody}"),
+              onTap: () => launchUrl(
+                  Uri.parse("mailto:${widget.supportEmail}?subject=${widget.supportSubject}&body=${widget.supportEmailBody}")),
             ),
           Divider(
             height: 20.0,

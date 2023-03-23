@@ -225,10 +225,10 @@ class InteractiveStoryViewState extends State<InteractiveStoryView>
     _nextDebouncer = null;
   }
 
-  void _holdNext() {
-    _nextDebouncer?.cancel();
-    _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
-  }
+  // void _holdNext() {
+  //   _nextDebouncer?.cancel();
+  //   _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
+  // }
 
   @override
   Widget build(BuildContext context) {

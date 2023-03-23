@@ -133,10 +133,13 @@ class NavigationModel extends RouteInformationParser<String> with Loggable {
     var path =
         split.length > 2 ? "/${split[0]}/${split[1]}/${split[2]}" : route;
     var result = screenGroup.screenMaps[path];
-    result = result ?? screenGroup.screenMaps.values.first;
 
-    if (result == null)
+    try {
+      result = result ?? screenGroup.screenMaps.values.first;
+    } catch (e) {
       throw NoRouteFoundException(route);
+    }
+
     return result;
   }
 

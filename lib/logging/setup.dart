@@ -27,7 +27,7 @@ void setupCustomLogging({void Function(LogRecord)? onRecord, Level? forceLevel})
 }
 
 void setupLoggingWithLogfile(
-    {bool printToConsole: true,
+    {bool printToConsole = true,
       Level? forceLevel}) {
   $initLogging(GetIt.I);
   var fileLogAppender = GetIt.I<FileLogAppender>();

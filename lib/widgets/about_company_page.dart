@@ -34,13 +34,13 @@ class AboutCompanyPage extends StatelessWidget {
         "icon": Icons.phone,
         "subtitle": AtomsStrings.of(context).phone,
         "title": phone,
-        "tap": (_) => launch("tel:$phone"),
+        "tap": (_) => launchUrl(Uri.parse("tel:$phone")),
       },
       {
         "icon": Icons.language,
         "subtitle": AtomsStrings.of(context).website,
         "title": webSite,
-        "tap": (_) => launch(webSite!),
+        "tap": (_) => launchUrl(Uri.parse(webSite!)),
       },
     ]..retainWhere((element) => element["title"] != null);
     return info;

@@ -19,7 +19,7 @@ class InteractiveStoryItem extends StoryItem {
   final WidgetBuilder interactiveLayer;
 
   InteractiveStoryItem(Widget view, this.interactiveLayer,
-      {Duration duration: const Duration(seconds: 3)})
+      {Duration duration = const Duration(seconds: 3)})
       : super(view, duration: duration);
 }
 

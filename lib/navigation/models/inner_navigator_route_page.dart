@@ -4,6 +4,7 @@ import 'package:flutter_atoms/logging.dart';
 
 import 'navigation_screen.dart';
 
+// ignore: must_be_immutable
 class InnerNavigatorRoutePage extends Page with Loggable {
   final NavigationScreen screen;
   final PageStorageBucket? storageBucket;
