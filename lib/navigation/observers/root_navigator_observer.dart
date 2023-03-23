@@ -22,7 +22,7 @@ class RootNavigatorObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     var jetPage = navigationModel.getPageByRoute(previousRoute!.settings.name!);
     // Нужно поискать другие варианты проставить backButtonDispatcher в случае, если пользователь возвращается через стрелку AppBar
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       try {
         jetPage.backButtonDispatcher!.takePriority();
       } catch (ignore) {}

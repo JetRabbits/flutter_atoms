@@ -1,6 +1,4 @@
-import 'package:crypted_preferences/crypted_preferences.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:encrypt_shared_preferences/enc_shared_pref.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
@@ -14,21 +12,15 @@ class LocalStorage {
 
   late SharedPreferences _sharedPreferences;
 
-  late Preferences _securePreferences;
-
-  late FlutterSecureStorage _secureStorage;
+  late EncryptedSharedPreferences _securePreferences;
 
   bool hasKey(String key) {
     return _sharedPreferences.get(key) != null;
   }
 
-  Future<void> load({webSecurePath = './secure/preferences'}) async {
+  Future<void> load() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    if (kIsWeb) {
-      _securePreferences = await Preferences.preferences(path: webSecurePath);
-    } else {
-      _secureStorage = FlutterSecureStorage();
-    }
+    _securePreferences = await EncryptedSharedPreferences.getInstance();
   }
 
   Future<bool> setString(String key, String value) =>
@@ -43,20 +35,11 @@ class LocalStorage {
   }
 
   Future<String?> secureRead(String key) {
-    if (kIsWeb) {
       return Future.value(_securePreferences.getString(key));
-    } else {
-      return _secureStorage.read(key: key);
-    }
   }
 
   Future<void> secureWrite(String key, String value) async {
-    if (kIsWeb) {
-      var result = await _securePreferences.setString(key, value);
-      if (!result) throw "Exception when writing preference $key";
-    } else {
-      return _secureStorage.write(key: key, value: value);
-    }
+      await _securePreferences.setString(key, value);
   }
 
   Future<void> delete(String key) async {
@@ -66,11 +49,7 @@ class LocalStorage {
 
   Future<void> deleteAll() async {
     await _sharedPreferences.clear();
-    if (kIsWeb) {
-      await _securePreferences.clear();
-    } else {
-      await _secureStorage.deleteAll();
-    }
+    await _securePreferences.clear();
   }
 
   Future<bool> setBool(String key, bool value) =>

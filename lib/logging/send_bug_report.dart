@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:flutter_atoms/logging/constants.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<void> sendLog({String errorLog: logFileNameConst}) async {
   var directory = await getApplicationDocumentsDirectory();

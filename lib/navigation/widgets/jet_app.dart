@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_atoms/flutter_atoms.dart';
@@ -14,6 +15,8 @@ import 'package:persist_theme/persist_theme.dart';
 import 'root_router_delegate.dart';
 
 // ignore: must_be_immutable
+typedef AppStartCall = Future<bool> Function();
+
 class JetApp extends StatefulWidget {
   final List<RepositoryProvider>? topLevelProviders;
 
@@ -23,7 +26,9 @@ class JetApp extends StatefulWidget {
 
   WidgetBuilder? bootWidgetBuilder;
 
-  final Future<bool> Function()? onAppStart;
+  AppStartCall defaultOnAppStart = () => SynchronousFuture(true);
+
+  late AppStartCall onAppStart;
 
   final String Function()? nextRoute;
 
@@ -42,7 +47,7 @@ class JetApp extends StatefulWidget {
     Key? key,
     required this.navigationModel,
     required this.onGenerateTitle,
-    this.onAppStart,
+    AppStartCall? onAppStart,
     this.nextRoute,
     this.bootWidgetBuilder,
     this.topLevelProviders,
@@ -60,13 +65,15 @@ class JetApp extends StatefulWidget {
   }) : super(key: key) {
     setupNavigation(navigationModel);
 
+    this.onAppStart = onAppStart ?? defaultOnAppStart;
+
     if (useAtomsIntl) {
       initializeBigIntlMessageLookup();
       localizationsDelegates!.add(AtomsStrings.delegate);
     }
     bootBloc = GetIt.I<BootBloc>()
       ..nextRoute = nextRoute
-      ..onStart = onAppStart!;
+      ..onStart = this.onAppStart;
     if (navigationModel.pagesMap["/"] == null) {
       if (bootWidgetBuilder == null) {
         bootWidgetBuilder = (context) {
@@ -79,7 +86,7 @@ class JetApp extends StatefulWidget {
                 loadingLabelText: loadingLabelText,
                 loadingPadding: loadingPadding,
                 repeatLabelText: repeatLoadLabel == null
-                    ? AtomsStrings.of(context).repeatLoad
+                    ? (AtomsStrings.maybeOf(context)?.repeatLoad ?? "repeat")
                     : repeatLoadLabel(context)),
           );
         };
@@ -110,7 +117,7 @@ class _JetAppState extends State<JetApp> with Loggable {
       builder: (context, themeModel, child) {
         return MaterialApp.router(
             localizationsDelegates: widget.localizationsDelegates,
-            supportedLocales: widget.supportedLocales!,
+            supportedLocales: widget.supportedLocales ?? const <Locale>[Locale('en', 'US')],
             debugShowCheckedModeBanner: false,
             theme: themeModel.theme,
             onGenerateTitle: widget.onGenerateTitle,
