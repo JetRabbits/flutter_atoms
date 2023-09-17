@@ -1,19 +1,17 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_atoms/generated/l10n.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutCompanyPage extends StatelessWidget {
-  final String? companyName;
+  final String companyName;
 
   final String? phone;
 
   final String? webSite;
 
-  const AboutCompanyPage({Key? key, this.companyName, this.phone, this.webSite})
+  const AboutCompanyPage({Key? key, required this.companyName, this.phone, this.webSite})
       : super(key: key);
 
   List<Map<String, dynamic>> createInfo(BuildContext context) {
