@@ -35,7 +35,7 @@ dependencies:
     git:
       url: https://github.com/JetRabbits/flutter_whatsnew.git
   collection:
-  encrypt_shared_preferences:
+  encrypted_shared_preferences: ^3.0.1
   intl:
   logging:
   get_it:
