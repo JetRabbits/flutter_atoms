@@ -25,7 +25,7 @@ class LocalStorage {
 
   Future<void> load({String? secureKey}) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    _securePreferences = await EncryptedSharedPreferences();
+    _securePreferences = EncryptedSharedPreferences(prefs: _sharedPreferences);
     var _secureKey = secureKey;
     if (_secureKey == null) {
       if (Platform.isAndroid || Platform.isFuchsia){
@@ -50,7 +50,6 @@ class LocalStorage {
         }
       }
     }
-    _securePreferences.setEncryptionKey(_secureKey ?? "Unknown ID");
   }
 
   Future<bool> setString(String key, String value) =>
