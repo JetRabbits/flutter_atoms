@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:encrypt_shared_preferences/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
@@ -25,7 +25,6 @@ class LocalStorage {
 
   Future<void> load({String? secureKey}) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    _securePreferences = await EncryptedSharedPreferences();
     var _secureKey = secureKey;
     if (_secureKey == null) {
       if (Platform.isAndroid || Platform.isFuchsia){
@@ -50,7 +49,9 @@ class LocalStorage {
         }
       }
     }
-    _securePreferences.setEncryptionKey(_secureKey ?? "Unknown ID");
+
+    EncryptedSharedPreferences.initialize(_secureKey ?? "Unknown ID");
+    _securePreferences = EncryptedSharedPreferences.getInstance();
   }
 
   Future<bool> setString(String key, String value) =>

@@ -27,7 +27,7 @@ dependencies:
   cached_network_image:
   shared_preferences:
   flutter_cache_manager:
-  story_view: ^0.14.0
+  story_view: ^0.16.0
   json_serializable:
   auto_size_text:
   url_launcher:
@@ -35,7 +35,7 @@ dependencies:
     git:
       url: https://github.com/JetRabbits/flutter_whatsnew.git
   collection:
-  encrypted_shared_preferences: ^3.0.1
+  encrypt_shared_preferences: ^0.4.8
   intl:
   logging:
   get_it:
